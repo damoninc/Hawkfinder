@@ -7,3 +7,4 @@ Lead Developer:
 
 Developers:
 - Damon Incorvaia
+- Octavio Galindo
