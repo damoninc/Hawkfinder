@@ -1,4 +1,4 @@
-﻿# csc450-sp23-project-team1
+# csc450-sp23-project-team1
 Project Manager:
 - Nicholas Brunsink
 
