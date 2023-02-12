@@ -8,7 +8,7 @@
 4) Type "npm i" to install required dependencies
 5) Type "npm run dev" to run the application
 6) Open "http://localhost:5173/" in browser of your choice
-7) Ctrl+C to close the local server
+7) Ctrl+C or "q" to close the local server
 
 -------------------------------------------------------------------------------------------------------------------------
 ## About
