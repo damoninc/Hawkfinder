@@ -6,5 +6,5 @@ Lead Developer:
 - John Bejar
 
 Developers:
-- Damon Incorvaia
 - Octavio Galindo
+- Damon Incorvaia
