@@ -23,6 +23,5 @@ Lead Developer:
 Developers:
 - Octavio Galindo
 - Damon Incorvaia
-- Octavio Galindo
 ---------------------------------------------------------------------------------------------------------------------------
 This is a react.js project bootstrapped with Vite
