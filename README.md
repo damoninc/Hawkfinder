@@ -28,3 +28,9 @@ Developers:
 - Damon Incorvaia
 ---------------------------------------------------------------------------------------------------------------------------
 This is a react.js project bootstrapped with Vite
+
+## Links to Tutorials
+- https://www.youtube.com/watch?v=bMknfKXIFA8
+- https://beta.reactjs.org/
+- https://www.youtube.com/watch?v=b0IZo2Aho9Y
+- https://www.youtube.com/watch?v=s2skans2dP4 ← React Concepts
