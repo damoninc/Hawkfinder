@@ -26,6 +26,23 @@ Lead Developer:
 Developers:
 - Octavio Galindo
 - Damon Incorvaia
+
+---------------------------------------------------------------------------------------------------------------------------
+## Components
+User 
+- Implemented by ___
+
+Profile 
+- Implemented by ___
+
+Post 
+- Implemented by ___
+
+Comment 
+- Implemented by ___
+
+Message 
+- Implemented by Nicholas
 ---------------------------------------------------------------------------------------------------------------------------
 This is a react.js project bootstrapped with Vite
 
