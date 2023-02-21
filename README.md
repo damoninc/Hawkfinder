@@ -55,20 +55,26 @@ Developers:
 
 ---------------------------------------------------------------------------------------------------------------------------
 ## Components
-User 
-- Implemented by ___
+Posts 
+- Being Implemented by __
 
-Profile 
-- Implemented by ___
+Main Feed 
+- Being Implemented by __
 
-Post 
-- Implemented by ___
+FireBase
+- Being Implemented by __
 
-Comment 
-- Implemented by ___
+Authentication
+- Being Implemented by __
 
-Message 
-- Implemented by Nicholas
+UserManger
+- Being Implemented by __
+
+Spotify Integration
+- Being implemented by Nicholas
+
+Friend System
+- Being implemented by Nicholas
 ---------------------------------------------------------------------------------------------------------------------------
 This is a react.js project bootstrapped with Vite
 
