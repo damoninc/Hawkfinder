@@ -56,10 +56,10 @@ Developers:
 ---------------------------------------------------------------------------------------------------------------------------
 ## Components
 Posts 
-- Being Implemented by __
+- Being Implemented by John Bejar
 
 Main Feed 
-- Being Implemented by __
+- Being Implemented by John Bejar
 
 FireBase
 - Being Implemented by __
