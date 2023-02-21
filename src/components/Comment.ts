@@ -28,16 +28,16 @@ class Comment {
         return this._text;
     }
 
-    public set text(value: string) {
-        this._text = value;
-    }
-
-    public set ratings(value: Map<string, string>) {
-        this._ratings = value;
+    public set text(newText: string) {
+        this._text = newText;
     }
 
     public get ratings(): Map<string, string> {
         return this._ratings;
+    }
+
+    public set ratings(newRating: Map<string, string>) {
+        this._ratings = newRating;
     }
 
     // In the params, 
