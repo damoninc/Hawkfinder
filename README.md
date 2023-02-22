@@ -62,7 +62,7 @@ Main Feed
 - Being Implemented by John Bejar
 
 FireBase
-- Being Implemented by __
+- Being Implemented by Damon Incorvaia
 
 Authentication
 - Being Implemented by Octavio Galindo
