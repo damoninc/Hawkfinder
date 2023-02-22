@@ -1,9 +1,20 @@
+/**
+ * The class for Comments
+ * 
+ * Each comment will have a unique ID and date that both will never change
+ * The text is also something that the user cannot change but since it is 
+ * not initialized by firebase, we won't set it to private. The ratings is 
+ * initialized as an empty map but can be changed by the user as they upvote
+ * or downvote a comment.
+ */
+
 class Comment {
     readonly _commentID: string;
     readonly _commentDate: Date;
     private _text: string;
     private _ratings: Map<string, string>;
 
+    
     constructor(
         commentID: string,
         commentDate: Date,
@@ -28,16 +39,16 @@ class Comment {
         return this._text;
     }
 
-    public set text(value: string) {
-        this._text = value;
-    }
-
-    public set ratings(value: Map<string, string>) {
-        this._ratings = value;
+    public set text(newText: string) {
+        this._text = newText;
     }
 
     public get ratings(): Map<string, string> {
         return this._ratings;
+    }
+
+    public set ratings(newRating: Map<string, string>) {
+        this._ratings = newRating;
     }
 
     // In the params, 

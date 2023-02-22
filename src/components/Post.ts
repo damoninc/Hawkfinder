@@ -1,9 +1,20 @@
-import Comment from "./Comment";
+/**
+ * The class for Posts
+ * 
+ * Each post will have a postID and post date that is created
+ * when the Post objects is initialized. The description, 
+ * image, and imageURL are initialized by the user. If the user 
+ * does not provide an image, the imageURL will be an empty 
+ * string. The ratings is initialized as an empty map but can be 
+ * changed by the user as they upvote or downvote a comment.
+ * 
+ */
 
 class Post {
     readonly _postID: string;
     readonly _postDate: Date;
     private _description: string;
+    private _interest: string;
     private _imageURL: string;
     private _ratings: Map<string, string>;
 
@@ -11,12 +22,14 @@ class Post {
         postID: string, 
         postDate: Date,
         description: string,
+        interest: string,
         imageURL: string = "",
         ratings: Map<string, string>,
     ) {
         this._postID = postID;
         this._postDate = postDate;
         this._description = description;
+        this._interest = interest;
         this._imageURL = imageURL;
         this._ratings = ratings;
     }
@@ -33,29 +46,39 @@ class Post {
         return this._description;
     }
 
-    public set description(value: string) {
-        this._description = value;
+    public set description(newDescription: string) {
+        this._description = newDescription;
+    }
+
+    public get interest(): string {
+        return this._interest;
+    }
+
+    public set interest(newInterest: string) {
+        this._interest = newInterest;
     }
 
     public get imageURL(): string {
         return this._imageURL;
     }
 
-    public set imageURL(value: string) {
-        this._imageURL = value;
+    public set imageURL(newURL: string) {
+        this._imageURL = newURL;
     }
 
-    public set ratings(value: Map<string, string>) {
-        this._ratings = value;
+    public set ratings(ratings: Map<string, string>) {
+        this._ratings = ratings;
     }
 
     public get ratings(): Map<string, string> {
         return this._ratings;
     }
 
-    // In the params, 
-    // string1 is the userID,
-    // string2 is either 'like'/'dislike'/null
+    /**
+     * In the params, string1 is the userID,
+     * string2 is either 'like'/'dislike'/null
+     * @param rating[string, string]
+     */
     public addRating(rating: [string, string]) {
         const userID = rating[0];
         const rate = rating[1];
@@ -74,6 +97,7 @@ let SAMPLE_POSTS: Post[] = [
         "0b0koxs", 
         new Date(2023, 2, 16, 10, 0), 
         "i heckin love this song!!!!!", 
+        "music",
         "img1.jpg", 
         new Map<string, string>([
             ["39kvfsb", "like"],
@@ -83,7 +107,8 @@ let SAMPLE_POSTS: Post[] = [
     new Post(
         "8fSD8930bFg", 
         new Date(2023, 2, 16, 10, 0), 
-        "check this song guys coolsong.mp3",
+        "can i get uhhhhhhhh 2 fries",
+        "food",
         "",
         new Map<string, string>([
             ["z0l2pvd", "dislike"],
@@ -92,7 +117,8 @@ let SAMPLE_POSTS: Post[] = [
     new Post(
         "8fSD8930bFg", 
         new Date(2023, 2, 16, 10, 0), 
-        "hypergrindcore death grunge ambient experimental prog art country", 
+        "hypergrindcore death grunge ambient experimental prog art country",
+        "music",
         "", 
         new Map<string, string>([
             ["39kvfsb", "like"],
