@@ -65,10 +65,10 @@ FireBase
 - Being Implemented by __
 
 Authentication
-- Being Implemented by __
+- Being Implemented by Octavio Galindo
 
 UserManger
-- Being Implemented by __
+- Being Implemented by Octavio Galindo, Damon Incorvaia
 
 Spotify Integration
 - Being implemented by Nicholas
