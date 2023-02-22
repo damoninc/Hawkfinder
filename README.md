@@ -71,10 +71,10 @@ UserManger
 - Being Implemented by Octavio Galindo, Damon Incorvaia
 
 Spotify Integration
-- Being implemented by Nicholas
+- Being implemented by Nicholas Brunsink
 
 Friend System
-- Being implemented by Nicholas
+- Being implemented by Nicholas Brunsink
 ---------------------------------------------------------------------------------------------------------------------------
 This is a react.js project bootstrapped with Vite
 
