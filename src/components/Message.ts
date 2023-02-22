@@ -1,6 +1,3 @@
-import { send } from "process";
-import { text } from "stream/consumers";
-
 /*
  * A class for the Message data structure
  * 
@@ -78,3 +75,5 @@ let SAMPLE_MESSAGES: Message[] = [
     new Message("0123456789", "njb4775", "afd3856", "How about a reply to the image but without an image.", new Date(2023, 2, 16, 5, 56)),
     new Message("1472580369", "abc1234", "def5678", "I just sent this image, so it is using the current time."),
 ];
+
+export default Message;
