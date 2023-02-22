@@ -1,4 +1,14 @@
-import Comment from "./Comment";
+/**
+ * The class for Posts
+ * 
+ * Each post will have a postID and post date that is created
+ * when the Post objects is initialized. The description, 
+ * image, and imageURL are initialized by the user. If the user 
+ * does not provide an image, the imageURL will be an empty 
+ * string. The ratings is initialized as an empty map but can be 
+ * changed by the user as they upvote or downvote a comment.
+ * 
+ */
 
 class Post {
     readonly _postID: string;
@@ -64,9 +74,11 @@ class Post {
         return this._ratings;
     }
 
-    // In the params, 
-    // string1 is the userID,
-    // string2 is either 'like'/'dislike'/null
+    /**
+     * In the params, string1 is the userID,
+     * string2 is either 'like'/'dislike'/null
+     * @param rating[string, string]
+     */
     public addRating(rating: [string, string]) {
         const userID = rating[0];
         const rate = rating[1];
