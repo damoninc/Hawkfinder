@@ -189,4 +189,4 @@ const sampleProfiles: Profile[] = [
     new Date(1999, 12, 20)
   ),
 ];
-export {};
+export default Profile;
