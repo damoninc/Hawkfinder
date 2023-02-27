@@ -7,7 +7,6 @@ function App() {
     <div className='app'>
       <h1>Hi :)</h1>
       <FriendPage />
-
     </div>
   )
 }
