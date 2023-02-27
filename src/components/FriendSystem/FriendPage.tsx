@@ -1,40 +1,84 @@
 import React from 'react';
-import { FriendBox } from './FriendBox';
 import User from '../User';
-import './FriendPage.css'
+import Profile from '../Profile';
+import './FriendPage.css';
+import FriendBox from './FriendBox';
+import { sampleProfiles } from '../Profile';
 
-const testUsers: Array<User> = [
-  new User("og2828@uncw.edu", "gamertime"),
-  new User("pio1681@uncw.edu", "siuuuuuuuu"),
-  new User("dwi2359@uncw.edu", "Grugley da master ;)"),
-  new User("rajebj@uncw.edu", "suppa hot FIYA"),
-  new User("njb4775@uncw,edu", "password"),
-  new User("jag1452@uncw.edu", "Abc123"),
-  new User("nam3261@uncw.edu", "heyHowsitgoing")
+const userProfiles: Array<Profile> = [
+  new Profile("Damon","Incorvaia","dwi2359",
+    "Hello, my name is Damon Incorvaia. I am currently a Senior studying Computer Science! Other things about me: I am a musician of 12 years, I am a car enthusiast and I thorughly enjoy videogames and technology",
+    [
+      "Music",
+      "Videogames",
+      "Cars",
+      "Computers",
+      "Technology",
+      "Drums",
+      "Bass",
+      "Guitar",
+    ],
+    "profileimg.jpg",
+    "coverphoto.jpg",
+    new Date(2000, 6, 17)
+  ),
+  new Profile("Octavio","Galindo","og2828",
+    "My name is Octavio Galindo and I am a man of culture.",
+    ["Predatory Mobile Gaming", "Stale Bread", "Paint Chips", "Esoteric Art"],
+    "profileimg.jpg",
+    "coverphoto2.jpg",
+    new Date(1999, 12, 20)
+  ),
+  new Profile("Octavio","Galindo","og2828",
+  "My name is Octavio Galindo and I am a man of culture.",
+  ["Stale Bread", "Paint Chips", "Esoteric Art"],
+  "profileimg.jpg",
+  "coverphoto2.jpg",
+  new Date(1999, 12, 20)
+  ),
+  new Profile("Octavio","Galindo","og2828",
+  "My name is Octavio Galindo and I am a man of culture.",
+  ["Paint Chips", "Esoteric Art"],
+  "profileimg.jpg",
+  "coverphoto2.jpg",
+  new Date(1999, 12, 20)
+  ),
+  new Profile("Octavio","Galindo","og2828",
+  "My name is Octavio Galindo and I am a man of culture.",
+  ["Esoteric Art"],
+  "profileimg.jpg",
+  "coverphoto2.jpg",
+  new Date(1999, 12, 20)
+  ),
 ];
 
 function FriendPage() {
-  if (testUsers.length == 0) {
+  const dbCall : Array<Profile> = sampleProfiles // grab user friend's profiles using database call
+  return (
+    <div className='friendPage'>
+        <h1>Friends List</h1>
+        {checkNullList(dbCall)}
+    </div>
+    )
+}
+
+function checkNullList(friends : Profile[]) {
+  if (friends.length == 0) {
     return (
-      <div className='friendPage'>
-          <h1>Friends List</h1>
           <div>
-              <h3>No Friends Found :(</h3>
+              <h2>No Friends Found :(</h2>
           </div>
-      </div>
     )
   } else {
     return (
-      <div className='friendPage'>
-          <h1>Friends List</h1>
           <div className='friendBlock'>
-              {testUsers.map((friend) => 
-                <div className='friends'>{<FriendBox friend={friend}/>}</div>
+              {friends.map((friend) => 
+                <div className='friends'>{FriendBox(friend)}</div>
               )}
           </div>
-      </div>
     )
   }
 }
+
 
 export default FriendPage
