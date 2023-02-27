@@ -12,17 +12,14 @@ const testUsers: Array<User> = [
 function FriendPage() {
   return (
     <div className='friendPage'>
+        <h1>Friends List</h1>
         <div>
             {testUsers.map((friend) => 
-                <div>{<FriendBox friend={friend}/>}</div>
+              <div>{<FriendBox friend={friend}/>}</div>
             )}
         </div>
     </div>
   )
-}
-
-function FriendList(friends : User[]) {
-    friends.map((friend) => <li>{<FriendBox friend={friend}/>}</li>)
 }
 
 export default FriendPage

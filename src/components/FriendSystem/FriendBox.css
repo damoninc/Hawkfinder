@@ -1,0 +1,31 @@
+.container {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    width: 50%;
+    margin: 10px;
+    border: 1px solid black;
+    padding-left: 10px;
+  }
+.content {
+    font-size: 15px;
+    text-align: left;
+  }
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding-right: 10px
+}
+
+.button {
+  border: 1px solid black;
+  color: black;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
