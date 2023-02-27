@@ -2,14 +2,16 @@
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;
-    width: 50%;
-    margin: 10px;
+    width: 300px;
+    margin: auto;
+
     border: 1px solid black;
     padding-left: 10px;
   }
 .content {
     font-size: 15px;
     text-align: left;
+    padding-right: 5%;
   }
 
 .buttons {
