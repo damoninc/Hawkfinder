@@ -1,8 +1,11 @@
+import Profile from "./Profile";
+
 class User {
   private _username: string;
   private _password: string;
   private _email: string;
   private _accountSettings: Map<string, string>;
+  private _profile: Profile;
 
   /**
    * A User object which contains the user's information related to many core features.
@@ -14,11 +17,12 @@ class User {
    * @param daEmail User's email
    * @param daPassword User's password
    */
-  constructor(daEmail: string, daPassword: string) {
+  constructor(daEmail: string, daPassword: string, daFirst: string, daLast: string) {
     this._email = daEmail;
     this._password = daPassword;
     this._username = this.createUsername();
     this._accountSettings = new Map<string, string>();
+    this._profile = new Profile(daFirst, daLast, this._username)
   }
 
   /**
@@ -134,12 +138,12 @@ class User {
 
 // Sample code for initializing and printing array of User objects
 
-const testUsers: Array<User> = [
-  new User("og2828@uncw.edu", "gamertime"),
-  new User("pio1681@uncw.edu", "siuuuuuuuu"),
-  new User("dwi2359@uncw.edu", "Grugley da master ;)"),
-  new User("rajebj@uncw.edu", "suppa hot FIYA")
-];
+export const testUsers: User[] = [
+  new User("og2828@uncw.edu", "gamertime", "Octavio", "Galindo"),
+  new User("pio1681@uncw.edu", "siuuuuuuuu", "Patricio", "Orces"), ,
+  new User("dwi2359@uncw.edu", "Grugley da master ;)", "Damon", "Incorvaia"),
+  new User("rajebj@uncw.edu", "suppa hot FIYA", "John", "Bejar")
+] as User[]
 
 // These statements show off how you can add alt emails to Users.
 

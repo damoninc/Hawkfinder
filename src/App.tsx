@@ -1,10 +1,11 @@
 import "./App.css"
+import LoginScreen from "./components/authentification_system/LoginScreen"
 
 function App() {
 
   return (
     <div className='app'>
-      <h1>Hi :)</h1>
+      <LoginScreen />
     </div>
   )
 }
