@@ -157,7 +157,7 @@ class Profile {
     }
   }
   
-  const sampleProfiles: Profile[] = [
+  export const sampleProfiles: Profile[] = [
     new Profile(
       "Damon",
       "Incorvaia",
