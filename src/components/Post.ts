@@ -17,6 +17,7 @@ class Post {
     private _interest: string;
     private _imageURL: string;
     private _ratings: Map<string, string>;
+    // public _rating: number;
 
     constructor(
         postID: string, 
@@ -25,6 +26,7 @@ class Post {
         interest: string,
         imageURL: string = "",
         ratings: Map<string, string>,
+        // rating: number = 0
     ) {
         this._postID = postID;
         this._postDate = postDate;
@@ -32,6 +34,7 @@ class Post {
         this._interest = interest;
         this._imageURL = imageURL;
         this._ratings = ratings;
+        // this._rating = rating;
     }
 
     public get postID(): string {
@@ -76,7 +79,7 @@ class Post {
 
     /**
      * In the params, string1 is the userID,
-     * string2 is either 'like'/'dislike'/null
+     * string2 is either 'upvote'/'downvote'/null
      * @param rating[string, string]
      */
     public addRating(rating: [string, string]) {
@@ -90,6 +93,24 @@ class Post {
 
         this._ratings.set(userID, rate);
     }
+
+    /**
+     * This function is not a setter as it does not
+     * require a parameter, but will still set the rating
+     */
+    public calculateRating() {
+        let rating = 0
+
+        this._ratings.forEach((value:string, key:string) => {
+            if (value==='upvote') {
+                rating += 1
+            } else if (value==='downvote') {
+                rating -= 1
+            }
+        })
+
+        return rating;
+    }
 }
 
 let SAMPLE_POSTS: Post[] = [
@@ -100,8 +121,8 @@ let SAMPLE_POSTS: Post[] = [
         "music",
         "img1.jpg", 
         new Map<string, string>([
-            ["39kvfsb", "like"],
-            ["b929kcs", "dislike"]
+            ["39kvfsb", "upvote"],
+            ["b929kcs", "downvote"]
         ])
     ),
     new Post(
@@ -111,7 +132,7 @@ let SAMPLE_POSTS: Post[] = [
         "food",
         "",
         new Map<string, string>([
-            ["z0l2pvd", "dislike"],
+            ["z0l2pvd", "downvote"],
         ])
     ),
     new Post(
@@ -121,15 +142,15 @@ let SAMPLE_POSTS: Post[] = [
         "music",
         "", 
         new Map<string, string>([
-            ["39kvfsb", "like"],
-            ["b929kcs", "like"],
-            ["z0l2pvd", "like"],
+            ["39kvfsb", "upvote"],
+            ["b929kcs", "upvote"],
+            ["z0l2pvd", "upvote"],
         ])
     ),
 ];
 
 SAMPLE_POSTS.forEach((post: Post) => {
-    console.log(post);
+    // console.log(post);
 });
 
 export default Post;

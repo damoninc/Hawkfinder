@@ -1,54 +1,68 @@
-import Post from '../Post';
-import Posts from '../Post/Post'
+import { useState } from 'react';
+import '../../styles/Forum.css';
 
-let SAMPLE_POSTS: Post[] = [
-    new Post(
-        "0b0koxs", 
-        new Date(2023, 2, 16, 10, 0), 
-        "i heckin love this song!!!!!", 
-        "music",
-        "img1.jpg", 
-        new Map<string, string>([
-            ["39kvfsb", "like"],
-            ["b929kcs", "dislike"]
-        ])
-    ),
-    new Post(
-        "8fSD8930bFg", 
-        new Date(2023, 2, 16, 10, 0), 
-        "can i get uhhhhhhhh 2 fries",
-        "food",
-        "",
-        new Map<string, string>([
-            ["z0l2pvd", "dislike"],
-        ])
-    ),
-    new Post(
-        "8fSD8930bFg", 
-        new Date(2023, 2, 16, 10, 0), 
-        "hypergrindcore death grunge ambient experimental prog art country",
-        "music",
-        "", 
-        new Map<string, string>([
-            ["39kvfsb", "like"],
-            ["b929kcs", "like"],
-            ["z0l2pvd", "like"],
-        ])
-    ),
-];
+function Forum(props: any) {
+    const [ratings, setRatings] = useState(props.rating)
+    const [upvoted, setUpvoted] = useState(false)
+    const [downvoted, setDownvoted] = useState(false)
 
-function Forum() {
-    // Will change 'any' to its appropriate type later
-    // npm install --save @types/react-helmet
-    const posts: any = SAMPLE_POSTS.map((post) => {
-        <Posts 
-            {...post}
-        />
-    })
+    const upvote = () => {
+        if (!upvoted) {
+            setRatings(ratings + 1)
+            setUpvoted(true)
+        } else {
+            setRatings(ratings-1)
+            setUpvoted(false)
+        }
+    }
+
+    const downvote = () => {
+        if (!downvoted) {
+            setRatings(ratings - 1)
+            setDownvoted(true)
+        } else {
+            setRatings(ratings + 1)
+            setDownvoted(false)
+        }
+    }
+
+    let postImgPath =  `/src/assets/images/${props.imageURL}`
+
+    // let rating = upvotes - downvotes
 
     return (
-        <div className='main-forum'>
-            {posts}
+        // Data passed in from props
+        /* {props._postID}
+        {props._postDate.toString}
+        {props._description}
+        {props._interest}
+        {props._imageURL}
+        {props._ratings} */
+        <div className="post-container">
+            <div className="pic-crop">
+                <img className="profile-pic" src="\src\assets\images\profileimg.jpg" />
+            </div>
+            <div className="post-img-container">
+                <img className="post-img" src={postImgPath} />
+            </div>
+            <p className="post-description">
+                {props.description}
+            </p>
+            <h4>
+            {props.ratings.length}
+            </h4>
+            <div className="ratings">
+                <button onClick={upvote}>
+                    Upvote
+                </button>
+                <span>{ratings}</span>
+                <button onClick={downvote}>
+                    Downvote
+                </button>
+            </div>
+            <span className='post-interest'>
+                {props.interest}
+            </span>
         </div>
     )
 }
