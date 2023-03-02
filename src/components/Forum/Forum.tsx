@@ -62,11 +62,11 @@ function Forum(props: any) {
             {props.ratings.length}
             </h4>
             <div className="ratings">
-                <button onClick={upvote}>
+                <button className={upvoted ? "rating-button-selected" : "rating-button"} onClick={upvote}>
                     Upvote
                 </button>
                 <span>{ratings}</span>
-                <button onClick={downvote}>
+                <button className={downvoted ? "rating-button-selected" : "rating-button"} onClick={downvote}>
                     Downvote
                 </button>
             </div>

@@ -34,7 +34,6 @@
 .post-img {
     height: 140px;
     border-radius: 5px;
-    /* width: 100%; */
 }
 
 .post-description {
@@ -46,10 +45,31 @@
     flex-direction: column;
     align-items: center;
     width: 80px;
+    margin-left: auto;
+}
+
+.ratings > button {
+    padding: .5em 0;
+    width: 110%;
+    font-weight: bold;
 }
 
 .post-interest {
     position: absolute;
     top: 2%;
     right: 1%;
+}
+
+.rating-button {
+    background-color: white;
+}
+
+.rating-button-selected {
+    background-color: black;
+    color: white;
+}
+
+.rating-button:hover, .rating-button-selected:hover {
+    background-color: gray;
+    transition: 200ms;
 }
