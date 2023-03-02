@@ -7,20 +7,30 @@ function Forum(props: any) {
     const [downvoted, setDownvoted] = useState(false)
 
     const upvote = () => {
-        if (!upvoted) {
+        if (!upvoted && !downvoted) {
             setRatings(ratings + 1)
             setUpvoted(true)
-        } else {
+        } else if (!upvoted && downvoted) {
+            setRatings(ratings + 2)
+            setDownvoted(false)
+            setUpvoted(true)
+        }  
+        else {
             setRatings(ratings-1)
             setUpvoted(false)
         }
     }
 
     const downvote = () => {
-        if (!downvoted) {
+        if (!downvoted && !upvoted) {
             setRatings(ratings - 1)
             setDownvoted(true)
-        } else {
+        } else if (!downvoted && upvoted) {
+            setRatings(ratings - 2)
+            setUpvoted(false)
+            setDownvoted(true)
+        } 
+        else {
             setRatings(ratings + 1)
             setDownvoted(false)
         }
