@@ -5,9 +5,15 @@ import { sampleProfiles } from '../Profile';
 
 function FriendPage() {
   const dbCall : Array<Profile> = sampleProfiles // grab user friend's profiles using database call
+  const BarStyle = {width:"20rem",background:"#F0F0F0", border:"none", padding:"0.5rem"};
+
   return (
     <div className='friendPage'>
         <h1>Friends List</h1>
+        <div>
+          <input type="text" placeholder="Username" />
+          <button>Add Friend</button>
+        </div>
         {checkNullList(dbCall)}
     </div>
     )
@@ -31,5 +37,8 @@ function checkNullList(friends : Profile[]) {
   }
 }
 
+function addFriend(friendUser : string) {
+  alert('Adding Friend ' + friendUser)
+}
 
 export default FriendPage

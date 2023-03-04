@@ -28,9 +28,14 @@ function FriendBox(friend : Profile) {
                 <form action="/Profile">
                     <button className="button">Profile</button>
                 </form>                  
-                <button className='button' type="button">Remove</button>
+                <button className='button' type="button" onClick={removeFriend}>Remove</button>
             </div>                                    
         </div>
     )
 }
+
+function removeFriend() {
+    alert('Friend Removed')
+}
+
 export default FriendBox;
