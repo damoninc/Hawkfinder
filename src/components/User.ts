@@ -57,6 +57,10 @@ class User {
     return this._email;
   }
 
+  public get profile() : Profile {
+    return this._profile
+  }
+
   /**
    * Setter accountSettings
    * @param {Map<string, string>} value
@@ -88,6 +92,7 @@ class User {
   public set email(value: string) {
     this._email = value;
   }
+  
 
   /**
    *
@@ -145,15 +150,17 @@ export const testUsers: User[] = [
   new User("rajebj@uncw.edu", "suppa hot FIYA", "John", "Bejar")
 ] as User[]
 
+// For some reason, alt emails were giving me browser rendering problems
+
 // These statements show off how you can add alt emails to Users.
 
-testUsers[0].addAltEmail("tabiogaming@gmail.com");
-testUsers[1].addAltEmail("elpatoorces@hotmail.com");
-testUsers[2].addAltEmail("gruggers@yahoo.com");
+// testUsers[0].addAltEmail("tabiogaming@gmail.com");
+// testUsers[1].addAltEmail("elpatoorces@hotmail.com");
+// testUsers[2].addAltEmail("gruggers@yahoo.com");
 
-console.log("Display Sample Users\n");
-for (let i = 0; i < testUsers.length; i++) {
-  console.log("User " + (i + 1) + "\n" + testUsers[i].toString() + "\n");
-}
+// console.log("Display Sample Users\n");
+// for (let i = 0; i < testUsers.length; i++) {
+//   console.log("User " + (i + 1) + "\n" + testUsers[i].toString() + "\n");
+// }
 
 export default User;

@@ -1,21 +1,58 @@
-import User from "../User";
 import "./LoginScreen.css";
-import { testUsers } from "../User";
-import { TextField } from "@mui/material";
+import { parseUsers } from "./CheckUser";
+import { useState } from "react";
 
 function LoginScreen() {
+  const [usernameInput, setUsernameInput] = useState("");
+  const [passwordInput, setPasswordInput] = useState("");
+
+  function checkExist() {
+    if (usernameInput == "" || passwordInput == "") {
+      alert("Must fill out username or password.")
+      return false
+    }
+
+    let [found , theUser] = parseUsers(usernameInput, passwordInput);
+    if (found) {
+      alert("Logged in as " + theUser.profile.firstName + " " + theUser.profile.lastName + ".");
+    } else {
+      alert("User not found. Incorrect username or password.");
+    }
+  }
+
   return (
     <div className="backboard">
       <fieldset className="loginSquare">
         <h1>Login</h1>
-        <h2>
-          Username{" "}
-          <input id="name" type="text" placeholder="Write your name" required />
-        </h2>
-        <h2>
-          Password{" "}
-          <input id="name" type="text" placeholder="Write your name" required />
-        </h2>
+        <h1>
+          <label>
+            Username
+            <input
+              name="nameTyped"
+              id="name"
+              type="text"
+              placeholder="Write your name"
+              required
+              onChange={(namewrote) => setUsernameInput(namewrote.target.value)}
+            />
+          </label>
+        </h1>
+        <h1>
+          <label>
+            Password{" "}
+            <input
+              name="passTyped"
+              id="password"
+              type="text"
+              placeholder="Write your password"
+              required
+              onChange={(passwrote) => setPasswordInput(passwrote.target.value)}
+            />
+          </label>
+        </h1>
+        <button type="submit" onClick={checkExist}>
+          Login
+        </button>
       </fieldset>
     </div>
   );

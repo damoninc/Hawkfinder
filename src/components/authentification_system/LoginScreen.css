@@ -1,11 +1,10 @@
 .loginSquare{
-    color: white;
+    display: block;
     text-align: center;
+    color: white;
     background-color: grey;
-    
-}
-
-.backboard{
-    background-color: black;
-    padding-bottom: 15%;
+    padding: 20px;
+    margin: 20px 0;
+    justify-content: center;
+    border: 50px solid rgb(139, 144, 150);
 }
