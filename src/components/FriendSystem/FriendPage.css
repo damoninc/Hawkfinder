@@ -1,3 +1,4 @@
+/* Main container for all friends */
 .friendPage {
     width: 100%;
     border: 3px dashed teal;
@@ -6,6 +7,7 @@
     text-align: center;
 }
 
+/* Holds all FriendBox components */
 .friendBlock {
     display: flex;
     flex-wrap: wrap;
@@ -13,7 +15,8 @@
     justify-content: center;
 }
 
-.friends {
+/* Holds each individual FriendBox */
+.friend {
     justify-content: space-evenly;
     padding: 10px;
 }

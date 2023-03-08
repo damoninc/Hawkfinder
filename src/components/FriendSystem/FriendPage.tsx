@@ -2,6 +2,8 @@ import Profile from '../Profile';
 import './FriendPage.css';
 import FriendBox from './FriendBox';
 import { sampleProfiles } from '../Profile';
+import { testUsers } from '../User';
+import SearchForm from './SearchForm';
 
 /**
  * Generates a HTML block that displays a user's friend list by creating
@@ -11,20 +13,12 @@ import { sampleProfiles } from '../Profile';
  * @return {*} - FriendPage HTML
  */
 function FriendPage() {
-  // FriendPage component which displays a friends list based on the currently active user
-  //
-  // returns: HTML for displaying the users insides of the current user's friend's list.
-  //          If the user does not have any friends, it returns an empty list.
-
   const dbCall : Array<Profile> = sampleProfiles // grab user friend's profiles using database call
 
   return (
     <div className='friendPage'>
         <h1>Friends List</h1> 
-        <div>
-          <input type="text" placeholder="Username" />
-          <button type="button" onClick={addFriend}>Remove</button>
-        </div>
+        <SearchForm outsideSubmit={addFriend} title={"Username: "}/>
         {checkNullList(dbCall)}
     </div>
     )
@@ -42,16 +36,16 @@ function checkNullList(friends : Profile[]) {
     return (
           <div className='friendBlock'>
               {friends.map((friend) => 
-                <div className='friends'>{FriendBox(friend)}</div>
+                <div className='friend'>{FriendBox(friend)}</div>
               )}
           </div>
     )
   }
 }
 
-function addFriend() {
+function addFriend(friend: string) {
   // dummy function for adding a friend, no friend information is transfered
-  alert('Adding Friend')
+  alert('Adding Friend: ' + friend)
 }
 
 export default FriendPage
