@@ -3,12 +3,20 @@ import './LoginScreen.css'
 import LoginScreen from "./LoginScreen";
 import User, { testUsers } from "../User";
 
+/**
+ * Sign up has 4 fields which are used to create a User object
+ * @returns The sign up screen component
+ */
 function SignUpScreen() {
     const [emailInput, setEmail] = useState("");
     const [passwordInput, setPasswordInput] = useState("");
     const [firstnameInput, setFirstName] = useState("");
     const [lastnameInput, setLastName] = useState("");
 
+    /**
+     * Creates a new User in the User array in User.ts. Doesn't permanently save the User.
+     * @returns false is a placeholder, it doesn't do anything
+     */
     function createUser(){
         if (emailInput == "" || passwordInput == "" || firstnameInput == "" || lastnameInput == "") {
             alert("Fields cannot be blank")

@@ -2,10 +2,19 @@ import "./LoginScreen.css";
 import { parseUsers } from "./CheckUser";
 import { useState } from "react";
 
+/**
+ * Login screen contains two use states which are used for the input fields
+ * TODO: Add firebase implementation
+ * @returns The login screen component
+ */
 function LoginScreen() {
   const [usernameInput, setUsernameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
 
+  /**
+   * checks if User is within the User array in the User.ts
+   * @returns false is used as a placeholder, it isn't actually used
+   */
   function checkExist() {
     if (usernameInput == "" || passwordInput == "") {
       alert("Must fill out username or password.")

@@ -57,6 +57,10 @@ class User {
     return this._email;
   }
 
+  /**
+   * Getter profile
+   * @return {Profile}
+   */
   public get profile() : Profile {
     return this._profile
   }
@@ -150,7 +154,7 @@ export const testUsers: User[] = [
   new User("rajebj@uncw.edu", "suppa hot FIYA", "John", "Bejar")
 ] as User[]
 
-// For some reason, alt emails were giving me browser rendering problems
+// For some reason, alt emails were giving me browser rendering problems, so I commented them out for now
 
 // These statements show off how you can add alt emails to Users.
 
