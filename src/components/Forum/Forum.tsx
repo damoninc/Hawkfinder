@@ -36,7 +36,7 @@ function Forum(props: any) {
         }
     }
 
-    let postImgPath =  `../../src/assets/images/${props.imageURL}`
+    let postImgPath =  `/src/assets/images/${props.imageURL}`
 
     return (
         // Data passed in from props
