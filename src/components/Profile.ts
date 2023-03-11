@@ -143,7 +143,7 @@ class Profile {
   }
 }
 
-const sampleProfiles: Profile[] = [
+export const sampleProfiles: Profile[] = [
   new Profile(
     "Damon",
     "Incorvaia",
@@ -175,7 +175,7 @@ sampleProfiles[0].birthDate = new Date(2000, 6, 17)
 
 sampleProfiles[1].bio = "My name is Octavio Galindo and I am a man of culture."
 sampleProfiles[1].interests = ["Predatory Mobile Gaming", "Stale Bread", "Paint Chips", "Esoteric Art"]
-sampleProfiles[1].profilePicture = "profileimg.jpg"
+sampleProfiles[1].profilePicture = "profileimg2.jpg"
 sampleProfiles[1].coverPhoto = "coverphoto.jpg"
 sampleProfiles[1].birthDate = new Date(1999, 12, 20)
 
