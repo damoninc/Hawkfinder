@@ -1,6 +1,7 @@
 import "./LoginScreen.css";
 import { parseUsers } from "./CheckUser";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 /**
  * Login screen contains two use states which are used for the input fields
@@ -10,6 +11,7 @@ import { useState } from "react";
 function LoginScreen() {
   const [usernameInput, setUsernameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
+  let navigate = useNavigate();
 
   /**
    * checks if User is within the User array in the User.ts
@@ -23,6 +25,7 @@ function LoginScreen() {
 
     let [found , theUser] = parseUsers(usernameInput, passwordInput);
     if (found) {
+      navigate("/friendpage");
       alert("Logged in as " + theUser.profile.firstName + " " + theUser.profile.lastName + ".");
     } else {
       alert("User not found. Incorrect username or password.");
