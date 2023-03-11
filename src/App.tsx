@@ -1,6 +1,7 @@
 import "./App.css"
 import FriendPage from "./components/FriendSystem/FriendPage" // import friends page for testing
 
+
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
