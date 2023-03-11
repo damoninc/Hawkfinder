@@ -7,43 +7,7 @@ import {
   Link
 } from 'react-router-dom';
 import "./App.css"
-import Post from "./components/Post";
-
-let SAMPLE_POSTS: Post[] = [
-  new Post(
-      "0b0koxs", 
-      new Date(2023, 0, 16, 10, 0), 
-      "i heckin love this song!!!!!", 
-      "music",
-      "dog.jpg", 
-      new Map<string, string>([
-          ["39kvfsb", "upvote"],
-          ["b929kcs", "downvote"]
-      ])
-  ),
-  new Post(
-      "8fSD8930bFg", 
-      new Date(2023, 1, 15, 10, 0), 
-      "can i get uhhhhhhhh 2 fries",
-      "food",
-      "profileimg.jpg",
-      new Map<string, string>([
-          ["z0l2pvd", "downvote"],
-      ])
-  ),
-  new Post(
-      "8fSD8930bFg", 
-      new Date(2023, 1, 27, 10, 0), 
-      "hypergrindcore death grunge ambient experimental prog art country",
-      "music",
-      "coverphoto.jpg", 
-      new Map<string, string>([
-          ["39kvfsb", "upvote"],
-          ["b929kcs", "upvote"],
-          ["z0l2pvd", "upvote"],
-      ])
-  ),
-];
+import { SAMPLE_POSTS } from "./components/Post";
 
 const posts = SAMPLE_POSTS.map((post) => {
   let json: string = JSON.stringify(post)

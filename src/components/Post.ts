@@ -113,13 +113,13 @@ class Post {
     }
 }
 
-let SAMPLE_POSTS: Post[] = [
+export const SAMPLE_POSTS: Post[] = [
     new Post(
         "0b0koxs", 
         new Date(2023, 2, 16, 10, 0), 
         "i heckin love this song!!!!!", 
         "music",
-        "img1.jpg", 
+        "coverphoto.jpg", 
         new Map<string, string>([
             ["39kvfsb", "upvote"],
             ["b929kcs", "downvote"]
@@ -130,7 +130,7 @@ let SAMPLE_POSTS: Post[] = [
         new Date(2023, 2, 16, 10, 0), 
         "can i get uhhhhhhhh 2 fries",
         "food",
-        "",
+        "dog.jpg",
         new Map<string, string>([
             ["z0l2pvd", "downvote"],
         ])
@@ -140,7 +140,7 @@ let SAMPLE_POSTS: Post[] = [
         new Date(2023, 2, 16, 10, 0), 
         "hypergrindcore death grunge ambient experimental prog art country",
         "music",
-        "", 
+        "profileimg.jpg", 
         new Map<string, string>([
             ["39kvfsb", "upvote"],
             ["b929kcs", "upvote"],
@@ -148,9 +148,5 @@ let SAMPLE_POSTS: Post[] = [
         ])
     ),
 ];
-
-SAMPLE_POSTS.forEach((post: Post) => {
-    // console.log(post);
-});
 
 export default Post;

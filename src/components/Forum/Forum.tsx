@@ -22,23 +22,21 @@ function Forum(props: any) {
     }
 
     const downvote = () => {
-        if (!downvoted && !upvoted) {
+        if (!downvoted && !upvoted) { // Case where downvote and upvote are not set
             setRatings(ratings - 1)
             setDownvoted(true)
-        } else if (!downvoted && upvoted) {
+        } else if (!downvoted && upvoted) { // Case where post is upvoted
             setRatings(ratings - 2)
             setUpvoted(false)
             setDownvoted(true)
         } 
-        else {
+        else { // Case where post is downvoted
             setRatings(ratings + 1)
             setDownvoted(false)
         }
     }
 
-    let postImgPath =  `/src/assets/images/${props.imageURL}`
-
-    // let rating = upvotes - downvotes
+    let postImgPath =  `../../src/assets/images/${props.imageURL}`
 
     return (
         // Data passed in from props
