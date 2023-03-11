@@ -5,3 +5,7 @@
 body {
   font-family: Arial, 'sans-serif';
 }
+
+.navbar {
+  display: flex;
+}

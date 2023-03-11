@@ -7,7 +7,7 @@ import {
   Link
 } from 'react-router-dom';
 import "./App.css"
-import { SAMPLE_POSTS } from "./components/Post";
+import { SAMPLE_POSTS } from "./data/Post";
 
 const posts = SAMPLE_POSTS.map((post) => {
   let json: string = JSON.stringify(post)
@@ -31,19 +31,36 @@ function App() {
   return (
     <div className='app'>
       <h3>All the pages we are working on</h3>
-      <h3>John</h3>
+      {/* <h3>John</h3> */}
       <Router>
-        <ul>
-          <li>
-            <Link to="/components/Forum">Forum</Link>
-          </li>
-          <li>
-            <Link to="/components/Post">Post</Link>
-          </li>
-        </ul>
+        <nav className="navbar">
+          <ul>
+            John
+            <li>
+              <Link to="/components/Forum">Forum</Link>
+            </li>
+            <li>
+              <Link to="/components/Post">Post</Link>
+            </li>
+          </ul>
+          <ul>
+            Octavio
+            <li>
+              <Link to="/components/FriendsList">Friends List</Link>
+            </li>
+          </ul>
+          <ul>
+            Nicholaus
+            <li>
+            <Link to="/components/Login">Login</Link>
+            </li>
+          </ul>
+        </nav>
         <Routes>
           <Route path="/components/Forum" element={posts} />
           <Route path="/components/Post" element={<PostView />} />
+          <Route path="/components/Forum" element={posts} />
+          <Route path="/components/Forum" element={posts} />
         </Routes>
       </Router>
     </div>
