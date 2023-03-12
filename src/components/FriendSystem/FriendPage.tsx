@@ -1,8 +1,7 @@
-import Profile from '../Profile';
-import './FriendPage.css';
+import Profile, { sampleProfiles } from '../../data/Profile';
+import '../../styles/friendbox.css';
 import FriendBox from './FriendBox';
-import { sampleProfiles } from '../Profile';
-import { testUsers } from '../User';
+import { testUsers } from '../../data/User';
 import SearchForm from './SearchForm';
 
 /**

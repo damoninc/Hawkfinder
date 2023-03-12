@@ -1,5 +1,5 @@
-import "./FriendBox.css"
-import Profile from '../Profile';
+import "../../styles/friendbox.css"
+import Profile from '../../data/Profile';
 
 /**
  * Generates a HTML block that displays a user based on their Profile information
@@ -9,7 +9,7 @@ import Profile from '../Profile';
  * @return {*} - FriendBox HTML
  */
 function FriendBox(friend : Profile) { 
-    let imgPath : string = "src/assets/images/" + friend.profilePicture;    // database call to grab image
+    let imgPath : string = "/src/assets/images/" + friend.profilePicture;    // database call to grab image
 
     // Generating string of interests, cutting off after ~25 characters 
     let interests : string = friend.interests[0];

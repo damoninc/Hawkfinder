@@ -1,9 +1,12 @@
+import Profile from "./Profile";
+
 class User {
   private _username: string;
   private _password: string;
   private _email: string;
   private _accountSettings: Map<string, string>;
   private _friendsList: Array<User>
+  private _profile: Profile;
 
   /**
    * A User object which contains the user's information related to many core features.
@@ -15,12 +18,13 @@ class User {
    * @param daEmail User's email
    * @param daPassword User's password
    */
-  constructor(daEmail: string, daPassword: string) {
+  constructor(daEmail: string, daPassword: string, daFirst: string, daLast: string) {
     this._email = daEmail;
     this._password = daPassword;
     this._username = this.createUsername();
     this._accountSettings = new Map<string, string>();
     this._friendsList = new Array<User>();
+    this._profile = new Profile(daFirst, daLast, this._username)
   }
 
   /**
@@ -56,6 +60,14 @@ class User {
   }
 
   /**
+   * Getter profile
+   * @return {Profile}
+   */
+  public get profile() : Profile {
+    return this._profile
+  }
+
+  /**
    * Setter accountSettings
    * @param {Map<string, string>} value
    */
@@ -86,6 +98,7 @@ class User {
   public set email(value: string) {
     this._email = value;
   }
+  
 
   /**
    *
@@ -152,23 +165,25 @@ class User {
 
 // Sample code for initializing and printing array of User objects
 
-export const testUsers: Array<User> = [
-  new User("og2828@uncw.edu", "gamertime"),
-  new User("pio1681@uncw.edu", "siuuuuuuuu"),
-  new User("dwi2359@uncw.edu", "Grugley da master ;)"),
-  new User("rajebj@uncw.edu", "suppa hot FIYA")
-];
+export const testUsers: User[] = [
+  new User("og2828@uncw.edu", "gamertime", "Octavio", "Galindo"),
+  new User("pio1681@uncw.edu", "siuuuuuuuu", "Patricio", "Orces"), ,
+  new User("dwi2359@uncw.edu", "Grugley da master ;)", "Damon", "Incorvaia"),
+  new User("rajebj@uncw.edu", "suppa hot FIYA", "John", "Bejar")
+] as User[]
+
+// For some reason, alt emails were giving me browser rendering problems, so I commented them out for now
 
 // These statements show off how you can add alt emails to Users.
 
-testUsers[0].addAltEmail("tabiogaming@gmail.com");
-testUsers[1].addAltEmail("elpatoorces@hotmail.com");
-testUsers[2].addAltEmail("gruggers@yahoo.com");
+// testUsers[0].addAltEmail("tabiogaming@gmail.com");
+// testUsers[1].addAltEmail("elpatoorces@hotmail.com");
+// testUsers[2].addAltEmail("gruggers@yahoo.com");
 
-console.log("Display Sample Users\n");
-for (let i = 0; i < testUsers.length; i++) {
-  console.log("User " + (i + 1) + "\n" + testUsers[i].toString() + "\n");
-}
+// console.log("Display Sample Users\n");
+// for (let i = 0; i < testUsers.length; i++) {
+//   console.log("User " + (i + 1) + "\n" + testUsers[i].toString() + "\n");
+// }
 
 testUsers[0].addFriend(testUsers[0])
 testUsers[0].addFriend(testUsers[1])

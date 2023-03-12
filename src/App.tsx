@@ -1,6 +1,32 @@
+import Forum from "./components/Forum/Forum"
+import PostView from "./components/Post/PostView";
+import LogAndSign from "./components/Authentication/LogAndSign";
+import FriendPage from "./components/FriendSystem/FriendPage";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link
+} from 'react-router-dom';
 import "./App.css"
-import FriendPage from "./components/FriendSystem/FriendPage" // import friends page for testing
+import { SAMPLE_POSTS } from "./data/Post";
 
+const posts = SAMPLE_POSTS.map((post) => {
+  let json: string = JSON.stringify(post)
+  let postJSON = JSON.parse(json)
+  console.log(postJSON)
+  return <Forum
+    // key={postJSON._postID}
+    // {...postJSON}
+    postID={post.postID}
+    postDate={post.postDate}
+    description={post.description}
+    interest={post.interest}
+    imageURL={post.imageURL}
+    ratings={post.ratings}
+    rating={post.calculateRating()}
+  />
+})
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
@@ -25,12 +51,41 @@ const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 
 function App() {
-
-  // added FriendPage for testing
   return (
     <div className='app'>
-      <h1>Hi :)</h1>
-      <FriendPage />
+      <h3>All the pages we are working on</h3>
+      {/* <h3>John</h3> */}
+      <Router>
+        <nav className="navbar">
+          <ul>
+            John
+            <li>
+              <Link to="/components/Forum">Forum</Link>
+            </li>
+            <li>
+              <Link to="/components/Post">Post</Link>
+            </li>
+          </ul>
+          <ul>
+            Nicholaus
+            <li>
+              <Link to="/components/Friends">Friends List</Link>
+            </li>
+          </ul>
+          <ul>
+            Octavio
+            <li>
+            <Link to="/components/Login">Login</Link>
+            </li>
+          </ul>
+        </nav>
+        <Routes>
+          <Route path="/components/Forum" element={posts} />
+          <Route path="/components/Post" element={<PostView />} />
+          <Route path="/components/Friends" element={<FriendPage />} />
+          <Route path="/components/Login" element={<LogAndSign />} />
+        </Routes>
+      </Router>
     </div>
   )
 }
