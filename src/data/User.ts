@@ -5,6 +5,7 @@ class User {
   private _password: string;
   private _email: string;
   private _accountSettings: Map<string, string>;
+  private _friendsList: Array<User>
   private _profile: Profile;
 
   /**
@@ -22,6 +23,7 @@ class User {
     this._password = daPassword;
     this._username = this.createUsername();
     this._accountSettings = new Map<string, string>();
+    this._friendsList = new Array<User>();
     this._profile = new Profile(daFirst, daLast, this._username)
   }
 
@@ -128,6 +130,22 @@ class User {
   }
 
   /**
+   * Getter for friendsList
+   * @return Array<User>
+   */
+  public get friendsList(): Array<User> {
+    return this._friendsList
+  }
+
+  /**
+   * Adds a friend to the users friend list
+   * @param friend 
+   */
+  public addFriend(friend : User) {
+    this._friendsList.push(friend)
+  }
+
+  /**
    *
    * @returns description of user, used for testing, should probably be depreciated afterwards
    */
@@ -166,5 +184,11 @@ export const testUsers: User[] = [
 // for (let i = 0; i < testUsers.length; i++) {
 //   console.log("User " + (i + 1) + "\n" + testUsers[i].toString() + "\n");
 // }
+
+testUsers[0].addFriend(testUsers[0])
+testUsers[0].addFriend(testUsers[1])
+testUsers[0].addFriend(testUsers[2])
+testUsers[0].addFriend(testUsers[3])
+
 
 export default User;

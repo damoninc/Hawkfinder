@@ -30,15 +30,27 @@ function FriendBox(friend : Profile) {
                 <p>{interests}</p>
             </div>   
             <div className="buttons">
-                <form action="/Messages">
-                    <button className="button">Messages</button>
-                </form>   
-                <form action="/Profile">
-                    <button className="button">Profile</button>
-                </form>                  
-                <button className='button' type="button">Remove</button>
+                <button className="button" onClick={goToMessages}>Messages</button>
+                <button className="button" onClick={goToProfile}>Profile</button>                
+                <button className='button' type="button" onClick={removeFriend}>Remove</button>
             </div>                                    
         </div>
     )
 }
+
+function removeFriend() {
+    // Dummy functionality for removing a friend. Currently only sends an alert
+    alert('Friend Removed')
+}
+
+function goToMessages() {
+    // Dummy function for navigating to messages
+    alert('Cannot go to Messages')
+}
+
+function goToProfile() {
+    // Dummy function for navigating to profile
+    alert('Cannot go to Profile')
+}
+
 export default FriendBox;
