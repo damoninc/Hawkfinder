@@ -1,5 +1,7 @@
 import Forum from "./components/Forum/Forum"
 import PostView from "./components/Post/PostView";
+import LogAndSign from "./components/Authentication/LogAndSign";
+import FriendPage from "./components/FriendSystem/FriendPage";
 import {
   BrowserRouter as Router,
   Routes,
@@ -44,13 +46,13 @@ function App() {
             </li>
           </ul>
           <ul>
-            Octavio
+            Nicholaus
             <li>
-              <Link to="/components/FriendsList">Friends List</Link>
+              <Link to="/components/Friends">Friends List</Link>
             </li>
           </ul>
           <ul>
-            Nicholaus
+            Octavio
             <li>
             <Link to="/components/Login">Login</Link>
             </li>
@@ -59,8 +61,8 @@ function App() {
         <Routes>
           <Route path="/components/Forum" element={posts} />
           <Route path="/components/Post" element={<PostView />} />
-          <Route path="/components/Forum" element={posts} />
-          <Route path="/components/Forum" element={posts} />
+          <Route path="/components/Friends" element={<FriendPage />} />
+          <Route path="/components/Login" element={<LogAndSign />} />
         </Routes>
       </Router>
     </div>

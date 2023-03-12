@@ -1,7 +1,7 @@
 .post-container {
     display: flex;
     position: relative;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     height: 150px;
     width: 80%;
     gap: 2%;
