@@ -29,7 +29,6 @@ const posts = SAMPLE_POSTS.map((post) => {
 })
 
 function App() {
-
   return (
     <div className='app'>
       <h3>All the pages we are working on</h3>

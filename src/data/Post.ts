@@ -130,7 +130,7 @@ export const SAMPLE_POSTS: Post[] = [
         new Date(2023, 2, 16, 10, 0), 
         "can i get uhhhhhhhh 2 fries",
         "food",
-        "dog.jpg",
+        "profileimg2.jpg",
         new Map<string, string>([
             ["z0l2pvd", "downvote"],
         ])

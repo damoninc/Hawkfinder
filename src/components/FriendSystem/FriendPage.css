@@ -1,0 +1,20 @@
+.friendPage {
+    width: 100%;
+    border: 3px dashed teal;
+    margin: auto;
+    justify-content: center;
+    text-align: center;
+}
+
+.friendBlock {
+    display: flex;
+    flex-wrap: wrap;
+    flex-grow: 2;
+    justify-content: center;
+}
+
+.friends {
+    justify-content: space-evenly;
+    padding: 10px;
+}
+
