@@ -30,12 +30,8 @@ function FriendBox(friend : Profile) {
                 <p>{interests}</p>
             </div>   
             <div className="buttons">
-                <form action="/Messages">
-                    <button className="button" onClick={goToMessages}>Messages</button>
-                </form>   
-                <form action="/Profile">
-                    <button className="button" onClick={goToProfile}>Profile</button>
-                </form>                  
+                <button className="button" onClick={goToMessages}>Messages</button>
+                <button className="button" onClick={goToProfile}>Profile</button>                
                 <button className='button' type="button" onClick={removeFriend}>Remove</button>
             </div>                                    
         </div>
