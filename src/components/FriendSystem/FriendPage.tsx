@@ -1,7 +1,8 @@
+import React from 'react';
 import Profile, { sampleProfiles } from '../../data/Profile';
 import '../../styles/friendbox.css';
 import FriendBox from './FriendBox';
-import { testUsers } from '../../data/User';
+//import { testUsers } from '../../data/User';
 import SearchForm from './SearchForm';
 
 /**
@@ -35,14 +36,14 @@ function checkNullList(friends : Profile[]) {
     return (
           <div className='friendBlock'>
               {friends.map((friend) => 
-                <div className='friend'>{FriendBox(friend)}</div>
+                <div className='friend' key={friend.userName}>{FriendBox(friend)}</div>
               )}
           </div>
     )
   }
 }
 
-function addFriend(friend: string) {
+function addFriend(friend?: string) {
   // dummy function for adding a friend, no friend information is transfered
   alert('Adding Friend: ' + friend)
 }

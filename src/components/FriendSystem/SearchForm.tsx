@@ -3,8 +3,8 @@ import React from "react";
 interface IProps {
   title? : string
   buttonName? : string
-  outsideSubmit? : Function
-  outsideChange? : Function
+  outsideSubmit? : (val?:string) => void
+  outsideChange? : (val?:string) => void
 }
 
 interface IState {
