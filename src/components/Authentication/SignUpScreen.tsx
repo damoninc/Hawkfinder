@@ -1,8 +1,8 @@
 import { useState } from "react";
 import "../../styles/loginscreen.css";
-import LoginScreen from "./LoginScreen";
 import User, { testUsers } from "../../data/User";
-
+import React
+ from "react";
 /**
  * Sign up has 4 fields which are used to create a User object
  * @returns The sign up screen component
@@ -34,7 +34,7 @@ function SignUpScreen() {
       return false;
     }
 
-    let duplicate: boolean = false;
+    let duplicate = false;
     testUsers.forEach((currentUser) => {
       if (currentUser.email == emailInput) {
         duplicate = true;
@@ -46,7 +46,7 @@ function SignUpScreen() {
       return false;
     }
 
-    let madeUser: User = new User(
+    const madeUser = new User(
       emailInput,
       passwordInput,
       firstnameInput,

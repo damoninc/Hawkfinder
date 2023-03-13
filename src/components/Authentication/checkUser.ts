@@ -12,7 +12,7 @@ import User, { testUsers } from "../../data/User";
  * @returns boolean
  */
 export function parseUsers(typedUser : string, typedPass : string) : [boolean, User] {
-    let found : boolean = false;
+    let found = false;
     let userFound : User = new User("did","not","work","empty")
     testUsers.forEach((currentUser) => {
       console.log(currentUser.username, currentUser.password)

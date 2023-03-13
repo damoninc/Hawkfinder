@@ -2,6 +2,7 @@ import "../../styles/loginscreen.css";
 import { parseUsers } from "./checkUser";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import React from "react";
 
 /**
  * Login screen contains two use states which are used for the input fields
@@ -11,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 function LoginScreen() {
   const [usernameInput, setUsernameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   /**
    * checks if User is within the User array in the User.ts
@@ -23,7 +24,7 @@ function LoginScreen() {
       return false
     }
 
-    let [found , theUser] = parseUsers(usernameInput, passwordInput);
+    const [found , theUser] = parseUsers(usernameInput, passwordInput);
     if (found) {
       navigate("/friendpage");
       alert("Logged in as " + theUser.profile.firstName + " " + theUser.profile.lastName + ".");

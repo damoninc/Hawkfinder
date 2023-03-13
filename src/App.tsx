@@ -5,15 +5,15 @@ import FriendPage from "./components/FriendSystem/FriendPage";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import "./App.css";
 import { SAMPLE_POSTS } from "./data/Post";
+import React from "react";
 
 const posts = SAMPLE_POSTS.map((post) => {
-  let json: string = JSON.stringify(post);
-  let postJSON = JSON.parse(json);
+  const json: string = JSON.stringify(post);
+  const postJSON = JSON.parse(json);
   console.log(postJSON);
   return (
     <Forum
-      // key={postJSON._postID}
-      // {...postJSON}
+      key={postJSON._postID}
       postID={post.postID}
       postDate={post.postDate}
       description={post.description}
