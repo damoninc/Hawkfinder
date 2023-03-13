@@ -2,12 +2,13 @@ import React from "react";
 
 interface IProps {
   title? : string
-  outsideSubmit? : Function;
-  outsideChange? : Function;
+  buttonName? : string
+  outsideSubmit? : Function
+  outsideChange? : Function
 }
 
 interface IState {
-  value?: string;
+  value?: string
 }
 
 /**
@@ -22,26 +23,26 @@ interface IState {
  */
 class SearchForm extends React.Component<IProps, IState> {
     constructor(props : IProps) {
-      super(props);
-      this.state = {value: ''};
-  
-      this.handleChange = this.handleChange.bind(this);
-      this.handleSubmit = this.handleSubmit.bind(this);
+      super(props)
+      this.state = {value: ''}
+
+      this.handleChange = this.handleChange.bind(this)
+      this.handleSubmit = this.handleSubmit.bind(this)
     }
   
     handleChange(event : any) {
       if (this.props.outsideChange != null){
-        this.props.outsideChange(this.state.value);
+        this.props.outsideChange(this.state.value)
       }
-      this.setState({value: event.target.value});
+      this.setState({value: event.target.value})
     }
   
     handleSubmit(event : any) {
       if (this.props.outsideSubmit != null){
-        this.props.outsideSubmit(this.state.value);
+        this.props.outsideSubmit(this.state.value)
       }
-      alert(this.state.value);
-      event.preventDefault();
+      alert(this.state.value)
+      event.preventDefault()
     }
   
     render() {
@@ -51,7 +52,7 @@ class SearchForm extends React.Component<IProps, IState> {
             {this.props.title}
             <input type="text" value={this.state.value} onChange={this.handleChange} />
           </label>
-          <input type="submit" value="Submit" />
+          <input type="submit" value={this.props.buttonName} />
         </form>
       );
     }

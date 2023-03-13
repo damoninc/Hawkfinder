@@ -17,7 +17,7 @@ function FriendPage() {
   return (
     <div className='friendPage'>
         <h1>Friends List</h1> 
-        <SearchForm outsideSubmit={addFriend} title={"Username: "}/>
+        <SearchForm outsideSubmit={addFriend} title={"Username: "} buttonName={"Add"}/>
         {checkNullList(dbCall)}
     </div>
     )
