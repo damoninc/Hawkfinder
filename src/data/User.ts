@@ -28,59 +28,11 @@ class User {
   }
 
   /**
-   * Getter accountSettings
-   * @return {Map<string, string>}
-   */
-  public get accountSettings(): Map<string, string> {
-    return this._accountSettings;
-  }
-
-  /**
-   * Getter password
-   * @return {string}
-   */
-  public get password(): string {
-    return this._password;
-  }
-
-  /**
    * Getter username
    * @return {string}
    */
   public get username(): string {
     return this._username;
-  }
-
-  /**
-   * Getter uncwEmail
-   * @return {string}
-   */
-  public get email(): string {
-    return this._email;
-  }
-
-  /**
-   * Getter profile
-   * @return {Profile}
-   */
-  public get profile() : Profile {
-    return this._profile
-  }
-
-  /**
-   * Setter accountSettings
-   * @param {Map<string, string>} value
-   */
-  public set accountSettings(value: Map<string, string>) {
-    this._accountSettings = value;
-  }
-
-  /**
-   * Setter password
-   * @param {string} value
-   */
-  public set password(value: string) {
-    this._password = value;
   }
 
   /**
@@ -92,21 +44,68 @@ class User {
   }
 
   /**
+ * Getter password
+ * @return {string}
+ */
+  public get password(): string {
+    return this._password;
+  }
+
+  /**
+  * Setter password
+  * @param {string} value
+  */
+  public set password(value: string) {
+    this._password = value;
+  }
+
+  /**
+   * Getter accountSettings
+   * @return {Map<string, string>}
+   */
+  public get accountSettings(): Map<string, string> {
+    return this._accountSettings;
+  }
+
+  /**
+   * Setter accountSettings
+   * @param {Map<string, string>} value
+   */
+  public set accountSettings(value: Map<string, string>) {
+    this._accountSettings = value;
+  }
+
+  /**
+   * Getter uncwEmail
+   * @return {string}
+   */
+  public get email(): string {
+    return this._email;
+  }
+
+  /**
    * Setter uncwEmail
    * @param {string} value
    */
   public set email(value: string) {
     this._email = value;
   }
-  
+
+  /**
+   * Getter profile
+   * @return {Profile}
+  */
+  public get profile(): Profile {
+    return this._profile
+  }
 
   /**
    *
    * @returns username which is split from the @ on the email
    */
   private createUsername() {
-    let email: string = this.email;
-    var theItems: Array<string> = email.split("@");
+    const email: string = this.email;
+    const theItems: Array<string> = email.split("@");
     return theItems[0];
   }
 
@@ -141,7 +140,7 @@ class User {
    * Adds a friend to the users friend list
    * @param friend 
    */
-  public addFriend(friend : User) {
+  public addFriend(friend: User) {
     this._friendsList.push(friend)
   }
 
@@ -167,7 +166,7 @@ class User {
 
 export const testUsers: User[] = [
   new User("og2828@uncw.edu", "gamertime", "Octavio", "Galindo"),
-  new User("pio1681@uncw.edu", "siuuuuuuuu", "Patricio", "Orces"), ,
+  new User("pio1681@uncw.edu", "siuuuuuuuu", "Patricio", "Orces"),
   new User("dwi2359@uncw.edu", "Grugley da master ;)", "Damon", "Incorvaia"),
   new User("rajebj@uncw.edu", "suppa hot FIYA", "John", "Bejar")
 ] as User[]

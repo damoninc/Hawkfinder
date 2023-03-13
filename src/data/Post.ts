@@ -20,11 +20,11 @@ class Post {
     // public _rating: number;
 
     constructor(
-        postID: string, 
+        postID: string,
         postDate: Date,
         description: string,
         interest: string,
-        imageURL: string = "",
+        imageURL = "",
         ratings: Map<string, string>,
         // rating: number = 0
     ) {
@@ -101,10 +101,10 @@ class Post {
     public calculateRating() {
         let rating = 0
 
-        this._ratings.forEach((value:string, key:string) => {
-            if (value==='upvote') {
+        this._ratings.forEach((value: string, key: string) => {
+            if (value === 'upvote') {
                 rating += 1
-            } else if (value==='downvote') {
+            } else if (value === 'downvote') {
                 rating -= 1
             }
         })
@@ -115,19 +115,19 @@ class Post {
 
 export const SAMPLE_POSTS: Post[] = [
     new Post(
-        "0b0koxs", 
-        new Date(2023, 2, 16, 10, 0), 
-        "i heckin love this song!!!!!", 
+        "0b0koxs",
+        new Date(2023, 2, 16, 10, 0),
+        "i heckin love this song!!!!!",
         "music",
-        "coverphoto.jpg", 
+        "coverphoto.jpg",
         new Map<string, string>([
             ["39kvfsb", "upvote"],
             ["b929kcs", "downvote"]
         ])
     ),
     new Post(
-        "8fSD8930bFg", 
-        new Date(2023, 2, 16, 10, 0), 
+        "8fSD8930bFg",
+        new Date(2023, 2, 16, 10, 0),
         "can i get uhhhhhhhh 2 fries",
         "food",
         "profileimg2.jpg",
@@ -136,11 +136,11 @@ export const SAMPLE_POSTS: Post[] = [
         ])
     ),
     new Post(
-        "8fSD8930bFg", 
-        new Date(2023, 2, 16, 10, 0), 
+        "8fSD8930bFg",
+        new Date(2023, 2, 16, 10, 0),
         "hypergrindcore death grunge ambient experimental prog art country",
         "music",
-        "profileimg.jpg", 
+        "profileimg.jpg",
         new Map<string, string>([
             ["39kvfsb", "upvote"],
             ["b929kcs", "upvote"],

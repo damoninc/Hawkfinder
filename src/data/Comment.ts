@@ -14,7 +14,7 @@ class Comment {
     private _text: string;
     private _ratings: Map<string, string>;
 
-    
+
     constructor(
         commentID: string,
         commentDate: Date,
@@ -68,7 +68,7 @@ class Comment {
 
 }
 
-let SAMPLE_COMMENTS: Comment[] = [
+export const SAMPLE_COMMENTS: Comment[] = [
     new Comment(
         "92k0ksk",
         new Date(2023, 2, 16, 10, 0),
