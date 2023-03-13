@@ -16,10 +16,10 @@ class Message {
     private _senderID: string;
     private _recipientID: string;
     private _textContent: string;
-    private _imageURL: string; 
+    private _imageURL: string;
 
     constructor(messageID: string, senderID: string, recipientID: string,
-                textContent: string, dateTimeSent: Date = new Date(), imageURL: string = '') {
+        textContent: string, dateTimeSent = new Date(), imageURL = '') {
         this._messageID = messageID;
         this._senderID = senderID;
         this._recipientID = recipientID;
@@ -31,46 +31,46 @@ class Message {
     public get messageID(): string {
         return this._messageID;
     }
-    
-    public get senderID() : string {
+
+    public get senderID(): string {
         return this._senderID;
     }
-    
-    public set senderID(sender : string) {
+
+    public set senderID(sender: string) {
         this._senderID = sender;
     }
-    
-    public get recipientID() : string {
+
+    public get recipientID(): string {
         return this._recipientID;
     }
-    
-    public set recipientID(reciever : string) {
+
+    public set recipientID(reciever: string) {
         this._recipientID = reciever;
     }
-    
-    public get textContent() : string {
+
+    public get textContent(): string {
         return this._textContent;
     }
 
-    public set textContent(content : string) {
+    public set textContent(content: string) {
         this._textContent = content;
     }
 
-    public get dateTimeSent() : Date {
+    public get dateTimeSent(): Date {
         return this._dateTimeSent;
     }
-    
-    public get imageURL() : string {
+
+    public get imageURL(): string {
         return this._imageURL;
     }
-    
-    public set image(img : string) {
+
+    public set image(img: string) {
         this._imageURL = img;
     }
 }
 
 // A sample list of messages to play with.
-let SAMPLE_MESSAGES: Message[] = [
+export const SAMPLE_MESSAGES: Message[] = [
     new Message("7890654213", "afd3856", "njb4775", "Hello, this is a message with an image", new Date(2023, 2, 16, 10, 0), 'img1.jpg'),
     new Message("0123456789", "njb4775", "afd3856", "How about a reply to the image but without an image.", new Date(2023, 2, 16, 5, 56)),
     new Message("1472580369", "abc1234", "def5678", "I just sent this image, so it is using the current time."),
