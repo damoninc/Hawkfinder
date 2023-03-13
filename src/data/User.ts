@@ -5,6 +5,7 @@ class User {
   private _password: string;
   private _email: string;
   private _accountSettings: Map<string, string>;
+  private _friendsList: Array<User>
   private _profile: Profile;
 
   /**
@@ -22,23 +23,8 @@ class User {
     this._password = daPassword;
     this._username = this.createUsername();
     this._accountSettings = new Map<string, string>();
+    this._friendsList = new Array<User>();
     this._profile = new Profile(daFirst, daLast, this._username)
-  }
-
-  /**
-   * Getter accountSettings
-   * @return {Map<string, string>}
-   */
-  public get accountSettings(): Map<string, string> {
-    return this._accountSettings;
-  }
-
-  /**
-   * Getter password
-   * @return {string}
-   */
-  public get password(): string {
-    return this._password;
   }
 
   /**
@@ -50,19 +36,35 @@ class User {
   }
 
   /**
-   * Getter uncwEmail
-   * @return {string}
+   * Setter username
+   * @param {string} value
    */
-  public get email(): string {
-    return this._email;
+  public set username(value: string) {
+    this._username = value;
   }
 
   /**
-   * Getter profile
-   * @return {Profile}
+ * Getter password
+ * @return {string}
+ */
+  public get password(): string {
+    return this._password;
+  }
+
+  /**
+  * Setter password
+  * @param {string} value
+  */
+  public set password(value: string) {
+    this._password = value;
+  }
+
+  /**
+   * Getter accountSettings
+   * @return {Map<string, string>}
    */
-  public get profile() : Profile {
-    return this._profile
+  public get accountSettings(): Map<string, string> {
+    return this._accountSettings;
   }
 
   /**
@@ -74,19 +76,11 @@ class User {
   }
 
   /**
-   * Setter password
-   * @param {string} value
+   * Getter uncwEmail
+   * @return {string}
    */
-  public set password(value: string) {
-    this._password = value;
-  }
-
-  /**
-   * Setter username
-   * @param {string} value
-   */
-  public set username(value: string) {
-    this._username = value;
+  public get email(): string {
+    return this._email;
   }
 
   /**
@@ -96,15 +90,22 @@ class User {
   public set email(value: string) {
     this._email = value;
   }
-  
+
+  /**
+   * Getter profile
+   * @return {Profile}
+  */
+  public get profile(): Profile {
+    return this._profile
+  }
 
   /**
    *
    * @returns username which is split from the @ on the email
    */
   private createUsername() {
-    let email: string = this.email;
-    var theItems: Array<string> = email.split("@");
+    const email: string = this.email;
+    const theItems: Array<string> = email.split("@");
     return theItems[0];
   }
 
@@ -125,6 +126,22 @@ class User {
       return this.accountSettings.get("alt-email")!; // "!"" is used to tell typescript it won't be null
     }
     return "No Alternative Email";
+  }
+
+  /**
+   * Getter for friendsList
+   * @return Array<User>
+   */
+  public get friendsList(): Array<User> {
+    return this._friendsList
+  }
+
+  /**
+   * Adds a friend to the users friend list
+   * @param friend 
+   */
+  public addFriend(friend: User) {
+    this._friendsList.push(friend)
   }
 
   /**
@@ -149,7 +166,7 @@ class User {
 
 export const testUsers: User[] = [
   new User("og2828@uncw.edu", "gamertime", "Octavio", "Galindo"),
-  new User("pio1681@uncw.edu", "siuuuuuuuu", "Patricio", "Orces"), ,
+  new User("pio1681@uncw.edu", "siuuuuuuuu", "Patricio", "Orces"),
   new User("dwi2359@uncw.edu", "Grugley da master ;)", "Damon", "Incorvaia"),
   new User("rajebj@uncw.edu", "suppa hot FIYA", "John", "Bejar")
 ] as User[]
@@ -166,5 +183,11 @@ export const testUsers: User[] = [
 // for (let i = 0; i < testUsers.length; i++) {
 //   console.log("User " + (i + 1) + "\n" + testUsers[i].toString() + "\n");
 // }
+
+testUsers[0].addFriend(testUsers[0])
+testUsers[0].addFriend(testUsers[1])
+testUsers[0].addFriend(testUsers[2])
+testUsers[0].addFriend(testUsers[3])
+
 
 export default User;

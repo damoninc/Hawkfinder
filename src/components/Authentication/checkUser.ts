@@ -1,4 +1,4 @@
-import User, { testUsers } from "../User";
+import User, { testUsers } from "../../data/User";
 
 
 // this function keeps going even after a return statement, and I don't know why
@@ -12,7 +12,7 @@ import User, { testUsers } from "../User";
  * @returns boolean
  */
 export function parseUsers(typedUser : string, typedPass : string) : [boolean, User] {
-    let found : boolean = false;
+    let found = false;
     let userFound : User = new User("did","not","work","empty")
     testUsers.forEach((currentUser) => {
       console.log(currentUser.username, currentUser.password)
@@ -29,4 +29,3 @@ export function parseUsers(typedUser : string, typedPass : string) : [boolean, U
     return [found, userFound]
 
   }
-
