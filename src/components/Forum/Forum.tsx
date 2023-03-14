@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import { FaRegArrowAltCircleDown, FaRegArrowAltCircleUp, FaArrowAltCircleDown, FaArrowAltCircleUp} from "react-icons/fa"
 import "../../styles/Forum.css";
 
 function Forum(props: any) {
@@ -56,21 +57,23 @@ function Forum(props: any) {
         <img className="post-img" src={postImgPath} />
       </div>
       <p className="post-description">{props.description}</p>
-      <h4>{props.ratings.length}</h4>
       <div className="ratings">
-        <button
-          className={upvoted ? "rating-button-selected" : "rating-button"}
-          onClick={upvote}
-        >
-          Upvote
-        </button>
-        <span>{ratings}</span>
-        <button
-          className={downvoted ? "rating-button-selected" : "rating-button"}
-          onClick={downvote}
-        >
-          Downvote
-        </button>
+        {/**
+         * The upvote and downvote buttons that are rendered will depend
+         * on the state of upvoted and downvoted
+         */}
+
+        <div className="rating-button">
+          { (!upvoted) ? (<FaRegArrowAltCircleUp onClick={upvote} size={25} />) :
+          (<FaArrowAltCircleUp onClick={upvote} size={25} />)}
+        </div>
+
+        <span className="rating">{ratings}</span>
+
+        <div className="rating-button">
+          { (!downvoted) ? (<FaRegArrowAltCircleDown onClick={downvote} size={25} />) :
+          (<FaArrowAltCircleDown onClick={downvote} size={25} />)}
+        </div>
       </div>
       <span className="post-interest">{props.interest}</span>
     </div>

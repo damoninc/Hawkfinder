@@ -61,12 +61,14 @@
 }
 
 .rating-button {
-    background-color: white;
+    cursor: pointer;
+    width: 24.3px;
+    height: 24.3px;
+    border-radius: 50%;
 }
 
-.rating-button-selected {
-    background-color: black;
-    color: white;
+.rating {
+    font-weight: bold;
 }
 
 .rating-button:hover, .rating-button-selected:hover {
