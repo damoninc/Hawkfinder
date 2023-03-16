@@ -1,4 +1,4 @@
-import Forum from "./components/Forum/Forum";
+import ForumPost from "./components/Forum/ForumPost";
 import PostView from "./components/Post/PostView";
 import LogAndSign from "./components/Authentication/LogAndSign";
 import FriendPage from "./components/FriendSystem/FriendPage";
@@ -12,7 +12,7 @@ const posts = SAMPLE_POSTS.map((post) => {
   const postJSON = JSON.parse(json);
   console.log(postJSON);
   return (
-    <Forum
+    <ForumPost
       key={postJSON._postID}
       postID={post.postID}
       postDate={post.postDate}
@@ -61,9 +61,6 @@ function App() {
             <li>
               <Link to="/components/Forum">Forum</Link>
             </li>
-            <li>
-              <Link to="/components/Post">Post</Link>
-            </li>
           </ul>
           <ul>
             Nicholaus
@@ -80,9 +77,9 @@ function App() {
         </nav>
         <Routes>
           <Route path="/components/Forum" element={posts} />
-          <Route path="/components/Post" element={<PostView />} />
           <Route path="/components/Friends" element={<FriendPage />} />
           <Route path="/components/Login" element={<LogAndSign />} />
+          <Route path="/components/Forum/post" element={<PostView />} />
         </Routes>
       </Router>
     </div>

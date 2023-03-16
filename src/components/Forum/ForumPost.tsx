@@ -1,9 +1,17 @@
 import React from "react";
 import { useState } from "react";
-import { FaRegArrowAltCircleDown, FaRegArrowAltCircleUp, FaArrowAltCircleDown, FaArrowAltCircleUp} from "react-icons/fa"
-import "../../styles/Forum.css";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import {
+  FaRegArrowAltCircleDown,
+  FaRegArrowAltCircleUp,
+  FaArrowAltCircleDown,
+  FaArrowAltCircleUp,
+} from "react-icons/fa";
+import { AiOutlineExpandAlt } from "react-icons/ai";
+import "../../styles/forumpost.css";
+import PostView from "../Post/PostView";
 
-function Forum(props: any) {
+function ForumPost(props: any) {
   const [ratings, setRatings] = useState(props.rating);
   const [upvoted, setUpvoted] = useState(false);
   const [downvoted, setDownvoted] = useState(false);
@@ -64,20 +72,37 @@ function Forum(props: any) {
          */}
 
         <div className="rating-button">
-          { (!upvoted) ? (<FaRegArrowAltCircleUp onClick={upvote} size={25} />) :
-          (<FaArrowAltCircleUp onClick={upvote} size={25} />)}
+          {!upvoted ? (
+            <FaRegArrowAltCircleUp onClick={upvote} size={25} />
+          ) : (
+            <FaArrowAltCircleUp onClick={upvote} size={25} />
+          )}
         </div>
 
         <span className="rating">{ratings}</span>
 
         <div className="rating-button">
-          { (!downvoted) ? (<FaRegArrowAltCircleDown onClick={downvote} size={25} />) :
-          (<FaArrowAltCircleDown onClick={downvote} size={25} />)}
+          {!downvoted ? (
+            <FaRegArrowAltCircleDown onClick={downvote} size={25} />
+          ) : (
+            <FaArrowAltCircleDown onClick={downvote} size={25} />
+          )}
         </div>
       </div>
       <span className="post-interest">{props.interest}</span>
+      <Link to="/components/Forum/post" state={props}>
+        <div className="expand-post-icon">
+          <AiOutlineExpandAlt size={20} />
+        </div>
+      </Link>
+      {/* <Routes>
+        <Route
+          path="/components/Forum/post"
+          element={<PostView {...props} />}
+        />
+      </Routes> */}
     </div>
   );
 }
 
-export default Forum;
+export default ForumPost;
