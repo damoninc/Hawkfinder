@@ -2,7 +2,9 @@ import "../../styles/loginscreen.css";
 import { parseUsers } from "./checkUser";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { auth } from "../../App";
 import React from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 /**
  * Login screen contains two use states which are used for the input fields
@@ -20,17 +22,27 @@ function LoginScreen() {
    */
   function checkExist() {
     if (usernameInput == "" || passwordInput == "") {
-      alert("Must fill out username or password.")
-      return false
+      alert("Must fill out email or password.");
+      return false;
     }
 
-    const [found , theUser] = parseUsers(usernameInput, passwordInput);
-    if (found) {
-      navigate("/friendpage");
-      alert("Logged in as " + theUser.profile.firstName + " " + theUser.profile.lastName + ".");
-    } else {
-      alert("User not found. Incorrect username or password.");
-    }
+    signInWithEmailAndPassword(auth, usernameInput, passwordInput).then(cred =>
+      alert("Signed in as " + cred.user.email)
+    );
+
+    // const [found, theUser] = parseUsers(usernameInput, passwordInput);
+    // if (found) {
+    //   navigate("/friendpage");
+    //   alert(
+    //     "Logged in as " +
+    //       theUser.profile.firstName +
+    //       " " +
+    //       theUser.profile.lastName +
+    //       "."
+    //   );
+    // } else {
+    //   alert("User not found. Incorrect username or password.");
+    // }
   }
 
   return (

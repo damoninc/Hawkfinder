@@ -1,8 +1,12 @@
 import { useState } from "react";
 import "../../styles/loginscreen.css";
 import User, { testUsers } from "../../data/User";
-import React
- from "react";
+import React from "react";
+import { createUserWithEmailAndPassword} from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../../App";
+import { auth } from "../../App";
+
 /**
  * Sign up has 4 fields which are used to create a User object
  * @returns The sign up screen component
@@ -54,7 +58,23 @@ function SignUpScreen() {
     );
     console.log("created user", madeUser.toString());
     testUsers.push(madeUser);
-    alert("New account created!");
+    alert("New account created! Your username is " + madeUser.username);
+
+    createUserWithEmailAndPassword(auth, emailInput, passwordInput).then(cred =>{
+      setDoc(doc(db, 'Users', cred.user.uid),{
+          email:emailInput,
+          password:passwordInput,
+          profile:{
+              firstName:firstnameInput,
+              lastName:lastnameInput,
+              username:madeUser.username,
+              bio:madeUser.profile.bio,
+              interests:madeUser.profile.interests,
+              profilePicture:madeUser.profile.profilePicture,
+              coverPhoto:madeUser.profile.coverPhoto
+          }
+      });
+  });
   }
 
   return (
