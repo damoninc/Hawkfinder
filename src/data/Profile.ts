@@ -1,3 +1,7 @@
+/*
+ * A profile class that is used as a parameter of the user class. Profiles cannot exist independently without a User to go with it.
+ * Profile should never be instanstiated outside of an instance of User.
+ */
 class Profile {
   private _firstName: string;
   private _lastName: string;
