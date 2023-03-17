@@ -23,7 +23,7 @@ function FriendPage() {
         title={"Username: "}
         buttonName={"Add"}
       />
-      {checkNullList(dbCall)}
+      //{checkNullList(dbCall)}
     </div>
   );
 }
