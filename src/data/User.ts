@@ -1,3 +1,4 @@
+import { DocumentSnapshot, SnapshotOptions } from "firebase/firestore";
 import Profile from "./Profile";
 import { sampleProfiles } from "./Profile";
 
@@ -6,7 +7,7 @@ class User {
   private _password: string;
   private _email: string;
   private _accountSettings: Map<string, string>;
-  private _friendsList: Array<User>
+  private _friendsList: string[]
   private _profile: Profile;
 
   /**
@@ -19,14 +20,21 @@ class User {
    * @param daEmail User's email
    * @param daPassword User's password
    */
-  constructor(daEmail: string, daPassword: string, daFirst: string, daLast: string) {
+  constructor(daEmail: string, daPassword: string, daFirst: string, daLast: string, profile?: Profile) {
     this._email = daEmail;
     this._password = daPassword;
     this._username = this.createUsername();
     this._accountSettings = new Map<string, string>();
-    this._friendsList = new Array<User>();
-    this._profile = new Profile(daFirst, daLast, this._username)
+    this._friendsList = new Array<string>();
+
+    if (profile != null) {
+      this._profile = profile;
+    }
+    else {
+      this._profile = new Profile(daFirst, daLast, this._username)
+    }
   }
+
 
   /**
    * Getter username
@@ -137,15 +145,21 @@ class User {
    * Getter for friendsList
    * @return Array<User>
    */
-  public get friendsList(): Array<User> {
+  public get friendsList(): Array<string> {
     return this._friendsList
+  }
+
+
+
+  public set friendsList(friendsList: Array<string>) {
+    this._friendsList = friendsList
   }
 
   /**
    * Adds a friend to the users friend list
    * @param friend 
    */
-  public addFriend(friend: User) {
+  public addFriend(friend: string) {
     this._friendsList.push(friend)
   }
 
@@ -166,6 +180,44 @@ class User {
     );
   }
 }
+
+export const userConverter = {
+  toFirestore: (user: User) => {
+    return {
+      username: user.username,
+      email: user.email,
+      friendsList: user.friendsList,
+      profile: user.profile,
+      password: user.password,
+    };
+  },
+  fromFirestore: (snapshot: DocumentSnapshot, options: SnapshotOptions) => {
+    if (snapshot.exists()) {
+      const data = snapshot.data(options);
+
+      const newUser = new User(
+        data.email,
+        data.password,
+        data.profile.firstName,
+        data.profile.lastName,
+        new Profile(data.profile.firstName, data.profile.lastName, data.profile.username)
+      );
+      newUser.friendsList = data.friendsList
+
+      newUser.profile.bio = data.profile.bio
+      newUser.profile.birthDate = data.profile.birthDate
+      newUser.profile.interests = data.profile.interests
+      newUser.profile.profilePicture = data.profile.profilePicture
+      newUser.profile.coverPhoto = data.profile.coverPhoto
+      newUser.profile.birthDate = data.profile.birthDate
+
+      return newUser
+    }
+    else {
+      console.log("No Such Document")
+    }
+  },
+};
 
 // Sample code for initializing and printing array of User objects
 
@@ -189,10 +241,10 @@ export const testUsers: User[] = [
 //   console.log("User " + (i + 1) + "\n" + testUsers[i].toString() + "\n");
 // }
 
-testUsers[0].addFriend(testUsers[0])
-testUsers[0].addFriend(testUsers[1])
-testUsers[0].addFriend(testUsers[2])
-testUsers[0].addFriend(testUsers[3])
+testUsers[0].addFriend(testUsers[0].username)
+testUsers[0].addFriend(testUsers[1].username)
+testUsers[0].addFriend(testUsers[2].username)
+testUsers[0].addFriend(testUsers[3].username)
 
 testUsers[0].profile = sampleProfiles[0]
 testUsers[1].profile = sampleProfiles[1]
