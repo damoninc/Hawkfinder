@@ -1,45 +1,69 @@
 import React from "react";
-import Profile from "../../data/Profile";
 import User from "../../data/User";
 import "../../styles/Profile.css";
-const testProfile = new User(
-  "dwi2359@uncw.edu",
-  "strongpassword",
-  "Skarrow",
-  "9"
-);
-testProfile.profile.bio = "Hey guys skarrow9 here";
-testProfile.profile.interests = ["destiny2", "ur mom"];
-testProfile.profile.profilePicture =
-  "https://pbs.twimg.com/media/EPK5mPuWoAAELqI.jpg";
-testProfile.profile.coverPhoto =
-  "https://cdn.discordapp.com/attachments/598723135608586250/1086147225492672624/CrhFKYpgaXntNcM-800x450-noPad.png";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  getDoc,
+  doc,
+  onSnapshot,
+} from "firebase/firestore";
+import { auth } from "../../App";
+import { db } from "../../App";
 
 /**
  * Firebase implementation is required for all
  *
+ * This will be changed later to check for authentication and so on.
  */
+
+const docRef = doc(db, "Users", "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1");
+const docSnap = await getDoc(docRef);
+
+function getUser() {
+  if (docSnap.exists()) {
+    console.log("Document data:", docSnap.data());
+    return docSnap.data();
+  } else {
+    // doc.data() will be undefined in this case
+    console.log("No such document!");
+  }
+}
+
+const user = getUser();
+
+const meta = {
+  charset: "utf-8",
+  meta: {
+    name: "viewport",
+    content: "width=device-width, initial-scale=1.0",
+  },
+};
 
 function ProfilePage() {
   return (
-    <div className="container">
+    <div>
       <div className="banner">
-        <span className="hawkfinder">Hawkfinder</span>
+        <h1 className="hawkfinder">Hawkfinder</h1>
       </div>
       <div className="profile-info">
         <img
-          src={testProfile.profile.coverPhoto}
+          src={"src/assets/images/coverphoto.jpg"}
           alt="image"
           className="cover-photo"
         />
         <span className="profile-name">
-          <span>
-            {testProfile.profile.firstName + " " + testProfile.profile.lastName}
-          </span>
+          <span>{user?.profile.firstName + " " + user?.profile.lastName}</span>
           <br></br>
         </span>
+        <span className="friend-count">
+          <span>{user?.friendsList.length + " Friends"}</span>
+          <br />
+        </span>
         <img
-          src={testProfile.profile.profilePicture}
+          src={"src/assets/images/profileimg.jpg"}
           alt="image"
           loading="lazy"
           className="profile-photo"
@@ -49,7 +73,7 @@ function ProfilePage() {
         <span className="about-title">
           <span>About Me</span>
           <br></br>
-          <p>{testProfile.profile.bio}</p> {/* INSERT BIO */}
+          <p>{user?.profile.bio}</p> {/* INSERT BIO */}
         </span>
       </div>
       <div className="interests">
@@ -58,7 +82,7 @@ function ProfilePage() {
           <br></br>
         </span>
         <ul className="list">
-          {testProfile.profile.interests.map((interest) => (
+          {user?.profile.interests.map((interest: any) => (
             <li key={interest}>{interest}</li>
           ))}
         </ul>
