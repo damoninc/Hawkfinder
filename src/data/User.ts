@@ -1,4 +1,5 @@
 import Profile from "./Profile";
+import { sampleProfiles } from "./Profile";
 
 class User {
   private _username: string;
@@ -99,6 +100,10 @@ class User {
     return this._profile
   }
 
+  public set profile(newProf: Profile) {
+    this._profile = newProf
+  }
+
   /**
    *
    * @returns username which is split from the @ on the email
@@ -189,5 +194,9 @@ testUsers[0].addFriend(testUsers[1])
 testUsers[0].addFriend(testUsers[2])
 testUsers[0].addFriend(testUsers[3])
 
+testUsers[0].profile = sampleProfiles[0]
+testUsers[1].profile = sampleProfiles[1]
+testUsers[2].profile = sampleProfiles[1]
+testUsers[3].profile = sampleProfiles[1]
 
 export default User;
