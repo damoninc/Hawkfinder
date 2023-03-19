@@ -1,5 +1,4 @@
 import "../../styles/loginscreen.css";
-import { parseUsers } from "./checkUser";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../App";
@@ -30,19 +29,6 @@ function LoginScreen() {
       alert("Signed in as " + cred.user.email)
     );
 
-    // const [found, theUser] = parseUsers(usernameInput, passwordInput);
-    // if (found) {
-    //   navigate("/friendpage");
-    //   alert(
-    //     "Logged in as " +
-    //       theUser.profile.firstName +
-    //       " " +
-    //       theUser.profile.lastName +
-    //       "."
-    //   );
-    // } else {
-    //   alert("User not found. Incorrect username or password.");
-    // }
   }
 
   return (
