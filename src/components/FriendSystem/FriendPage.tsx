@@ -153,7 +153,7 @@ async function callDB(setFriends: any) {
       doc(db, "Users", idQuery.docs[0].id).withConverter(userConverter)
     );
 
-    // Using document id to store friends
+    // // Using document id to store friends
     // const querySnapshot = await getDoc(
     //   doc(db, "Users", friend).withConverter(userConverter)
     // );
@@ -162,6 +162,7 @@ async function callDB(setFriends: any) {
     if (data !== undefined) {
       friends.push(data);
     }
+    console.log("DB Call")
   }
   setFriends(friends);
   dbPulled = true;

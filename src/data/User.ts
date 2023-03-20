@@ -9,6 +9,7 @@ class User {
   private _accountSettings: Map<string, string>;
   private _friendsList: string[]
   private _profile: Profile;
+  private _userid: string
 
   /**
    * A User object which contains the user's information related to many core features.
@@ -26,6 +27,7 @@ class User {
     this._username = this.createUsername();
     this._accountSettings = new Map<string, string>();
     this._friendsList = new Array<string>();
+    this._userid = '';
 
     if (profile != null) {
       this._profile = profile;
@@ -149,8 +151,6 @@ class User {
     return this._friendsList
   }
 
-
-
   public set friendsList(friendsList: Array<string>) {
     this._friendsList = friendsList
   }
@@ -163,6 +163,22 @@ class User {
     this._friendsList.push(friend)
   }
 
+  /**
+   * Getter for userid
+   * @return string
+   */
+  public get userid() : string {
+    return this._userid
+  }
+
+  /**
+   * Setter for userid
+   * @param userid string
+   */
+  public set userid(userid: string) {
+    this.userid = userid
+  }
+  
   /**
    *
    * @returns description of user, used for testing, should probably be depreciated afterwards
