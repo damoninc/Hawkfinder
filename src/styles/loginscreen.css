@@ -2,9 +2,9 @@
     display: block;
     text-align: center;
     color: white;
-    background-color: grey;
+    background-image: radial-gradient( rgb(25, 118, 210), rgb(27, 4, 41));
     padding: 20px;
     margin: 20px 0;
     justify-content: center;
-    border: 50px solid rgb(139, 144, 150);
+    border: 20px double rgb(139, 144, 150);
 }

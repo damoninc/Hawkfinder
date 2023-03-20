@@ -7,6 +7,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../App";
 import { auth } from "../../App";
 import { FirebaseError } from "firebase/app";
+import { Button } from "@mui/material";
 
 /**
  * Sign up has 4 fields which are used to create a User object
@@ -135,9 +136,9 @@ function SignUpScreen() {
             />
           </label>
         </h1>
-        <button type="submit" onClick={createUser}>
+        <Button variant="contained" onClick={createUser}>
           Sign Up
-        </button>
+        </Button>
       </fieldset>
     </div>
   );

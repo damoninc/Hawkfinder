@@ -14,6 +14,10 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
+import { Button, TextField } from "@mui/material";
+import Input from "@mui/material/Input";
+import { Box } from "@mui/system";
+import Grid from "@mui/material/Grid";
 
 /**
  * Login screen contains two use states which are used for the input fields
@@ -34,80 +38,93 @@ function LoginScreen() {
       return false;
     }
 
-    signInWithEmailAndPassword(auth, usernameInput, passwordInput).then(
-      async (cred) => {
-        
-        // Will keep this as a reference for layer
+    signInWithEmailAndPassword(auth, usernameInput, passwordInput)
+      .then(
+        async (cred) => {
+          // Will keep this as a reference for layer
 
-        // const qCino = query(collection(db, "Users"), where("email", "==", usernameInput));
-        // const querySnapshot = getDocs(qCino);
-        // var userAuth;
-        // (await querySnapshot).forEach(
-        //   (doc) => {
-        //     userAuth = doc.data();
-        //     alert("Signed in as " + userAuth?.profile.firstName + " " + userAuth?.profile.lastName);
-        //     console.log(userAuth);
-        //   }
-        // );
-        const docRef = doc(db, "Users", cred.user.uid);
-        const docSnap = await getDoc(docRef);
-        const userAuth = docSnap.data();
-        alert("Signed in as " + userAuth?.profile.firstName + " " + userAuth?.profile.lastName);
+          // const qCino = query(collection(db, "Users"), where("email", "==", usernameInput));
+          // const querySnapshot = getDocs(qCino);
+          // var userAuth;
+          // (await querySnapshot).forEach(
+          //   (doc) => {
+          //     userAuth = doc.data();
+          //     alert("Signed in as " + userAuth?.profile.firstName + " " + userAuth?.profile.lastName);
+          //     console.log(userAuth);
+          //   }
+          // );
 
-      }
-    ).catch((error : FirebaseError) => {
-          switch (error.code) {
-            case "auth/user-not-found":
-              alert("WHOOPSIES! It looks like that email doesn't exist!");
-              break;
-            case "auth/wrong-password":
-              alert("FORSOOTH! Shit don't work fam, that password wack!");
-              break;
-            case "auth/invalid-email":
-              alert("BY GOLLY! This is not a valid email!")
-              break;
-            default:
-              alert(error.code)
-              break;
-          }
-    })
+          /**
+           *
+           */
+          const docRef = doc(db, "Users", cred.user.uid);
+          const docSnap = await getDoc(docRef);
+          const userAuth = docSnap.data();
+          alert(
+            "Signed in as " +
+              userAuth?.profile.firstName +
+              " " +
+              userAuth?.profile.lastName
+          );
+        }
+        // TODO: I gotta change these error messages
+      )
+      .catch((error: FirebaseError) => {
+        switch (error.code) {
+          case "auth/user-not-found":
+            alert("WHOOPSIES! It looks like that email doesn't exist!");
+            break;
+          case "auth/wrong-password":
+            alert("FORSOOTH! Shit don't work fam, that password wack!");
+            break;
+          case "auth/invalid-email":
+            alert("BY GOLLY! This is not a valid email!");
+            break;
+          default:
+            alert(error.code);
+            break;
+        }
+      });
   }
 
   return (
-    <div className="backboard">
-      <fieldset className="loginSquare">
-        <h1>Login</h1>
-        <h1>
-          <label>
-            Username
-            <input
+    <Grid>
+      <div className="backboard">
+        <fieldset className="loginSquare">
+          <h1>Login</h1>
+
+          <Grid item>
+            <Input
               name="nameTyped"
               id="name"
               type="text"
-              placeholder="Write your name"
+              placeholder="Email"
               required
               onChange={(namewrote) => setUsernameInput(namewrote.target.value)}
             />
-          </label>
-        </h1>
-        <h1>
-          <label>
-            Password{" "}
-            <input
+          </Grid>
+          <Grid item>
+            <Input
               name="passTyped"
               id="password"
               type="text"
-              placeholder="Write your password"
+              placeholder="Password"
+              color="secondary"
               required
               onChange={(passwrote) => setPasswordInput(passwrote.target.value)}
             />
-          </label>
-        </h1>
-        <button type="submit" onClick={checkExist}>
-          Login
-        </button>
-      </fieldset>
-    </div>
+          </Grid>
+          <Button
+            variant="contained"
+            type="submit"
+            color="secondary"
+            onClick={checkExist}
+          >
+            Login
+          </Button>
+        </fieldset>
+      </div>
+    </Grid>
   );
 }
 export default LoginScreen;
