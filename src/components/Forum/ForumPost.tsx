@@ -1,7 +1,17 @@
 import React from "react";
 import { useState } from "react";
 import { db } from "../../firebase/config";
-import { doc, setDoc } from "firebase/firestore";
+import {
+  doc,
+  DocumentData,
+  QuerySnapshot,
+  QueryDocumentSnapshot,
+  collection,
+  query,
+  where,
+  getDoc,
+  getDocs,
+} from "firebase/firestore";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import {
   FaRegArrowAltCircleDown,
@@ -11,7 +21,64 @@ import {
 } from "react-icons/fa";
 import { AiOutlineExpandAlt } from "react-icons/ai";
 import "../../styles/forumpost.css";
-import PostView from "../Post/PostView";
+import Post from "../../data/Post";
+
+// async function getPostData() {
+//   const querySnapshot = await getDoc(
+//     doc(db, "Posts", post).withConverter(postConverter)
+//   );
+// }
+
+async function getPostData() {
+  const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(
+    collection(db, "Posts")
+  );
+  // const posts = querySnapshot.forEach(
+  //   (post: QueryDocumentSnapshot<DocumentData>) => {
+  //     const postData = post.data();
+  //     return new Post(
+  //       post.id,
+  //       postData.postDate,
+  //       postData.description,
+  //       postData.interest,
+  //       postData.imageURL,
+  //       postData.rating
+  //     );
+  //   }
+  // );
+  querySnapshot.forEach((post: QueryDocumentSnapshot<DocumentData>) => {
+    const postData = post.data();
+    console.log(post.id, " => ", post.data());
+    return new Post(
+      post.id,
+      postData.postDate,
+      postData.description,
+      postData.interest,
+      postData.imageURL,
+      postData.rating
+    );
+  });
+
+  // return posts;
+}
+
+// const posts = getPostData().map((post) => {
+//   const json: string = JSON.stringify(post);
+//   const postJSON = JSON.parse(json);
+//   console.log(postJSON);
+//   return (
+//     <ForumPost
+//       key={postJSON._postID}
+//       postID={post.postID}
+//       postDate={post.postDate}
+//       description={post.description}
+//       interest={post.interest}
+//       imageURL={post.imageURL}
+//       ratings={post.ratings}
+//       rating={post.calculateRating()}
+//     />
+//   );
+// });
 
 function ForumPost(props: any) {
   const [ratings, setRatings] = useState(props.rating);
@@ -49,6 +116,7 @@ function ForumPost(props: any) {
     }
   };
 
+  getPostData();
   const postImgPath = `/src/assets/images/${props.imageURL}`;
 
   return (

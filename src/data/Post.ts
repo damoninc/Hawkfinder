@@ -1,3 +1,5 @@
+import { DocumentSnapshot, SnapshotOptions } from "firebase/firestore";
+
 /**
  * The class for Posts
  *
@@ -112,6 +114,35 @@ class Post {
     return rating;
   }
 }
+
+// export const postConverter = {
+//   toFirestore: (post: Post) => {
+//     return {
+//       postID: post.postID,
+//       postDate: post.postDate,
+//       postDescription: post.description,
+//       postInterest: post.interest,
+//       postImageURL: post.imageURL,
+//       postRatings: post.ratings,
+//     };
+//   },
+//   fromFirestore: (snapshot: DocumentSnapshot, options: SnapshotOptions) => {
+//     if (snapshot.exists()) {
+//       const data = snapshot.data(options);
+//       const newPost = new Post(
+//         data.id,
+//         data.postDate,
+//         data.description,
+//         data.interest,
+//         data.imageURL,
+//         data.rating
+//       );
+//       return newPost;
+//     } else {
+//       console.log("Document does not exist.");
+//     }
+//   },
+// };
 
 export const SAMPLE_POSTS: Post[] = [
   new Post(
