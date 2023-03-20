@@ -1,5 +1,7 @@
 import React from "react";
 import { useState } from "react";
+import { db } from "../../firebase/config";
+import { doc, setDoc } from "firebase/firestore";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import {
   FaRegArrowAltCircleDown,
@@ -62,7 +64,11 @@ function ForumPost(props: any) {
         <img className="profile-pic" src="\src\assets\images\profileimg.jpg" />
       </div>
       <div className="post-img-container">
-        <img className="post-img" src={postImgPath} />
+        {props.imageURL !== "" ? (
+          <img className="post-img" src={postImgPath} />
+        ) : (
+          <></>
+        )}
       </div>
       <p className="post-description">{props.description}</p>
       <div className="ratings">

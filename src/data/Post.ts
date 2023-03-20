@@ -136,9 +136,9 @@ export const SAMPLE_POSTS: Post[] = [
   new Post(
     "8fSD8930bFg",
     new Date(2023, 2, 16, 10, 0),
-    "hypergrindcore death grunge ambient experimental prog art country",
+    "hypergrindcore death grunge ambient experimental prog art country is the best genre!!",
     "music",
-    "profileimg.jpg",
+    "",
     new Map<string, string>([
       ["39kvfsb", "upvote"],
       ["b929kcs", "upvote"],
