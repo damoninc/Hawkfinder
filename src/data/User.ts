@@ -196,7 +196,7 @@ export const userConverter = {
       const data = snapshot.data(options);
 
       const newUser = new User(
-        data.email,
+        data.email !== undefined ? data.email : '',
         data.password,
         data.profile.firstName,
         data.profile.lastName,

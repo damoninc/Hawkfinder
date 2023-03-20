@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 //import Profile, { sampleProfiles } from "../../data/Profile";
 import User, { userConverter } from "../../data/User";
 import "../../styles/friendpage.css";
@@ -7,12 +7,18 @@ import { testUsers } from "../../data/User";
 import SearchForm from "./SearchForm";
 //import { getDocs, collection } from "@firebase/firestore";
 import { db } from "../../App";
-import { doc, collection, query, where, getDoc } from "firebase/firestore";
+import {
+  doc,
+  collection,
+  query,
+  where,
+  getDoc,
+  getDocs,
+} from "firebase/firestore";
 
-const currUser = "RPqug4XyfRSchtX4NJdvgMy8Kn12";
-const dbCall: Array<string> = testUsers[0].friendsList;
+const currUser = "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1";
 
-//const dbCall: Array<User> = currUser.friendsList; // grab user friend's profiles using database call
+let dbPulled = false;
 
 /**
  * Generates a HTML block that displays a user's friend list by creating
@@ -22,7 +28,10 @@ const dbCall: Array<string> = testUsers[0].friendsList;
  * @return {*} - FriendPage HTML
  */
 function FriendPage() {
-  callDB();
+  const [dbCall, setFriends] = useState(null);
+  if (!dbPulled || dbCall == null) {
+    callDB(setFriends);
+  }
   return (
     <div className="friendPage">
       <h1>Friends List</h1>
@@ -31,13 +40,20 @@ function FriendPage() {
         title={"Username: "}
         buttonName={"Add"}
       />
-      {/* {checkNullList(dbCall)} */}
+      {checkNullList(dbCall)}
     </div>
   );
 }
 
-function checkNullList(friends: User[]) {
+function checkNullList(friends: User[] | null) {
   // Returns a list of FriendBox if the user's friends list is not empty
+  if (friends == null) {
+    return (
+      <div>
+        <h2>Loading Friends</h2>
+      </div>
+    );
+  }
   if (friends.length == 0) {
     return (
       <div>
@@ -76,20 +92,44 @@ export function goToProfile(friend: User) {
   alert("Cannot send " + friend.username + "'s Profile");
 }
 
-async function callDB() {
+async function callDB(setFriends: any) {
+  console.log("querying db");
   const querySnapshot = await getDoc(
     doc(db, "Users", currUser).withConverter(userConverter)
   );
 
   const user = querySnapshot.data();
 
-  console.log(user);
-  console.log(user?.friendsList);
+  const friends = new Array<User>();
 
-  // querySnapshot.docs.map((doc) => {
-  //   console.log(doc.id, " => ", doc.data());
-  //   console.log(doc.data());
-  // });
+  for (
+    let i = 0;
+    i < (user?.friendsList.length !== undefined ? user?.friendsList.length : 0);
+    i++
+  ) {
+    // Using username to store friends
+    const idQuery = await getDocs(
+      query(
+        collection(db, "Users"),
+        where("profile.username", "==", user?.friendsList[i])
+      )
+    );
+    const querySnapshot = await getDoc(
+      doc(db, "Users", idQuery.docs[0].id).withConverter(userConverter)
+    );
+
+    // Using document id to store friends
+    // const querySnapshot = await getDoc(
+    //   doc(db, "Users", friend).withConverter(userConverter)
+    // );
+
+    const data = querySnapshot.data();
+    if (data !== undefined) {
+      friends.push(data);
+    }
+  }
+  setFriends(friends);
+  dbPulled = true;
 }
 
 export default FriendPage;
