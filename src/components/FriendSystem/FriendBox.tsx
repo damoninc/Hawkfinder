@@ -1,6 +1,6 @@
 import React from "react";
 import "../../styles/friendbox.css";
-import User, { testUsers } from "../../data/User";
+import User from "../../data/User";
 import * as fp from "./FriendPage";
 /**
  * Generates a HTML block that displays a user based on their Profile information
