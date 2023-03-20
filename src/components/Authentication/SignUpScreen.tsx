@@ -2,10 +2,11 @@ import { useState } from "react";
 import "../../styles/loginscreen.css";
 import User, { testUsers } from "../../data/User";
 import React from "react";
-import { createUserWithEmailAndPassword} from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../App";
 import { auth } from "../../App";
+import { FirebaseError } from "firebase/app";
 
 /**
  * Sign up has 4 fields which are used to create a User object
@@ -33,48 +34,49 @@ function SignUpScreen() {
     } else if (!emailInput.includes("@")) {
       alert("Must have a valid email");
       return false;
-    } else if (passwordInput.length < 8) {
-      alert("Password must be 8 characters long");
-      return false;
     }
 
-    let duplicate = false;
-    testUsers.forEach((currentUser) => {
-      if (currentUser.email == emailInput) {
-        duplicate = true;
-      }
-    });
-
-    if (duplicate) {
-      alert("Email already exists!");
-      return false;
-    }
-
-    const madeUser = new User(
+      const madeUser = new User(
       emailInput,
       passwordInput,
       firstnameInput,
       lastnameInput
+
     );
     console.log("created user", madeUser.toString());
     testUsers.push(madeUser);
-    alert("New account created! Your username is " + madeUser.username);
-
-    createUserWithEmailAndPassword(auth, emailInput, passwordInput).then(cred =>{
-      setDoc(doc(db, 'Users', cred.user.uid),{
-          email:emailInput,
-          password:passwordInput,
-          profile:{
-              firstName:firstnameInput,
-              lastName:lastnameInput,
-              username:madeUser.username,
-              bio:madeUser.profile.bio,
-              interests:madeUser.profile.interests,
-              profilePicture:madeUser.profile.profilePicture,
-              coverPhoto:madeUser.profile.coverPhoto
-          }
-      });
-  });
+      createUserWithEmailAndPassword(auth, emailInput, passwordInput).then(
+        (cred) => {
+          setDoc(doc(db, "Users", cred.user.uid), {
+            email: emailInput,
+            friendsList: [],
+            profile: {
+              firstName: firstnameInput,
+              lastName: lastnameInput,
+              username: madeUser.username,
+              bio: madeUser.profile.bio,
+              interests: madeUser.profile.interests,
+              profilePicture: madeUser.profile.profilePicture,
+              coverPhoto: madeUser.profile.coverPhoto,
+            },
+          });
+          alert("New account created! Your username is " + madeUser.username);
+        }
+      )// TODO: Again, I gotta change these error messages
+      .catch((error : FirebaseError) => {
+        switch (error.code) {
+          case "auth/email-already-in-use":
+            alert("UH OH RAGGY! Email is already in use!")
+            break;
+          case "auth/weak-password":
+            alert("ZOINKS SCOOBS! Password is too weak, hit the gym!")
+            break;
+          default:
+            alert("WHAT THE FUCK DID YOU DO!")
+            alert(error.code)
+            break;
+        }
+      })
   }
 
   return (

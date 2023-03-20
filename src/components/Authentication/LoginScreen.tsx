@@ -1,9 +1,19 @@
 import "../../styles/loginscreen.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../../App";
+import { auth, db } from "../../App";
 import React from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  getDoc,
+  doc,
+  onSnapshot,
+} from "firebase/firestore";
+import { FirebaseError } from "firebase/app";
 
 /**
  * Login screen contains two use states which are used for the input fields
@@ -13,7 +23,6 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 function LoginScreen() {
   const [usernameInput, setUsernameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
-  const navigate = useNavigate();
 
   /**
    * checks if User is within the User array in the User.ts
@@ -25,10 +34,43 @@ function LoginScreen() {
       return false;
     }
 
-    signInWithEmailAndPassword(auth, usernameInput, passwordInput).then(cred =>
-      alert("Signed in as " + cred.user.email)
-    );
+    signInWithEmailAndPassword(auth, usernameInput, passwordInput).then(
+      async (cred) => {
+        
+        // Will keep this as a reference for layer
 
+        // const qCino = query(collection(db, "Users"), where("email", "==", usernameInput));
+        // const querySnapshot = getDocs(qCino);
+        // var userAuth;
+        // (await querySnapshot).forEach(
+        //   (doc) => {
+        //     userAuth = doc.data();
+        //     alert("Signed in as " + userAuth?.profile.firstName + " " + userAuth?.profile.lastName);
+        //     console.log(userAuth);
+        //   }
+        // );
+        const docRef = doc(db, "Users", cred.user.uid);
+        const docSnap = await getDoc(docRef);
+        const userAuth = docSnap.data();
+        alert("Signed in as " + userAuth?.profile.firstName + " " + userAuth?.profile.lastName);
+
+      }
+    ).catch((error : FirebaseError) => {
+          switch (error.code) {
+            case "auth/user-not-found":
+              alert("WHOOPSIES! It looks like that email doesn't exist!");
+              break;
+            case "auth/wrong-password":
+              alert("FORSOOTH! Shit don't work fam, that password wack!");
+              break;
+            case "auth/invalid-email":
+              alert("BY GOLLY! This is not a valid email!")
+              break;
+            default:
+              alert(error.code)
+              break;
+          }
+    })
   }
 
   return (
