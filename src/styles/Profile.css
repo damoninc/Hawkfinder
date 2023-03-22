@@ -38,15 +38,15 @@
   background-color: whitesmoke;
   border-radius: var(--dl-radius-radius-radius4);
   justify-content: flex-start;
+  transition: height 0.3s ease; /* add transition property */
 }
 .cover-photo {
-  top: 1px;
-  width: 70%;
-  left: 15%;
+  margin: 0 auto;
   height: 90%;
-  position: absolute;
+  width: 100%;
+  max-height: 500px;
+  max-width: 1400px;
   object-fit: cover;
-  flex: auto;
 }
 .profile-name {
   left: 317px;
@@ -101,8 +101,8 @@
 .text4 {
   align-self: center;
 }
-@media (max-width: 1600px) {
-  .cover-photo {
-    width: 1596px;
+@media (max-width: 768px) {
+  .profile-info {
+    max-height: 400px; /* change max-height for smaller screens */
   }
 }

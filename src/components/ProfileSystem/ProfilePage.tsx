@@ -36,14 +36,14 @@ const user = getUser();
 
 function ProfilePage() {
   return (
-    <div>
+    <>
       <Navbar />
       <div className="profile-info">
-        <img
-          src={"src/assets/images/coverphoto.jpg"}
-          alt="image"
-          className="cover-photo"
-        />
+          <img
+            src={"src/assets/images/coverphoto.jpg"}
+            alt="image"
+            className="cover-photo"
+          />
         <span className="profile-name">
           <span>{user?.profile.firstName + " " + user?.profile.lastName}</span>
           <br></br>
@@ -77,7 +77,7 @@ function ProfilePage() {
           ))}
         </ul>
       </div>
-    </div>
+    </>
   );
 }
 export default ProfilePage;
