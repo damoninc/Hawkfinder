@@ -1,5 +1,3 @@
-import { DocumentSnapshot, SnapshotOptions } from "firebase/firestore";
-
 /**
  * The class for Posts
  *
@@ -165,7 +163,7 @@ export const SAMPLE_POSTS: Post[] = [
     new Map<string, string>([["z0l2pvd", "downvote"]])
   ),
   new Post(
-    "8fSD8930bFg",
+    "V9kgS8fozxD3",
     new Date(2023, 2, 16, 10, 0),
     "hypergrindcore death grunge ambient experimental prog art country is the best genre!!",
     "music",

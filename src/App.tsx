@@ -4,26 +4,7 @@ import LogAndSign from "./components/Authentication/LogAndSign";
 import FriendPage from "./components/FriendSystem/FriendPage";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import "./App.css";
-import { SAMPLE_POSTS } from "./data/Post";
 import React from "react";
-
-const posts = SAMPLE_POSTS.map((post) => {
-  const json: string = JSON.stringify(post);
-  const postJSON = JSON.parse(json);
-  console.log(postJSON);
-  return (
-    <ForumPost
-      key={postJSON._postID}
-      postID={post.postID}
-      postDate={post.postDate}
-      description={post.description}
-      interest={post.interest}
-      imageURL={post.imageURL}
-      ratings={post.ratings}
-      rating={post.calculateRating()}
-    />
-  );
-});
 
 function App() {
   return (
@@ -52,7 +33,7 @@ function App() {
           </ul>
         </nav>
         <Routes>
-          <Route path="/components/Forum" element={posts} />
+          <Route path="/components/Forum" element={<ForumPost />} />
           <Route path="/components/Friends" element={<FriendPage />} />
           <Route path="/components/Login" element={<LogAndSign />} />
           <Route path="/components/Forum/post" element={<PostView />} />
