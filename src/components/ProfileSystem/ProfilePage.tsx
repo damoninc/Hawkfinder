@@ -12,7 +12,7 @@ import {
 } from "firebase/firestore";
 import { auth } from "../../App";
 import { db } from "../../App";
-
+import Navbar from "../Navbar/Navbar";
 /**
  * Firebase implementation is required for all
  *
@@ -34,20 +34,10 @@ function getUser() {
 
 const user = getUser();
 
-const meta = {
-  charset: "utf-8",
-  meta: {
-    name: "viewport",
-    content: "width=device-width, initial-scale=1.0",
-  },
-};
-
 function ProfilePage() {
   return (
     <div>
-      <div className="banner">
-        <h1 className="hawkfinder">Hawkfinder</h1>
-      </div>
+      <Navbar />
       <div className="profile-info">
         <img
           src={"src/assets/images/coverphoto.jpg"}

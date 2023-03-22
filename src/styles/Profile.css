@@ -17,6 +17,7 @@
   border-color: var(--dl-color-gray-black);
   border-width: 1px;
   background-color: teal;
+  align-self: center;
 }
 .hawkfinder {
   top: auto;
@@ -45,6 +46,7 @@
   height: 90%;
   position: absolute;
   object-fit: cover;
+  flex: auto;
 }
 .profile-name {
   left: 317px;
