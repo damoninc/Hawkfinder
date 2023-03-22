@@ -7,7 +7,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../App";
 import { auth } from "../../App";
 import { FirebaseError } from "firebase/app";
-import { Button } from "@mui/material";
+import { Button, Grid, Input } from "@mui/material";
 
 /**
  * Sign up has 4 fields which are used to create a User object
@@ -82,10 +82,9 @@ function SignUpScreen() {
     <div className="backboard">
       <fieldset className="loginSquare">
         <h1>Sign Up</h1>
-        <h1>
-          <label>
-            Email{" "}
-            <input
+        <Grid>
+          <Grid item>
+            <Input
               name="nameTyped"
               id="name"
               type="text"
@@ -93,12 +92,9 @@ function SignUpScreen() {
               required
               onChange={(emailwrote) => setEmail(emailwrote.target.value)}
             />
-          </label>
-        </h1>
-        <h1>
-          <label>
-            Password{" "}
-            <input
+          </Grid>
+          <Grid item>
+            <Input
               name="passTyped"
               id="password"
               type="text"
@@ -106,12 +102,9 @@ function SignUpScreen() {
               required
               onChange={(passwrote) => setPasswordInput(passwrote.target.value)}
             />
-          </label>
-        </h1>
-        <h1>
-          <label>
-            Firstname{" "}
-            <input
+          </Grid>
+          <Grid item>
+            <Input
               name="firstTyped"
               id="first"
               type="text"
@@ -119,12 +112,9 @@ function SignUpScreen() {
               required
               onChange={(firstwrote) => setFirstName(firstwrote.target.value)}
             />
-          </label>
-        </h1>
-        <h1>
-          <label>
-            Lastname{" "}
-            <input
+          </Grid>
+          <Grid item>
+            <Input
               name="lastTyped"
               id="last"
               type="text"
@@ -132,11 +122,11 @@ function SignUpScreen() {
               required
               onChange={(lastwrote) => setLastName(lastwrote.target.value)}
             />
-          </label>
-        </h1>
-        <Button variant="contained" onClick={createUser}>
-          Sign Up
-        </Button>
+          </Grid>
+            <Button variant="contained" onClick={createUser}>
+              Sign Up
+            </Button>
+        </Grid>
       </fieldset>
     </div>
   );

@@ -110,7 +110,6 @@ function LoginScreen() {
               id="password"
               type="text"
               placeholder="Password"
-              color="secondary"
               required
               onChange={(passwrote) => setPasswordInput(passwrote.target.value)}
             />
@@ -118,7 +117,6 @@ function LoginScreen() {
           <Button
             variant="contained"
             type="submit"
-            color="secondary"
             onClick={checkExist}
           >
             Login
