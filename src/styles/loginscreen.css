@@ -2,7 +2,7 @@
     display: block;
     text-align: center;
     color: white;
-    background-image: radial-gradient( rgb(25, 118, 210), rgb(27, 4, 41));
+    background-image: linear-gradient(to top right, rgb(255, 255, 255), rgb(30, 213, 219));
     padding: 20px;
     margin: 20px 0;
     justify-content: center;

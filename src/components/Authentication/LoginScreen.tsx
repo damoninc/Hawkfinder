@@ -15,9 +15,8 @@ import {
 } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
 import { Button, TextField } from "@mui/material";
-import Input from "@mui/material/Input";
-import { Box } from "@mui/system";
 import Grid from "@mui/material/Grid";
+import { useFormik } from "formik";
 
 /**
  * Login screen contains two use states which are used for the input fields
@@ -94,33 +93,31 @@ function LoginScreen() {
       <div className="backboard">
         <fieldset className="loginSquare">
           <h1>Login</h1>
-          <Grid item>
-            <Input
-              name="nameTyped"
-              id="name"
-              type="text"
-              placeholder="Email"
-              required
-              onChange={(namewrote) => setUsernameInput(namewrote.target.value)}
-            />
+          <Grid item mb={4}>
+              <TextField
+                label="Email"
+                id="name"
+                type="text"
+                required
+                onChange={(namewrote) =>
+                  setUsernameInput(namewrote.target.value)
+                }
+              />
           </Grid>
-          <Grid item>
-            <Input
-              name="passTyped"
+          <Grid item mb={4}>
+            <TextField
+              label="Password"
               id="password"
               type="text"
-              placeholder="Password"
               required
               onChange={(passwrote) => setPasswordInput(passwrote.target.value)}
             />
           </Grid>
-          <Button
-            variant="contained"
-            type="submit"
-            onClick={checkExist}
-          >
-            Login
-          </Button>
+          <Grid item>
+            <Button variant="contained" type="submit" onClick={checkExist}>
+              Login
+            </Button>
+          </Grid>
         </fieldset>
       </div>
     </Grid>
