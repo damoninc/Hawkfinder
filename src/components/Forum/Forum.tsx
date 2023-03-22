@@ -4,28 +4,6 @@ import { collection, getDocs } from "firebase/firestore";
 import Post from "../../data/Post";
 import ForumPost from "./ForumPost";
 
-const posts: Post[] = [];
-
-// const fetchPosts = async () => {
-//   console.log("DB CALL");
-//   await getDocs(collection(db, "Posts")).then((querySnapshot) => {
-//     querySnapshot.docs.map((doc) =>
-//       posts.push(
-//         new Post(
-//           doc.id,
-//           doc.data().postDate.toDate(),
-//           doc.data().description,
-//           doc.data().interest,
-//           doc.data().imageURL,
-//           doc.data().ratings
-//         )
-//       )
-//     );
-//     // console.log(tempPosts);
-//     // posts = tempPosts;
-//   });
-// };
-
 function Forum() {
   const [posts, setPosts] = useState([]);
 
