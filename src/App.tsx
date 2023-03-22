@@ -1,4 +1,5 @@
 import ForumPost from "./components/Forum/ForumPost";
+import Forum from "./components/Forum/Forum";
 import PostView from "./components/Post/PostView";
 import LogAndSign from "./components/Authentication/LogAndSign";
 import FriendPage from "./components/FriendSystem/FriendPage";
@@ -33,7 +34,7 @@ function App() {
           </ul>
         </nav>
         <Routes>
-          <Route path="/components/Forum" element={<ForumPost />} />
+          <Route path="/components/Forum" element={<Forum />} />
           <Route path="/components/Friends" element={<FriendPage />} />
           <Route path="/components/Login" element={<LogAndSign />} />
           <Route path="/components/Forum/post" element={<PostView />} />

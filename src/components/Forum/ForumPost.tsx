@@ -22,7 +22,7 @@ function ForumPost(props: any) {
   const [ratings, setRatings] = useState(props.rating);
   const [upvoted, setUpvoted] = useState(false);
   const [downvoted, setDownvoted] = useState(false);
-  const [posts, setPosts] = useState([]);
+  // const [posts, setPosts] = useState([]);
 
   const upvote = () => {
     if (!upvoted && !downvoted) {
@@ -55,90 +55,151 @@ function ForumPost(props: any) {
     }
   };
 
-  const fetchPosts = async () => {
-    await getDocs(collection(db, "Posts")).then((querySnapshot) => {
-      const tempPosts: any = querySnapshot.docs.map(
-        (doc) =>
-          new Post(
-            doc.id,
-            doc.data().postDate.toDate(),
-            doc.data().description,
-            doc.data().interest,
-            doc.data().imageURL,
-            doc.data().ratings
-          )
-      );
-      console.log("DB CALL");
-      console.log(tempPosts);
-      setPosts(tempPosts);
-    });
-  };
-  useEffect(() => {
-    fetchPosts();
-  }, []);
+  console.log("PROPS RECEIVED:", props);
 
+  const postImgPath = `/src/assets/images/${props.imageURL}`;
   return (
-    <div className="forum-container">
-      {posts?.map((post: Post) => {
-        // TODO: Hardcoded images not being shown
-        const postImgPath = `/src/assets/images/${props.imageURL}`;
-        return (
-          <div key={post.postID} className="post-container">
-            <div className="pic-crop">
-              <img
-                className="profile-pic"
-                src="\src\assets\images\profileimg.jpg"
-              />
-            </div>
-            <div className="post-img-container">
-              {props.imageURL !== "" ? (
-                <img className="post-img" src={postImgPath} />
-              ) : (
-                <></>
-              )}
-            </div>
-            <p className="post-description">{post.description}</p>
-            <div className="ratings">
-              {/**
-               * The upvote and downvote buttons that are rendered will depend
-               * on the state of upvoted and downvoted
-               */}
+    // Data passed in from props
+    /* {props._postID}
+        {props._postDate.toString}
+        {props._description}
+        {props._interest}
+        {props._imageURL}
+        {props._ratings} */
+    <div className="post-container">
+      <div className="pic-crop">
+        <img className="profile-pic" src="\src\assets\images\profileimg.jpg" />
+      </div>
+      <div className="post-img-container">
+        {props.imageURL !== "" ? (
+          <img className="post-img" src={postImgPath} />
+        ) : (
+          <></>
+        )}
+      </div>
+      <p className="post-description">{props.description}</p>
+      <div className="ratings">
+        {/**
+         * The upvote and downvote buttons that are rendered will depend
+         * on the state of upvoted and downvoted
+         */}
 
-              <div className="rating-button">
-                {!upvoted ? (
-                  <FaRegArrowAltCircleUp onClick={upvote} size={25} />
-                ) : (
-                  <FaArrowAltCircleUp onClick={upvote} size={25} />
-                )}
-              </div>
-              {/**
-               * TODO: post.calculateRating() returns an uncaught type
-               * error. Needs to be fixed in order to show the rating.
-               */}
-              <span className="rating">{0}</span>
+        <div className="rating-button">
+          {!upvoted ? (
+            <FaRegArrowAltCircleUp onClick={upvote} size={25} />
+          ) : (
+            <FaArrowAltCircleUp onClick={upvote} size={25} />
+          )}
+        </div>
 
-              <div className="rating-button">
-                {!downvoted ? (
-                  <FaRegArrowAltCircleDown onClick={downvote} size={25} />
-                ) : (
-                  <FaArrowAltCircleDown onClick={downvote} size={25} />
-                )}
-              </div>
-            </div>
-            <span className="post-interest">{post.interest}</span>
-            {/**
-             * TODO: Moving data from ForumPost to PostView is broken
-             */}
-            <Link to="/components/Forum/post" state={post}>
-              <div className="expand-post-icon">
-                <AiOutlineExpandAlt size={20} />
-              </div>
-            </Link>
-          </div>
-        );
-      })}
+        <span className="rating">{ratings}</span>
+
+        <div className="rating-button">
+          {!downvoted ? (
+            <FaRegArrowAltCircleDown onClick={downvote} size={25} />
+          ) : (
+            <FaArrowAltCircleDown onClick={downvote} size={25} />
+          )}
+        </div>
+      </div>
+      <span className="post-interest">{props.interest}</span>
+      <Link to="/components/Forum/post" state={props}>
+        <div className="expand-post-icon">
+          <AiOutlineExpandAlt size={20} />
+        </div>
+      </Link>
+      {/* <Routes>
+        <Route
+          path="/components/Forum/post"
+          element={<PostView {...props} />}
+        />
+      </Routes> */}
     </div>
   );
+
+  // const fetchPosts = async () => {
+  //   await getDocs(collection(db, "Posts")).then((querySnapshot) => {
+  //     const tempPosts: any = querySnapshot.docs.map(
+  //       (doc) =>
+  //         new Post(
+  //           doc.id,
+  //           doc.data().postDate.toDate(),
+  //           doc.data().description,
+  //           doc.data().interest,
+  //           doc.data().imageURL,
+  //           doc.data().ratings
+  //         )
+  //     );
+  //     console.log("DB CALL");
+  //     console.log(tempPosts);
+  //     setPosts(tempPosts);
+  //   });
+  // };
+  // useEffect(() => {
+  //   fetchPosts();
+  // }, []);
+  // return (
+  //   <div className="forum-container">
+  //     {posts?.map((post: Post) => {
+  //       // TODO: Hardcoded images not being shown
+  //       const postImgPath = `/src/assets/images/${props.imageURL}`;
+  //       return (
+  //         <div key={post.postID} className="post-container">
+  //           <div className="pic-crop">
+  //             <img
+  //               className="profile-pic"
+  //               src="\src\assets\images\profileimg.jpg"
+  //             />
+  //           </div>
+  //           <div className="post-img-container">
+  //             {props.imageURL !== "" ? (
+  //               <img className="post-img" src={postImgPath} />
+  //             ) : (
+  //               <></>
+  //             )}
+  //           </div>
+  //           <p className="post-description">{post.description}</p>
+  //           <div className="ratings">
+  //             {/**
+  //              * The upvote and downvote buttons that are rendered will depend
+  //              * on the state of upvoted and downvoted
+  //              */}
+
+  //             <div className="rating-button">
+  //               {!upvoted ? (
+  //                 <FaRegArrowAltCircleUp onClick={upvote} size={25} />
+  //               ) : (
+  //                 <FaArrowAltCircleUp onClick={upvote} size={25} />
+  //               )}
+  //             </div>
+  //             {/**
+  //              * TODO: post.calculateRating() returns an uncaught type
+  //              * error. Needs to be fixed in order to show the rating.
+  //              */}
+  //             <span className="rating">{0}</span>
+
+  //             <div className="rating-button">
+  //               {!downvoted ? (
+  //                 <FaRegArrowAltCircleDown onClick={downvote} size={25} />
+  //               ) : (
+  //                 <FaArrowAltCircleDown onClick={downvote} size={25} />
+  //               )}
+  //             </div>
+  //           </div>
+  //           <span className="post-interest">{post.interest}</span>
+  //           {/**
+  //            * TODO: Moving data from ForumPost to PostView is broken
+  //            */}
+  //           <Link to="/components/Forum/post" state={post}>
+  //             <div className="expand-post-icon">
+  //               <AiOutlineExpandAlt size={20} />
+  //             </div>
+  //           </Link>
+  //         </div>
+  //       );
+  //     })}
+  //   </div>
+  // );
 }
 
 export default ForumPost;
