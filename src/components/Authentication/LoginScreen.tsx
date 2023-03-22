@@ -27,6 +27,7 @@ import Grid from "@mui/material/Grid";
 function LoginScreen() {
   const [usernameInput, setUsernameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
+  let navigate = useNavigate();
 
   /**
    * checks if User is within the User array in the User.ts
@@ -66,6 +67,7 @@ function LoginScreen() {
               " " +
               userAuth?.profile.lastName
           );
+          navigate("/components/Forum");
         }
         // TODO: I gotta change these error messages
       )
@@ -92,7 +94,6 @@ function LoginScreen() {
       <div className="backboard">
         <fieldset className="loginSquare">
           <h1>Login</h1>
-
           <Grid item>
             <Input
               name="nameTyped"
