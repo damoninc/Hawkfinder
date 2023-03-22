@@ -51,6 +51,7 @@ function SignUpScreen() {
           email: emailInput,
           friendsList: [],
           profile: {
+            userid: cred.user.uid,
             firstName: firstnameInput,
             lastName: lastnameInput,
             username: madeUser.username,

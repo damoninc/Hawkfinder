@@ -26,7 +26,16 @@ import { useFormik } from "formik";
 function LoginScreen() {
   const [usernameInput, setUsernameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    onSubmit: (values) => {
+      alert(JSON.stringify(values, null, 2));
+    },
+  });
 
   /**
    * checks if User is within the User array in the User.ts
@@ -94,15 +103,13 @@ function LoginScreen() {
         <fieldset className="loginSquare">
           <h1>Login</h1>
           <Grid item mb={4}>
-              <TextField
-                label="Email"
-                id="name"
-                type="text"
-                required
-                onChange={(namewrote) =>
-                  setUsernameInput(namewrote.target.value)
-                }
-              />
+            <TextField
+              label="Email"
+              id="name"
+              type="text"
+              required
+              onChange={(namewrote) => setUsernameInput(namewrote.target.value)}
+            />
           </Grid>
           <Grid item mb={4}>
             <TextField
