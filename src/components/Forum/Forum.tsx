@@ -31,15 +31,15 @@ function Forum() {
 
   const fetchPosts = async () => {
     await getDocs(collection(db, "Posts")).then((querySnapshot) => {
-      console.log("DB CALL");
       const tempPosts: any = querySnapshot.docs.map((doc) => {
-        new Post(
+        console.log("DB CALL");
+        return new Post(
           doc.id,
           doc.data().postDate.toDate(),
           doc.data().description,
           doc.data().interest,
           doc.data().imageURL,
-          doc.data().ratings
+          new Map(Object.entries(doc.data().ratings))
         );
       });
       console.log("new posts created ", tempPosts);
@@ -47,29 +47,14 @@ function Forum() {
     });
   };
 
-  fetchPosts();
-  console.log(posts);
-
-  // const postComponents = posts.map((post: Post) => {
-  //   console.log("NEW POST RETURNED");
-  //   return (
-  //     <ForumPost
-  //       key={post.postID}
-  //       postDate={post.postDate}
-  //       description={post.description}
-  //       interest={post.interest}
-  //       imageURL={post.imageURL}
-  //       ratings={post.ratings}
-  //       rating={post.calculateRating()}
-  //     />
-  //   );
-  // });
-  // return postComponents;
+  useEffect(() => {
+    fetchPosts();
+  }, []);
 
   return (
     <>
       {posts.map((post: Post) => {
-        console.log("NEW POST RETURNED");
+        console.log("NEW POST COMPONENT RETURNED");
         return (
           <ForumPost
             key={post.postID}
