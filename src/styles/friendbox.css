@@ -1,45 +1,79 @@
 /* Main container */
-.container {
-  box-sizing: border-box;
+  .container {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-evenly;
+    width: auto;
+    margin: auto;
+    border: 1px solid black;
+    vertical-align: middle;
+    height: auto;
+    max-height: 100px;
+    min-width: 200px;
+    max-width: 400px;
+  }
+
+  /* Friend information (name, interests, etc.) */
+  .smallContent {
+    font-size: 15px;
+    text-align: left;
+    width: 50%;
+    padding-right: 5%;
+
+  }
+
+  /* Friend information (name, interests, etc.) */
+  .bigContent {
+    font-size: 15px;
+    text-align: left;
+    width: 50%;
+    padding-right: 5%;
+    white-space:normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 100px;
+  }
+  
+  /* Container holding buttons */
+  .buttons {
   display: flex;
+  flex-direction: column;
   justify-content: space-evenly;
-  width: 450px;
-  margin: auto;
+  padding-right: 10px;
+  }
+  
+  /* Buttons */
+  .button {
   border: 1px solid black;
-  vertical-align: middle;
-  height: 102px;
+  color: black;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  }
+  
+  /* Profile Picture */
+  .propic {
+  justify-content: center;
+  margin-right: 10px;
+  }
+
+@media (max-width: 500px) {
+  .smallContent {
+    display: block;
+  }
+  .bigContent {
+    display: none;
+  }
 }
 
-/* Friend information (name, interests, etc.) */
-.content {
-  font-size: 15px;
-  text-align: left;
-  width: 50%;
-  padding-right: 5%;
-}
-
-/* Container holding buttons */
-.buttons {
-display: flex;
-flex-direction: column;
-justify-content: space-evenly;
-padding-right: 10px;
-}
-
-/* Buttons */
-.button {
-border: 1px solid black;
-color: black;
-text-align: center;
-text-decoration: none;
-display: inline-block;
-font-size: 16px;
-margin: 4px 2px;
-cursor: pointer;
-}
-
-/* Profile Picture */
-.propic {
-justify-content: center;
-margin-right: 10px;
+@media (min-width: 501px) {
+  .smallContent {
+    display: none;
+  }
+  .bigContent {
+    display: block;
+  }
 }

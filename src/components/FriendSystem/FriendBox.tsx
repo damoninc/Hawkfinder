@@ -26,12 +26,17 @@ function FriendBox(friend: User) {
       <div className="propic">
         <img src={imgPath} width="100" height="100"></img>
       </div>
-      <div className="content">
+      <div className="bigContent">
         <h3>
           {" "}
           {friend.profile.firstName} {friend.profile.lastName}{" "}
         </h3>
         <p>{interests}</p>
+      </div>
+      <div className="smallContent">
+        <h3>
+          {friend.profile.firstName} {friend.profile.lastName}{" "}
+        </h3>
       </div>
       <div className="buttons">
         <button

@@ -162,7 +162,7 @@ async function callDB(setFriends: any) {
     if (data !== undefined) {
       friends.push(data);
     }
-    console.log("DB Call")
+    console.log("DB Call");
   }
   setFriends(friends);
   dbPulled = true;
