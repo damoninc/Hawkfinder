@@ -2,12 +2,11 @@ import React from "react";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import {
-  FaRegArrowAltCircleDown,
-  FaRegArrowAltCircleUp,
-  FaArrowAltCircleDown,
-  FaArrowAltCircleUp,
-} from "react-icons/fa";
-import Post from "../../data/Post";
+  ArrowCircleUpOutlined,
+  ArrowCircleDownOutlined,
+} from "@mui/icons-material";
+import { IconButton } from "@mui/material";
+import "../../styles/postview.css";
 
 function PostView() {
   /**
@@ -58,12 +57,16 @@ function PostView() {
   const postImgPath = `/src/assets/images/${state.imageURL}`;
 
   return (
-    <div className="post-view">
+    <div className="post-container">
       <div className="pic-crop">
         <img className="profile-pic" src="\src\assets\images\profileimg.jpg" />
       </div>
       <div className="post-img-container">
-        <img className="post-img" src={postImgPath} />
+        {state.imageURL !== "" ? (
+          <img className="post-img" src={postImgPath} />
+        ) : (
+          <></>
+        )}
       </div>
       <p className="post-description">{state.description}</p>
       <div className="ratings">
@@ -74,9 +77,21 @@ function PostView() {
 
         <div className="rating-button">
           {!upvoted ? (
-            <FaRegArrowAltCircleUp onClick={upvote} size={25} />
+            <IconButton className="rating-button" onClick={upvote}>
+              <ArrowCircleUpOutlined
+                fontSize="large"
+                color="primary"
+                style={{ fill: "black" }}
+              />
+            </IconButton>
           ) : (
-            <FaArrowAltCircleUp onClick={upvote} size={25} />
+            <IconButton className="rating-button" onClick={upvote}>
+              <ArrowCircleUpOutlined
+                fontSize="large"
+                color="primary"
+                style={{ fill: "blue" }}
+              />
+            </IconButton>
           )}
         </div>
 
@@ -84,9 +99,21 @@ function PostView() {
 
         <div className="rating-button">
           {!downvoted ? (
-            <FaRegArrowAltCircleDown onClick={downvote} size={25} />
+            <IconButton className="rating-button" onClick={downvote}>
+              <ArrowCircleDownOutlined
+                fontSize="large"
+                color="primary"
+                style={{ fill: "black" }}
+              />
+            </IconButton>
           ) : (
-            <FaArrowAltCircleDown onClick={downvote} size={25} />
+            <IconButton className="rating-button" onClick={downvote}>
+              <ArrowCircleDownOutlined
+                fontSize="large"
+                color="primary"
+                style={{ fill: "blue" }}
+              />
+            </IconButton>
           )}
         </div>
       </div>

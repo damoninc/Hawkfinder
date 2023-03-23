@@ -1,16 +1,9 @@
 import React from "react";
 import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import {
-  FaRegArrowAltCircleDown,
-  FaRegArrowAltCircleUp,
-  FaArrowAltCircleDown,
-  FaArrowAltCircleUp,
-} from "react-icons/fa";
 import { ArrowCircleUp, ArrowCircleDown, OpenWith } from "@mui/icons-material";
-import { AiOutlineExpandAlt } from "react-icons/ai";
-import "../../styles/forumpost.css";
 import { IconButton } from "@mui/material";
+import "../../styles/forumpost.css";
 
 function ForumPost(props: any) {
   const [ratings, setRatings] = useState(props.rating);
@@ -47,8 +40,6 @@ function ForumPost(props: any) {
       setDownvoted(false);
     }
   };
-
-  console.log("PROPS RECEIVED:", props);
 
   const postImgPath = `/src/assets/images/${props.imageURL}`;
   return (

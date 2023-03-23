@@ -20,7 +20,6 @@ function Forum() {
           new Map(Object.entries(doc.data().ratings))
         );
       });
-      console.log("new posts created ", tempPosts);
       setPosts(tempPosts);
     });
   };
@@ -30,7 +29,7 @@ function Forum() {
   }, []);
 
   return (
-    <>
+    <div className="forum-container">
       {posts.map((post: Post) => {
         console.log("NEW POST COMPONENT RETURNED");
         return (
@@ -45,7 +44,7 @@ function Forum() {
           />
         );
       })}
-    </>
+    </div>
   );
 }
 
