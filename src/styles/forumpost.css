@@ -61,8 +61,8 @@
 
 .rating-button {
   cursor: pointer;
-  width: 24.3px;
-  height: 24.3px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
 }
 
@@ -72,15 +72,15 @@
 
 .rating-button:hover,
 .rating-button-selected:hover {
-  background-color: gray;
+  background-color: rgb(56, 56, 56);
   transition: 200ms;
 }
 
 .expand-post-icon {
   position: absolute;
   border-radius: 3px;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   bottom: 2%;
   right: 1%;
 }

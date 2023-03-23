@@ -7,8 +7,10 @@ import {
   FaArrowAltCircleDown,
   FaArrowAltCircleUp,
 } from "react-icons/fa";
+import { ArrowCircleUp, ArrowCircleDown, OpenWith } from "@mui/icons-material";
 import { AiOutlineExpandAlt } from "react-icons/ai";
 import "../../styles/forumpost.css";
+import { IconButton } from "@mui/material";
 
 function ForumPost(props: any) {
   const [ratings, setRatings] = useState(props.rating);
@@ -75,28 +77,53 @@ function ForumPost(props: any) {
          * on the state of upvoted and downvoted
          */}
 
-        <div className="rating-button">
+        <div className="rating-button-container">
           {!upvoted ? (
-            <FaRegArrowAltCircleUp onClick={upvote} size={25} />
+            // <FaRegArrowAltCircleUp onClick={upvote} size={25} />
+            <IconButton className="rating-button" onClick={upvote}>
+              <ArrowCircleUp
+                fontSize="large"
+                color="primary"
+                style={{ fill: "black" }}
+              />
+            </IconButton>
           ) : (
-            <FaArrowAltCircleUp onClick={upvote} size={25} />
+            <IconButton className="rating-button" onClick={upvote}>
+              <ArrowCircleUp
+                fontSize="large"
+                color="primary"
+                style={{ fill: "blue" }}
+              />
+            </IconButton>
           )}
         </div>
 
         <span className="rating">{ratings}</span>
 
-        <div className="rating-button">
+        <div className="rating-button-container">
           {!downvoted ? (
-            <FaRegArrowAltCircleDown onClick={downvote} size={25} />
+            <IconButton className="rating-button" onClick={downvote}>
+              <ArrowCircleDown
+                fontSize="large"
+                color="primary"
+                style={{ fill: "black" }}
+              />
+            </IconButton>
           ) : (
-            <FaArrowAltCircleDown onClick={downvote} size={25} />
+            <IconButton className="rating-button" onClick={downvote}>
+              <ArrowCircleDown
+                fontSize="large"
+                color="primary"
+                style={{ fill: "blue" }}
+              />
+            </IconButton>
           )}
         </div>
       </div>
       <span className="post-interest">{props.interest}</span>
       <Link to="/components/Forum/post" state={props}>
         <div className="expand-post-icon">
-          <AiOutlineExpandAlt size={20} />
+          <OpenWith />
         </div>
       </Link>
     </div>
