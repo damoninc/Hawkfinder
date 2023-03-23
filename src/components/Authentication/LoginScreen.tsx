@@ -19,56 +19,69 @@ import Grid from "@mui/material/Grid";
 import { useFormik } from "formik";
 
 /**
- * Login screen contains two use states which are used for the input fields
- * TODO: Add firebase implementation
+ * 
+ * Login Screen checks for a user within the database using email and password authentication
  * @returns The login screen component
  */
 function LoginScreen() {
-  const [usernameInput, setUsernameInput] = useState("");
-  const [passwordInput, setPasswordInput] = useState("");
   const navigate = useNavigate();
+  const [accountNotFound, setAccountNotFound] = useState(false);
+  const [accountMessage, setAccountMessage] = useState("");
+
+  interface ErrorLoginInfo {
+    email? : string,
+    password? : string
+  }
+
+  /*
+  A long winded story:
+  
+  validate is used to determine if any of the textareas are wrong, as it will return a specfic error message.
+  The issue is that for it to pass, it has to return a "{}", but writing "const errors = {}" gives you an error, stating
+  that "Property email/password does not exist on type '{}'", however the code will run without errors. In order to remove
+  these error message, I created an interface called ErrorLoginInfo, that has these values as optional inputs. This allows the 
+  values to not be created, meaning it can pass the tests and will create them if there are errors. Whoopee.
+
+  */ 
+  const validate = (values: any) => {
+    const errors : ErrorLoginInfo = {};  
+    if (!formik.values.email) {
+      errors.email = "Must fill out email";
+    } else if (!formik.values.email.includes("@")) {
+      errors.email = "Email must include @";
+    }
+    if (!formik.values.password) {
+      errors.password = "Must fill out password";
+    }
+    return errors;  
+  };
+
+  /**
+   * This is the core backbone of the forums. Most of the heavy lifting is done by this hook.
+   */
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
     },
+    validate,
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      checkExist(values.email, values.password);
     },
   });
 
   /**
-   * checks if User is within the User array in the User.ts
-   * @returns false is used as a placeholder, it isn't actually used
+   * Uses the FireBase method to sign in with an email and password
+   * @returns null
    */
-  function checkExist() {
-    if (usernameInput == "" || passwordInput == "") {
-      alert("Must fill out email or password.");
-      return false;
-    }
-
+  function checkExist(usernameInput: string, passwordInput: string) {
     signInWithEmailAndPassword(auth, usernameInput, passwordInput)
       .then(
         async (cred) => {
-          // Will keep this as a reference for layer
-
-          // const qCino = query(collection(db, "Users"), where("email", "==", usernameInput));
-          // const querySnapshot = getDocs(qCino);
-          // var userAuth;
-          // (await querySnapshot).forEach(
-          //   (doc) => {
-          //     userAuth = doc.data();
-          //     alert("Signed in as " + userAuth?.profile.firstName + " " + userAuth?.profile.lastName);
-          //     console.log(userAuth);
-          //   }
-          // );
-
-          /**
-           *
-           */
           const docRef = doc(db, "Users", cred.user.uid);
           const docSnap = await getDoc(docRef);
           const userAuth = docSnap.data();
+          setAccountNotFound(false);
           alert(
             "Signed in as " +
               userAuth?.profile.firstName +
@@ -77,21 +90,21 @@ function LoginScreen() {
           );
           navigate("/components/Forum");
         }
-        // TODO: I gotta change these error messages
-      )
+        
+      ) // TODO: Will want to ask if we want a general error message.
       .catch((error: FirebaseError) => {
         switch (error.code) {
           case "auth/user-not-found":
-            alert("WHOOPSIES! It looks like that email doesn't exist!");
+            setAccountNotFound(true);
+            setAccountMessage("Account not found");
             break;
           case "auth/wrong-password":
-            alert("FORSOOTH! Shit don't work fam, that password wack!");
-            break;
-          case "auth/invalid-email":
-            alert("BY GOLLY! This is not a valid email!");
+            setAccountNotFound(true);
+            setAccountMessage("Account not found");
             break;
           default:
-            alert(error.code);
+            setAccountNotFound(true);
+            setAccountMessage(`UH OH! Unknown error: ${error.code}.`);
             break;
         }
       });
@@ -101,30 +114,43 @@ function LoginScreen() {
     <Grid>
       <div className="backboard">
         <fieldset className="loginSquare">
-          <h1>Login</h1>
-          <Grid item mb={4}>
-            <TextField
-              label="Email"
-              id="name"
-              type="text"
-              required
-              onChange={(namewrote) => setUsernameInput(namewrote.target.value)}
-            />
-          </Grid>
-          <Grid item mb={4}>
-            <TextField
-              label="Password"
-              id="password"
-              type="text"
-              required
-              onChange={(passwrote) => setPasswordInput(passwrote.target.value)}
-            />
-          </Grid>
-          <Grid item>
-            <Button variant="contained" type="submit" onClick={checkExist}>
-              Login
-            </Button>
-          </Grid>
+          <form onSubmit={formik.handleSubmit}>
+            <h1>Login</h1>
+            <Grid item mb={4}>
+              <TextField
+                label="Email" // What the text box displays
+                id="email" // Make sure this is the same as your formik value, or it won't allow you to type in the box
+                type="text"  // Setting type to text
+                onChange={formik.handleChange}  // This will use the formik hook to handle most of the backend changes
+                value={formik.values.email}  // This is the value that will change, and is used for validation and submission
+                error={formik.touched.email && Boolean(formik.errors.email)}  // touched means that the user hasn't 'touched' the specific input. Errors will cause the box to turn red if it gets an error.
+                helperText={formik.touched.email && formik.errors.email}  // Same idea as above, but this will display a message specific error.
+                // onBlur={formik.handleBlur}  Blur means it will check for errors as you're typing. Not ideal for UX.
+              />
+            </Grid>
+            <Grid item mb={4}>
+              <TextField
+                label="Password"
+                id="password"
+                type="text"
+                onChange={formik.handleChange}
+                value={formik.values.password}
+                error={formik.touched.password && Boolean(formik.errors.password)}
+                helperText={formik.touched.password && formik.errors.password}
+                // onBlur={formik.handleBlur}
+              />
+            </Grid>
+            {accountNotFound ? <h3 style={{color: "red"}}>{accountMessage}</h3> : null}
+            <Grid item>
+              <Button
+                variant="outlined"
+                type="submit"
+                sx={{ color: "purple", borderBlockColor: "purple" }}
+              >
+                Login
+              </Button>
+            </Grid>
+          </form>
         </fieldset>
       </div>
     </Grid>
