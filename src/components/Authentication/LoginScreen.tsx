@@ -115,7 +115,7 @@ function LoginScreen() {
     } else if (accountMessage == "Looking for user...") {
       return <CircularProgress />;
     } else {
-      return <h3 style={{ color: "red" }}>{accountMessage}</h3>;
+      return <h2 className="errorMessage">{accountMessage}</h2>;
     }
   }
 
@@ -158,10 +158,7 @@ function LoginScreen() {
             {loadingUserMessage()}
             <Container>
               <Grid item>
-                <Button
-                  variant="outlined"
-                  type="submit"
-                >
+                <Button variant="outlined" type="submit">
                   Login
                 </Button>
               </Grid>
