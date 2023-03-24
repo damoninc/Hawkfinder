@@ -17,9 +17,10 @@ import { FirebaseError } from "firebase/app";
 import { Button, CircularProgress, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useFormik } from "formik";
+import { Container } from "@mui/system";
 
 /**
- * 
+ *
  * Login Screen checks for a user within the database using email and password authentication
  * @returns The login screen component
  */
@@ -28,8 +29,8 @@ function LoginScreen() {
   const [accountMessage, setAccountMessage] = useState("");
 
   interface ErrorLoginInfo {
-    email? : string,
-    password? : string
+    email?: string;
+    password?: string;
   }
 
   /*
@@ -41,9 +42,9 @@ function LoginScreen() {
   these error message, I created an interface called ErrorLoginInfo, that has these values as optional inputs. This allows the 
   values to not be created, meaning it can pass the tests and will create them if there are errors. Whoopee.
 
-  */ 
-  function validate(values: any) {
-    const errors : ErrorLoginInfo = {};  
+  */
+  function validate() {
+    const errors: ErrorLoginInfo = {};
     if (!formik.values.email) {
       errors.email = "Must fill out email";
     } else if (!formik.values.email.includes("@")) {
@@ -52,8 +53,8 @@ function LoginScreen() {
     if (!formik.values.password) {
       errors.password = "Must fill out password";
     }
-    return errors;  
-  };
+    return errors;
+  }
 
   /**
    * This is the core backbone of the forums. Most of the heavy lifting is done by this hook.
@@ -74,23 +75,20 @@ function LoginScreen() {
    * @returns null
    */
   function checkExist(usernameInput: string, passwordInput: string) {
-    setAccountMessage("Looking for user..."); 
+    setAccountMessage("Looking for user...");
     signInWithEmailAndPassword(auth, usernameInput, passwordInput)
-      .then(
-        async (cred) => {
-          const docRef = doc(db, "Users", cred.user.uid);
-          const docSnap = await getDoc(docRef);
-          const userAuth = docSnap.data();
-          alert(
-            "Signed in as " +
-              userAuth?.profile.firstName +
-              " " +
-              userAuth?.profile.lastName
-          );
-          navigate("/components/Forum");
-        }
-        
-      ) // TODO: Will want to ask if we want a general error message.
+      .then(async (cred) => {
+        const docRef = doc(db, "Users", cred.user.uid);
+        const docSnap = await getDoc(docRef);
+        const userAuth = docSnap.data();
+        alert(
+          "Signed in as " +
+            userAuth?.profile.firstName +
+            " " +
+            userAuth?.profile.lastName
+        );
+        navigate("/components/Forum");
+      }) // TODO: Will want to ask if we want a general error message.
       .catch((error: FirebaseError) => {
         switch (error.code) {
           case "auth/user-not-found":
@@ -109,63 +107,69 @@ function LoginScreen() {
   /**
    * This will display a loading circle when the User clicks the button, and display
    * an error message if applicable.
-   * @returns A loading circle, a message, or null 
+   * @returns A loading circle, a message, or null
    */
   function loadingUserMessage() {
     if (accountMessage == "") {
-      return null
+      return null;
+    } else if (accountMessage == "Looking for user...") {
+      return <CircularProgress />;
+    } else {
+      return <h3 style={{ color: "red" }}>{accountMessage}</h3>;
     }
-    else if (accountMessage == "Looking for user...") {
-      return <CircularProgress />
-    }
-    else {
-      return <h3 style={{color: "red"}}>{accountMessage}</h3>
-    }
-
   }
 
   return (
-    <Grid>
-        <fieldset className="loginSquare">
-          <form onSubmit={formik.handleSubmit}>
-            <h1>Login</h1>
-            <Grid item mb={4}>
-              <TextField
-                label="Email" // What the text box displays
-                id="email" // Make sure this is the same as your formik value, or it won't allow you to type in the box
-                type="text"  // Setting type to text
-                onChange={formik.handleChange}  // This will use the formik hook to handle most of the backend changes
-                value={formik.values.email}  // This is the value that will change, and is used for validation and submission
-                error={formik.touched.email && Boolean(formik.errors.email)}  // touched means that the user hasn't 'touched' the specific input. Errors will cause the box to turn red if it gets an error.
-                helperText={formik.touched.email && formik.errors.email}  // Same idea as above, but this will display a message specific error.
-                // onBlur={formik.handleBlur}  Blur means it will check for errors as you're typing. Not ideal for UX.
-              />
-            </Grid>
-            <Grid item mb={4}>
-              <TextField
-                label="Password"
-                id="password"
-                type="text"
-                onChange={formik.handleChange}
-                value={formik.values.password}
-                error={formik.touched.password && Boolean(formik.errors.password)}
-                helperText={formik.touched.password && formik.errors.password}
-                // onBlur={formik.handleBlur}
-              />
-            </Grid>
+    <fieldset className="loginSquare">
+      <h1>Login</h1>
+      <form onSubmit={formik.handleSubmit}>
+        <Container className="formGaps">
+          <Grid>
+            <Container>
+              <Grid item>
+                <TextField
+                  label="Email" // What the text box displays
+                  id="email" // Make sure this is the same as your formik value, or it won't allow you to type in the box
+                  type="text" // Setting type to text
+                  onChange={formik.handleChange} // This will use the formik hook to handle most of the backend changes
+                  value={formik.values.email} // This is the value that will change, and is used for validation and submission
+                  error={formik.touched.email && Boolean(formik.errors.email)} // touched means that the user hasn't 'touched' the specific input. Errors will cause the box to turn red if it gets an error.
+                  helperText={formik.touched.email && formik.errors.email} // Same idea as above, but this will display a message specific error.
+                  // onBlur={formik.handleBlur}  Blur means it will check for errors as you're typing. Not ideal for UX.
+                />
+              </Grid>
+            </Container>
+            <Container>
+              <Grid item>
+                <TextField
+                  label="Password"
+                  id="password"
+                  type="text"
+                  onChange={formik.handleChange}
+                  value={formik.values.password}
+                  error={
+                    formik.touched.password && Boolean(formik.errors.password)
+                  }
+                  helperText={formik.touched.password && formik.errors.password}
+                  // onBlur={formik.handleBlur}
+                />
+              </Grid>
+            </Container>
             {loadingUserMessage()}
-            <Grid item>
-              <Button
-                variant="outlined"
-                type="submit"
-                sx={{ color: "purple", borderBlockColor: "purple" }}
-              >
-                Login
-              </Button>
-            </Grid>
-          </form>
-        </fieldset>
-    </Grid>
+            <Container>
+              <Grid item>
+                <Button
+                  variant="outlined"
+                  type="submit"
+                >
+                  Login
+                </Button>
+              </Grid>
+            </Container>
+          </Grid>
+        </Container>
+      </form>
+    </fieldset>
   );
 }
 export default LoginScreen;
