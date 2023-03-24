@@ -49,9 +49,9 @@ function SignUpScreen() {
       .then((cred) => {
         setDoc(doc(db, "Users", cred.user.uid), {
           email: emailInput,
+          userid: cred.user.uid,
           friendsList: [],
           profile: {
-            userid: cred.user.uid,
             firstName: firstnameInput,
             lastName: lastnameInput,
             username: madeUser.username,

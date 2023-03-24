@@ -14,7 +14,7 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
-import { Button, TextField } from "@mui/material";
+import { Button, CircularProgress, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useFormik } from "formik";
 
@@ -25,7 +25,6 @@ import { useFormik } from "formik";
  */
 function LoginScreen() {
   const navigate = useNavigate();
-  const [accountNotFound, setAccountNotFound] = useState(false);
   const [accountMessage, setAccountMessage] = useState("");
 
   interface ErrorLoginInfo {
@@ -43,7 +42,7 @@ function LoginScreen() {
   values to not be created, meaning it can pass the tests and will create them if there are errors. Whoopee.
 
   */ 
-  const validate = (values: any) => {
+  function validate(values: any) {
     const errors : ErrorLoginInfo = {};  
     if (!formik.values.email) {
       errors.email = "Must fill out email";
@@ -75,13 +74,13 @@ function LoginScreen() {
    * @returns null
    */
   function checkExist(usernameInput: string, passwordInput: string) {
+    setAccountMessage("Looking for user..."); 
     signInWithEmailAndPassword(auth, usernameInput, passwordInput)
       .then(
         async (cred) => {
           const docRef = doc(db, "Users", cred.user.uid);
           const docSnap = await getDoc(docRef);
           const userAuth = docSnap.data();
-          setAccountNotFound(false);
           alert(
             "Signed in as " +
               userAuth?.profile.firstName +
@@ -95,24 +94,38 @@ function LoginScreen() {
       .catch((error: FirebaseError) => {
         switch (error.code) {
           case "auth/user-not-found":
-            setAccountNotFound(true);
-            setAccountMessage("Account not found");
+            setAccountMessage("User not found!");
             break;
           case "auth/wrong-password":
-            setAccountNotFound(true);
-            setAccountMessage("Account not found");
+            setAccountMessage("Wrong password!");
             break;
           default:
-            setAccountNotFound(true);
             setAccountMessage(`UH OH! Unknown error: ${error.code}.`);
             break;
         }
       });
   }
 
+  /**
+   * This will display a loading circle when the User clicks the button, and display
+   * an error message if applicable.
+   * @returns A loading circle, a message, or null 
+   */
+  function loadingUserMessage() {
+    if (accountMessage == "") {
+      return null
+    }
+    else if (accountMessage == "Looking for user...") {
+      return <CircularProgress />
+    }
+    else {
+      return <h3 style={{color: "red"}}>{accountMessage}</h3>
+    }
+
+  }
+
   return (
     <Grid>
-      <div className="backboard">
         <fieldset className="loginSquare">
           <form onSubmit={formik.handleSubmit}>
             <h1>Login</h1>
@@ -140,7 +153,7 @@ function LoginScreen() {
                 // onBlur={formik.handleBlur}
               />
             </Grid>
-            {accountNotFound ? <h3 style={{color: "red"}}>{accountMessage}</h3> : null}
+            {loadingUserMessage()}
             <Grid item>
               <Button
                 variant="outlined"
@@ -152,7 +165,6 @@ function LoginScreen() {
             </Grid>
           </form>
         </fieldset>
-      </div>
     </Grid>
   );
 }
