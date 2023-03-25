@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "../../styles/loginscreen.css";
-import User, { testUsers } from "../../data/User";
+import User from "../../data/User";
 import React from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
@@ -10,16 +10,19 @@ import { FirebaseError } from "firebase/app";
 import { Button, CircularProgress, Grid, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import { Container } from "@mui/system";
+import { useNavigate, Link } from "react-router-dom";
 
 /**
  * Sign up has 4 fields which are used to create a User object
  * @returns The sign up screen component
  */
 function SignUpScreen() {
+  const navigate = useNavigate();
   const [signupMessage, setSignupMessage] = useState("");
   interface signupFields {
     email?: string;
     password?: string;
+    confirmPassword?: string;
     firstname?: string;
     lastname?: string;
   }
@@ -28,6 +31,7 @@ function SignUpScreen() {
     initialValues: {
       email: "",
       password: "",
+      confirmPassword: "",
       firstname: "",
       lastname: "",
     },
@@ -43,6 +47,16 @@ function SignUpScreen() {
         errors.password = "Must fill out password field.";
       } else if (values.password.length < 8) {
         errors.password = "Password must be 8 characters long";
+      }
+      else if (values.confirmPassword != values.password) {
+        errors.password = "Password fields do not match!"
+      }
+
+      if (values.confirmPassword == "") {
+        errors.confirmPassword = "Must confirm password."
+      } 
+      else if (values.confirmPassword != values.password) {
+        errors.confirmPassword = "Password fields do not match!"
       }
 
       if (values.firstname == "") {
@@ -109,7 +123,8 @@ function SignUpScreen() {
             coverPhoto: madeUser.profile.coverPhoto,
           },
         });
-        alert("New account created! Your username is " + madeUser.username);
+        alert(`New account created with email ${emailInput}!`);
+        navigate("/components/Login");
       }) // TODO: Again, I gotta change these error messages
       .catch((error: FirebaseError) => {
         switch (error.code) {
@@ -127,6 +142,7 @@ function SignUpScreen() {
       });
   }
 
+  // TODO: Obscure text password boxes
   return (
     <fieldset className="loginSquare">
       <h1>Sign Up</h1>
@@ -158,6 +174,21 @@ function SignUpScreen() {
                     formik.touched.password && Boolean(formik.errors.password)
                   }
                   helperText={formik.touched.password && formik.errors.password}
+                />
+              </Grid>
+            </Container>
+            <Container>
+              <Grid item>
+                <TextField
+                  label="Confirm Password"
+                  id="confirmPassword"
+                  type="text"
+                  onChange={formik.handleChange}
+                  value={formik.values.confirmPassword}
+                  error={
+                    formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)
+                  }
+                  helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
                 />
               </Grid>
             </Container>
@@ -199,6 +230,12 @@ function SignUpScreen() {
                 <Button variant="outlined" type="submit">
                   Sign Up
                 </Button>
+              </Grid>
+            </Container>
+            <Container>
+              <Grid item>
+                <h2 style={{fontSize: "15px"}}>Already have an account?</h2>
+                <Link to="/components/Login" style={{color: "#1ed5db", fontSize: "20px"}}>Login here!</Link>
               </Grid>
             </Container>
           </Grid>

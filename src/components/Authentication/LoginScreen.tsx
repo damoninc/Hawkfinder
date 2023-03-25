@@ -1,17 +1,12 @@
 import "../../styles/loginscreen.css";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { auth, db } from "../../App";
 import React from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import {
-  collection,
-  query,
-  where,
-  getDocs,
   getDoc,
   doc,
-  onSnapshot,
 } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
 import { Button, CircularProgress, TextField } from "@mui/material";
@@ -119,6 +114,7 @@ function LoginScreen() {
     }
   }
 
+  // TODO: Obscure text password boxes
   return (
     <fieldset className="loginSquare">
       <h1>Login</h1>
@@ -161,6 +157,12 @@ function LoginScreen() {
                 <Button variant="outlined" type="submit">
                   Login
                 </Button>
+              </Grid>
+            </Container>
+            <Container>
+              <Grid item>
+                <h2 style={{fontSize: "15px"}}>New user?</h2>
+                <Link to="/components/Signup" style={{color: "#1ed5db", fontSize: "20px"}}>Sign up now!</Link>
               </Grid>
             </Container>
           </Grid>
