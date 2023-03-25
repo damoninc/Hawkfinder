@@ -61,7 +61,11 @@
   position: absolute;
   padding-right: 0px;
 }
-
+.edit-button{
+  position: relative;
+  top: 45%;
+  right: 10%
+}
 .profile-photo {
   left: 144px;
   width: 164px;

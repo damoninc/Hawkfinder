@@ -13,6 +13,9 @@ import {
 import { auth } from "../../App";
 import { db } from "../../App";
 import Navbar from "../Navbar/Navbar";
+import { Box, Button, Modal, TextField, Typography } from "@mui/material";
+import { useState } from "react";
+
 /**
  * Firebase implementation is required for all
  *
@@ -21,6 +24,7 @@ import Navbar from "../Navbar/Navbar";
 
 const docRef = doc(db, "Users", "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1");
 const docSnap = await getDoc(docRef);
+const user = getUser();
 
 function getUser() {
   if (docSnap.exists()) {
@@ -32,8 +36,53 @@ function getUser() {
   }
 }
 
-const user = getUser();
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
+
+function EditPage(){
+  // Modal Handlers
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  // Text Handlers
+
+  if (user?.userid == "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1"){
+    return (
+      <>
+      <Button onClick = {handleOpen} className = "edit-button" variant="outlined">Edit Profile</Button>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Edit your profile
+          </Typography>
+          <TextField label="First Name" variant="outlined" margin = "normal" required={true}/>
+          <TextField label="Last Name" variant="outlined" margin = "normal" required={true}/>
+          <TextField label="About You" variant="outlined" fullWidth = {true} multiline={true} maxRows = "9"/>
+        </Box>
+      </Modal>
+      </>
+    );
+  }
+  else{
+    return null;
+  } // as of right now it is hardcoded until we have a solution to check user credentials 
+}
 function ProfilePage() {
   return (
     <>
@@ -58,6 +107,7 @@ function ProfilePage() {
           loading="lazy"
           className="profile-photo"
         />
+        <EditPage />
       </div>
       <div className="about">
         <span className="about-title">
