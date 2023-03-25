@@ -1,7 +1,7 @@
 import React from "react";
 import "../../styles/friendbox.css";
-import Profile from "../../data/Profile";
-
+import User from "../../data/User";
+import * as fp from "./FriendPage";
 /**
  * Generates a HTML block that displays a user based on their Profile information
  *      Currently displays the name and interests as well as having buttons to go to
@@ -9,17 +9,17 @@ import Profile from "../../data/Profile";
  * @param {Profile} friend - The user to display
  * @return {*} - FriendBox HTML
  */
-function FriendBox(friend: Profile) {
-  const imgPath: string = "/src/assets/images/" + friend.profilePicture; // database call to grab image
+function FriendBox(friend: User) {
+  const imgPath: string = "/src/assets/images/" + friend.profile.profilePicture; // database call to grab image
 
   // Generating string of interests, cutting off after ~25 characters
-  let interests: string = friend.interests[0];
-  for (let i = 1; i < friend.interests.length; i++) {
+  let interests: string = friend.profile.interests[0];
+  for (let i = 1; i < friend.profile.interests.length; i++) {
     if (interests.length > 25) {
       interests += "...";
       break;
     }
-    interests += ", " + friend.interests[i];
+    interests += ", " + friend.profile.interests[i];
   }
   return (
     <div className="container">
@@ -29,38 +29,39 @@ function FriendBox(friend: Profile) {
       <div className="content">
         <h3>
           {" "}
-          {friend.firstName} {friend.lastName}{" "}
+          {friend.profile.firstName} {friend.profile.lastName}{" "}
         </h3>
         <p>{interests}</p>
       </div>
       <div className="buttons">
-        <button className="button" onClick={goToMessages}>
+        <button
+          className="button"
+          onClick={() => {
+            fp.goToMessages(friend);
+          }}
+        >
           Messages
         </button>
-        <button className="button" onClick={goToProfile}>
+        <button
+          className="button"
+          onClick={() => {
+            fp.goToProfile(friend);
+          }}
+        >
           Profile
         </button>
-        <button className="button" type="button" onClick={removeFriend}>
+        <button
+          className="button"
+          type="button"
+          onClick={() => {
+            fp.removeFriend(friend);
+          }}
+        >
           Remove
         </button>
       </div>
     </div>
   );
-}
-
-function removeFriend() {
-  // Dummy functionality for removing a friend. Currently only sends an alert
-  alert("Friend Removed");
-}
-
-function goToMessages() {
-  // Dummy function for navigating to messages
-  alert("Cannot go to Messages");
-}
-
-function goToProfile() {
-  // Dummy function for navigating to profile
-  alert("Cannot go to Profile");
 }
 
 export default FriendBox;

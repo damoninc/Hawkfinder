@@ -41,7 +41,6 @@ class SearchForm extends React.Component<IProps, IState> {
     if (this.props.outsideSubmit != null) {
       this.props.outsideSubmit(this.state.value);
     }
-    alert(this.state.value);
     event.preventDefault();
   }
 
