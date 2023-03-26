@@ -1,10 +1,18 @@
 .loginSquare{
-    display: block;
-    text-align: center;
-    color: white;
-    background-color: grey;
-    padding: 20px;
-    margin: 20px 0;
-    justify-content: center;
-    border: 50px solid rgb(139, 144, 150);
+    font-family: 'Montserrat', sans-serif;
+    color: #e6e5e5;
+    background-image: linear-gradient(to bottom right, #79000e, #006461);
+    margin: 0 auto;
+    border: 10px double rgb(139, 144, 150);
+    width: 20%;
+    min-width: 270px;
+}
+
+.formGaps .MuiContainer-root {
+    margin: 20px auto;
+}
+
+.errorMessage {
+    color: red;
+    font-size: 16px;
 }
