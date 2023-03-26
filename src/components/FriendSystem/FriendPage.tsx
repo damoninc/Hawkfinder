@@ -45,10 +45,8 @@ function FriendPage() {
       />
       {checkNullList(dbCall)}
     </div>
-    <div>
-          <FriendSearch />
-          {FriendRequests(user)}
-    </div>
+    <FriendSearch />
+    {FriendRequests(user)}
   </div>
   );
 }
@@ -201,12 +199,14 @@ async function callDB(setFriends: any) {
       console.log("DB Call")
 
       dbPulled = true;
+      console.log("db?")
       setFriends(friends);
     }
   );
+  } else {
+    setFriends(friends)
+    dbPulled = true;
   }
-
-
 }
 
 export default FriendPage;
