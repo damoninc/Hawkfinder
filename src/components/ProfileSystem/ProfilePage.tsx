@@ -9,12 +9,14 @@ import {
   getDoc,
   doc,
   onSnapshot,
+  DocumentData,
 } from "firebase/firestore";
 import { auth } from "../../App";
 import { db } from "../../App";
 import Navbar from "../Navbar/Navbar";
-import { Box, Button, Modal, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, Modal, Stack, TextField, Typography } from "@mui/material";
 import { useState } from "react";
+
 
 /**
  * Firebase implementation is required for all
@@ -24,7 +26,7 @@ import { useState } from "react";
 
 const docRef = doc(db, "Users", "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1");
 const docSnap = await getDoc(docRef);
-const user = getUser();
+export const user = getUser();
 
 function getUser() {
   if (docSnap.exists()) {
@@ -57,26 +59,52 @@ function EditPage(){
 
   // Text Handlers
 
+  function InterestHook(){
+    const interests = ['Video games', 'Music', 'Cars', 'Technology', 'Business', 'Fishing'];
+    return (
+      <Stack spacing={3} >
+        <Autocomplete
+          multiple
+          id="tags-standard"
+          options={interests}
+          getOptionLabel={(option) => option}
+          defaultValue={user?.profile.interests}
+          renderInput={(params) => (
+            <TextField
+              sx={{ width: "94%" }}
+              {...params}
+              variant="outlined"
+              label="Interests"
+              placeholder="Choose any"
+              margin='normal'
+            />
+          )}
+        />
+      </Stack>
+    );
+  }
+
   if (user?.userid == "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1"){
     return (
-      <>
-      <Button onClick = {handleOpen} className = "edit-button" variant="outlined">Edit Profile</Button>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Edit your profile
-          </Typography>
-          <TextField label="First Name" variant="outlined" margin = "normal" required={true}/>
-          <TextField label="Last Name" variant="outlined" margin = "normal" required={true}/>
-          <TextField label="About You" variant="outlined" fullWidth = {true} multiline={true} maxRows = "9"/>
-        </Box>
-      </Modal>
-      </>
+      <Box>
+        <Button sx = {{position: "absolute"}} onClick = {handleOpen} className = "edit-button" variant="outlined">Edit Profile</Button>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Edit your profile
+            </Typography>
+            <TextField label="First Name" variant="outlined" sx={{width: "45%", mr:1}} margin="normal" required={true}/>
+            <TextField label="Last Name" variant="outlined" sx={{width: "45%", ml:1}} margin = "normal" required={true}/>
+            <TextField label="About You" variant="outlined" sx = {{width: "94%"}} multiline={true} maxRows = "9"/>
+            <InterestHook />
+          </Box>
+        </Modal>
+      </Box>
     );
   }
   else{
@@ -87,12 +115,12 @@ function ProfilePage() {
   return (
     <>
       <Navbar />
-      <div className="profile-info">
-          <img
-            src={"src/assets/images/coverphoto.jpg"}
-            alt="image"
-            className="cover-photo"
-          />
+      <Box className="profile-info">
+        <img
+          src={"src/assets/images/coverphoto.jpg"}
+          alt="image"
+          className="cover-photo"
+        />
         <span className="profile-name">
           <span>{user?.profile.firstName + " " + user?.profile.lastName}</span>
           <br></br>
@@ -106,17 +134,17 @@ function ProfilePage() {
           alt="image"
           loading="lazy"
           className="profile-photo"
-        />
+          />
         <EditPage />
-      </div>
-      <div className="about">
+      </Box>
+      <Box className="about">
         <span className="about-title">
           <span>About Me</span>
           <br></br>
           <p>{user?.profile.bio}</p> {/* INSERT BIO */}
         </span>
-      </div>
-      <div className="interests">
+      </Box>
+      <Box className="interests">
         <span className="text4">
           <span>My Interests</span>
           <br></br>
@@ -126,7 +154,7 @@ function ProfilePage() {
             <li key={interest}>{interest}</li>
           ))}
         </ul>
-      </div>
+      </Box>
     </>
   );
 }
