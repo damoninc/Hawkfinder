@@ -56,8 +56,9 @@
   
   /* Profile Picture */
   .propic {
-  justify-content: center;
-  margin-right: 10px;
+    justify-content: center;
+    padding-right: 10px;
+
   }
 
 @media (max-width: 500px) {

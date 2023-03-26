@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import User, { userConverter } from "../../data/User";
 import "../../styles/friendpage.css";
 import FriendBox from "./FriendBox";
+import FriendSearch from "./FriendSearch"
 import SearchForm from "./SearchForm";
 import { CircularProgress } from "@mui/material";
 import { db } from "../../App";
@@ -12,11 +13,11 @@ import {
   where,
   getDoc,
   getDocs,
-  updateDoc,
+  updateDoc, 
 } from "firebase/firestore";
 
 const currUser = "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1";
-let user: User;
+export let user: User;
 
 let dbPulled = false;
 
@@ -33,7 +34,8 @@ function FriendPage() {
     callDB(setFriends);
   }
   return (
-    <div className="friendPage">
+    <div>
+    <div className="list">
       <h1>Friends List</h1>
       <SearchForm
         outsideSubmit={addFriend}
@@ -42,6 +44,10 @@ function FriendPage() {
       />
       {checkNullList(dbCall)}
     </div>
+    <div>
+          <FriendSearch />
+    </div>
+  </div>
   );
 }
 
@@ -66,7 +72,7 @@ function checkNullList(friends: User[] | null) {
       <div className="friendBlock">
         {friends.map((friend) => (
           <div className="friend" key={friend.username}>
-            {FriendBox(friend)}
+            {FriendBox(user, friend)}
           </div>
         ))}
       </div>
@@ -74,21 +80,49 @@ function checkNullList(friends: User[] | null) {
   }
 }
 
-export async function addFriend(friend?: string) {
+export async function addFriend(friendUsername?: string) {
   // dummy function for adding a friend, no friend information is transfered
-  if (confirm("Add Friend " + friend + "?")) {
-    if (friend !== undefined) {
-      user.friendsList.push(friend);
+  if (confirm("Add Friend " + friendUsername + "?")) {
+    if (friendUsername !== undefined) {
+      await getDocs(
+        query(
+          collection(db, "Users"),
+          where("profile.username", "==", friendUsername)
+        )
+      ).then(async (id) => {
+        if (id.docs[0] !== undefined) {
+          const friend : User | undefined = userConverter.fromFirestore(id.docs[0])
 
-      await updateDoc(
-        doc(db, "Users", currUser),
-        "friendsList",
-        user.friendsList
-      );
-      dbPulled = false;
-      alert("Added " + friend);
+          if (friend !== undefined) {
+            if (!user.friendsList.includes(friend.userid)){
+              user.friendsList.push(friend.userid);
+              friend.friendsList.push(currUser);
+              
+              await updateDoc(
+                doc(db, "Users", currUser),
+                "friendsList",
+                user.friendsList
+              );
+
+              await updateDoc(
+                doc(db, "Users", friend.userid),
+                "friendsList",
+                friend.friendsList
+              );
+
+              dbPulled = false;
+              alert("Added " + friend.username);
+              window.location.reload(); 
+            }
+            else {
+              alert("This user is already your friend")
+            }
+          }
+        } else {
+          alert("This username does not exist")
+        }
+      });
     }
-    window.location.reload();
   }
 }
 
@@ -97,20 +131,32 @@ export async function removeFriend(friend: User) {
     confirm("Are you sure you want to remove " + friend.profile.userName + "?")
   ) {
     if (friend !== undefined) {
-      const index = user.friendsList.indexOf(friend.profile.userName, 0);
-      if (index > -1) {
-        user.friendsList.splice(index, 1);
-      }
+      const indexFriend = user.friendsList.indexOf(friend.userid, 0);
+      const indexUser = friend.friendsList.indexOf(user.userid, 0);
+      
+      indexUser > -1 ? user.friendsList.splice(indexFriend, 1) : null;
+      indexFriend > -1 ? friend.friendsList.splice(indexUser, 1) :  null;
+
+      
 
       await updateDoc(
         doc(db, "Users", currUser),
         "friendsList",
         user.friendsList
+      ).then(async () => {
+          await updateDoc(
+            doc(db, "Users", friend.userid),
+            "friendsList",
+            friend.friendsList
+          ).then(() => {
+            dbPulled = false;
+            alert("Removed " + friend.profile.userName);
+            window.location.reload();
+          })
+        }
       );
-      dbPulled = false;
-      alert("Removed " + friend.profile.userName);
+      
     }
-    window.location.reload();
   }
 }
 
@@ -142,27 +188,17 @@ async function callDB(setFriends: any) {
     (dbUser?.friendsList.length !== undefined ? dbUser?.friendsList.length : 0);
     i++
   ) {
-    // Using username to store friends
-    const idQuery = await getDocs(
-      query(
-        collection(db, "Users"),
-        where("profile.username", "==", dbUser?.friendsList[i])
-      )
-    );
-    const querySnapshot = await getDoc(
-      doc(db, "Users", idQuery.docs[0].id).withConverter(userConverter)
-    );
+      // Using document id to store friends
+      const querySnapshot = await getDoc(
+        doc(db, "Users", dbUser !== undefined ? dbUser.friendsList[i] : '').withConverter(userConverter)
+      );
 
-    // // Using document id to store friends
-    // const querySnapshot = await getDoc(
-    //   doc(db, "Users", friend).withConverter(userConverter)
-    // );
-
-    const data = querySnapshot.data();
-    if (data !== undefined) {
-      friends.push(data);
-    }
-    console.log("DB Call");
+      const data = querySnapshot.data();
+      if (data !== undefined) {
+        friends.push(data);
+      }
+      console.log("DB Call");
+    
   }
   setFriends(friends);
   dbPulled = true;

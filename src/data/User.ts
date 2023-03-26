@@ -7,7 +7,9 @@ class User {
   private _password: string;
   private _email: string;
   private _accountSettings: Map<string, string>;
-  private _friendsList: string[]
+  private _friendsList: string[];
+  private _incomingRequests: string[];
+  private _outgoingRequests: string[];
   private _profile: Profile;
   private _userid: string
 
@@ -27,6 +29,8 @@ class User {
     this._username = this.createUsername();
     this._accountSettings = new Map<string, string>();
     this._friendsList = new Array<string>();
+    this._incomingRequests = new Array<string>();
+    this._outgoingRequests = new Array<string>();
     this._userid = '';
 
     if (profile != null) {
@@ -175,8 +179,24 @@ class User {
    * Setter for userid
    * @param userid string
    */
-  public set userid(userid: string) {
-    this.userid = userid
+  public set userid(uid: string) {
+    this._userid = uid
+  }
+
+  public get incomingRequests() : Array<string> {
+    return this._incomingRequests
+  }
+
+  public set incomingRequests(inList: Array<string>) {
+    this._incomingRequests = inList
+  }
+
+  public get outgoingRequests() : Array<string> {
+    return this._outgoingRequests
+  }
+
+  public set outgoingRequests(outList: Array<string>) {
+    this._outgoingRequests = outList
   }
   
   /**
@@ -207,7 +227,7 @@ export const userConverter = {
       password: user.password,
     };
   },
-  fromFirestore: (snapshot: DocumentSnapshot, options: SnapshotOptions) => {
+  fromFirestore: (snapshot: DocumentSnapshot, options?: SnapshotOptions) => {
     if (snapshot.exists()) {
       const data = snapshot.data(options);
 
@@ -219,6 +239,7 @@ export const userConverter = {
         new Profile(data.profile.firstName, data.profile.lastName, data.profile.username)
       );
       newUser.friendsList = data.friendsList
+      newUser.userid = data.userid
 
       newUser.profile.bio = data.profile.bio
       newUser.profile.birthDate = data.profile.birthDate

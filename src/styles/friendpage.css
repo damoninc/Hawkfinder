@@ -1,6 +1,18 @@
-/* Main container for all friends */
-.friendPage {
-    width: 100%;
+/* Constainer holding list and search*/
+.page {
+    display: flex
+}
+.search {
+    border: 3px dashed teal;
+    margin: auto;
+    justify-content: center;
+    text-align: center;
+    padding: 10px
+}
+
+/* Main container for list of all friends */
+.list {
+
     border: 3px dashed teal;
     margin: auto;
     justify-content: center;
