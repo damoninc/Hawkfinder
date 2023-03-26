@@ -1,25 +1,12 @@
 import React from "react";
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
-import {
-  ArrowCircleUpOutlined,
-  ArrowCircleDownOutlined,
-} from "@mui/icons-material";
+import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
+import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
 import { IconButton } from "@mui/material";
 import "../../styles/postview.css";
 
-function PostView() {
-  /**
-   * useLocation is used to pass properties from
-   * other components through the Link component.
-   * The 'state' object will contain all of the
-   * information that is associated with the post
-   * that the user clicked on
-   */
-  const location = useLocation();
-  const { state } = location;
-
-  const [ratings, setRatings] = useState(state.rating);
+function PostView(props: any) {
+  const [ratings, setRatings] = useState(props.rating);
   const [upvoted, setUpvoted] = useState(false);
   const [downvoted, setDownvoted] = useState(false);
 
@@ -54,7 +41,7 @@ function PostView() {
     }
   };
 
-  const postImgPath = `/src/assets/images/${state.imageURL}`;
+  const postImgPath = `/src/assets/images/${props.imageURL}`;
 
   return (
     <div className="post-container">
@@ -62,13 +49,13 @@ function PostView() {
         <img className="profile-pic" src="\src\assets\images\profileimg.jpg" />
       </div>
       <div className="post-img-container">
-        {state.imageURL !== "" ? (
+        {props.imageURL !== "" ? (
           <img className="post-img" src={postImgPath} />
         ) : (
           <></>
         )}
       </div>
-      <p className="post-description">{state.description}</p>
+      <p className="post-description">{props.description}</p>
       <div className="ratings">
         {/**
          * The upvote and downvote buttons that are rendered will depend
@@ -78,7 +65,7 @@ function PostView() {
         <div className="rating-button">
           {!upvoted ? (
             <IconButton className="rating-button" onClick={upvote}>
-              <ArrowCircleUpOutlined
+              <ArrowCircleUpIcon
                 fontSize="large"
                 color="primary"
                 style={{ fill: "black" }}
@@ -86,7 +73,7 @@ function PostView() {
             </IconButton>
           ) : (
             <IconButton className="rating-button" onClick={upvote}>
-              <ArrowCircleUpOutlined
+              <ArrowCircleUpIcon
                 fontSize="large"
                 color="primary"
                 style={{ fill: "blue" }}
@@ -100,7 +87,7 @@ function PostView() {
         <div className="rating-button">
           {!downvoted ? (
             <IconButton className="rating-button" onClick={downvote}>
-              <ArrowCircleDownOutlined
+              <ArrowCircleDownIcon
                 fontSize="large"
                 color="primary"
                 style={{ fill: "black" }}
@@ -108,7 +95,7 @@ function PostView() {
             </IconButton>
           ) : (
             <IconButton className="rating-button" onClick={downvote}>
-              <ArrowCircleDownOutlined
+              <ArrowCircleDownIcon
                 fontSize="large"
                 color="primary"
                 style={{ fill: "blue" }}
@@ -117,7 +104,7 @@ function PostView() {
           )}
         </div>
       </div>
-      <span className="post-interest">{state.interest}</span>
+      <span className="post-interest">{props.interest}</span>
     </div>
   );
 }

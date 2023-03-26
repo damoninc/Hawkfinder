@@ -1,7 +1,8 @@
 import React from "react";
 import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import { ArrowCircleUp, ArrowCircleDown, OpenWith } from "@mui/icons-material";
+import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
+import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
 import { IconButton } from "@mui/material";
 import "../../styles/forumpost.css";
 
@@ -10,7 +11,12 @@ function ForumPost(props: any) {
   const [upvoted, setUpvoted] = useState(false);
   const [downvoted, setDownvoted] = useState(false);
 
-  const upvote = () => {
+  const upvote = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    /**
+     * stopPropgation prevents events from bubbling and only runs
+     * this function (instead of this function AND the modal)
+     */
+    e.stopPropagation();
     if (!upvoted && !downvoted) {
       setRatings(ratings + 1);
       setUpvoted(true);
@@ -24,7 +30,8 @@ function ForumPost(props: any) {
     }
   };
 
-  const downvote = () => {
+  const downvote = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation();
     if (!downvoted && !upvoted) {
       // Case where downvote and upvote are not set
       setRatings(ratings - 1);
@@ -71,16 +78,16 @@ function ForumPost(props: any) {
         <div className="rating-button-container">
           {!upvoted ? (
             // <FaRegArrowAltCircleUp onClick={upvote} size={25} />
-            <IconButton className="rating-button" onClick={upvote}>
-              <ArrowCircleUp
+            <IconButton className="rating-button" onClick={(e) => upvote(e)}>
+              <ArrowCircleUpIcon
                 fontSize="large"
                 color="primary"
                 style={{ fill: "black" }}
               />
             </IconButton>
           ) : (
-            <IconButton className="rating-button" onClick={upvote}>
-              <ArrowCircleUp
+            <IconButton className="rating-button" onClick={(e) => upvote(e)}>
+              <ArrowCircleUpIcon
                 fontSize="large"
                 color="primary"
                 style={{ fill: "blue" }}
@@ -93,16 +100,16 @@ function ForumPost(props: any) {
 
         <div className="rating-button-container">
           {!downvoted ? (
-            <IconButton className="rating-button" onClick={downvote}>
-              <ArrowCircleDown
+            <IconButton className="rating-button" onClick={(e) => downvote(e)}>
+              <ArrowCircleDownIcon
                 fontSize="large"
                 color="primary"
                 style={{ fill: "black" }}
               />
             </IconButton>
           ) : (
-            <IconButton className="rating-button" onClick={downvote}>
-              <ArrowCircleDown
+            <IconButton className="rating-button" onClick={(e) => downvote(e)}>
+              <ArrowCircleDownIcon
                 fontSize="large"
                 color="primary"
                 style={{ fill: "blue" }}
@@ -112,11 +119,11 @@ function ForumPost(props: any) {
         </div>
       </div>
       <span className="post-interest">{props.interest}</span>
-      <Link to="/components/Forum/post" state={props}>
+      {/* <Link to="/components/Forum/post" state={props}>
         <div className="expand-post-icon">
-          <OpenWith />
+          <OpenWithIcon />
         </div>
-      </Link>
+      </Link> */}
     </div>
   );
 }

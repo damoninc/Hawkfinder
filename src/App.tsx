@@ -1,4 +1,3 @@
-import ForumPost from "./components/Forum/ForumPost";
 import Forum from "./components/Forum/Forum";
 import PostView from "./components/Post/PostView";
 import LogAndSign from "./components/Authentication/LogAndSign";
@@ -37,7 +36,7 @@ function App() {
           <Route path="/components/Forum" element={<Forum />} />
           <Route path="/components/Friends" element={<FriendPage />} />
           <Route path="/components/Login" element={<LogAndSign />} />
-          <Route path="/components/Forum/post" element={<PostView />} />
+          {/* <Route path="/components/Forum/post" element={<PostView />} /> */}
         </Routes>
       </Router>
     </div>
