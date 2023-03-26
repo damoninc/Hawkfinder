@@ -15,6 +15,7 @@ import {
   getDocs,
   updateDoc, 
 } from "firebase/firestore";
+import FriendRequests from "./FriendRequests";
 
 const currUser = "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1";
 export let user: User;
@@ -46,6 +47,7 @@ function FriendPage() {
     </div>
     <div>
           <FriendSearch />
+          {FriendRequests(user)}
     </div>
   </div>
   );
@@ -95,19 +97,19 @@ export async function addFriend(friendUsername?: string) {
 
           if (friend !== undefined) {
             if (!user.friendsList.includes(friend.userid)){
-              user.friendsList.push(friend.userid);
-              friend.friendsList.push(currUser);
+              user.outgoingRequests.push(friend.userid);
+              friend.incomingRequests.push(currUser);
               
               await updateDoc(
                 doc(db, "Users", currUser),
-                "friendsList",
-                user.friendsList
+                "outgoingRequests",
+                user.outgoingRequests
               );
 
               await updateDoc(
                 doc(db, "Users", friend.userid),
-                "friendsList",
-                friend.friendsList
+                "incomingRequests",
+                friend.incomingRequests
               );
 
               dbPulled = false;
@@ -174,6 +176,7 @@ async function callDB(setFriends: any) {
   const querySnapshot = await getDoc(
     doc(db, "Users", currUser).withConverter(userConverter)
   );
+  console.log("DB Call");
 
   const dbUser = querySnapshot.data();
   if (dbUser !== undefined) {
@@ -181,27 +184,29 @@ async function callDB(setFriends: any) {
   }
 
   const friends = new Array<User>();
-
-  for (
-    let i = 0;
-    i <
-    (dbUser?.friendsList.length !== undefined ? dbUser?.friendsList.length : 0);
-    i++
-  ) {
-      // Using document id to store friends
-      const querySnapshot = await getDoc(
-        doc(db, "Users", dbUser !== undefined ? dbUser.friendsList[i] : '').withConverter(userConverter)
-      );
-
-      const data = querySnapshot.data();
-      if (data !== undefined) {
-        friends.push(data);
+  if (user.friendsList.length > 0) {
+  await getDocs(
+    query(
+      collection(db, "Users"),
+      where("userid", "in", user.friendsList)
+    )
+  ).then((friendList) => {
+    friendList.forEach((user) => {
+        const data : User | undefined = userConverter.fromFirestore(user)
+        if (data !== undefined) {
+          friends.push(data)
+        }
       }
-      console.log("DB Call");
-    
+      )
+      console.log("DB Call")
+
+      dbPulled = true;
+      setFriends(friends);
+    }
+  );
   }
-  setFriends(friends);
-  dbPulled = true;
+
+
 }
 
 export default FriendPage;

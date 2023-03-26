@@ -240,6 +240,9 @@ export const userConverter = {
       );
       newUser.friendsList = data.friendsList
       newUser.userid = data.userid
+      newUser.incomingRequests = data.incomingRequests
+      newUser.outgoingRequests = data.outgoingRequests
+
 
       newUser.profile.bio = data.profile.bio
       newUser.profile.birthDate = data.profile.birthDate
