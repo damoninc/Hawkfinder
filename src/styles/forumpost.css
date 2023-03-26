@@ -1,9 +1,8 @@
 .post-container {
   display: flex;
   position: relative;
-  margin-bottom: 10px;
   height: 150px;
-  width: 80%;
+  width: 100%;
   gap: 2%;
   align-items: center;
   border: 2px solid gray;

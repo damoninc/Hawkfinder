@@ -5,6 +5,7 @@ import Post from "../../data/Post";
 import PostView from "../Post/PostView";
 import ForumPost from "./ForumPost";
 import { Modal, Box } from "@mui/material";
+import "../../styles/forum.css";
 
 function Forum() {
   // State for posts must be set with any so the modal knows
@@ -48,7 +49,7 @@ function Forum() {
           <div
             key={index}
             onClick={() => handleOpen(index)}
-            style={{ display: "flex", alignItems: "center" }}
+            className="post-handler"
           >
             <ForumPost
               // key={post.postID}
@@ -65,11 +66,12 @@ function Forum() {
       <Modal open={open} onClose={() => setOpen(false)}>
         <Box
           sx={{
+            display: "flex",
             position: "absolute",
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: 750,
+            width: 0.6,
             bgcolor: "background.paper",
             border: "2px solid #000",
             boxShadow: 24,

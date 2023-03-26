@@ -1,0 +1,6 @@
+.forum-container {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8em;
+}

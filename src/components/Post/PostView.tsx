@@ -3,7 +3,6 @@ import { useState } from "react";
 import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
 import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
 import { IconButton } from "@mui/material";
-import "../../styles/postview.css";
 
 function PostView(props: any) {
   const [ratings, setRatings] = useState(props.rating);
