@@ -40,6 +40,11 @@ function getUser() {
 }
 //! END OF FIREBASE STUFF
 
+/**
+ * This is the edit page button. It is only visible if the logged in user matches the user's profile. 
+ * A user can only see this on their own page.
+ * @returns The edit page button/modal combo
+ */
 function EditPage(){
   if (user?.userid == "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1"){
   // Modal Handlers
@@ -51,6 +56,10 @@ function EditPage(){
 
   // Interests
 
+  /**
+   * This function sends back the interest field that is used in the edit page modal.
+   * @returns interest field
+   */
   function InterestHook(){
     return (
       <Stack spacing={3} >
@@ -154,6 +163,10 @@ function EditPage(){
     return null;
   } // as of right now it is hardcoded until we have a solution to check user credentials between pages
 }
+/**
+ * This is the main profile page that displays a users profile
+ * @returns the webpage
+ */
 function ProfilePage() {
   return (
     <>
