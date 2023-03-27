@@ -4,42 +4,35 @@ import "../../styles/friendpage.css";
 import FriendBox from "./FriendBox";
 import * as fp from "./FriendPage";
 import { db } from "../../App";
-import {
-  collection,
-  query,
-  where,
-  getDocs,
-} from "firebase/firestore";
+import { collection, query, where, getDocs } from "firebase/firestore";
 import { Button, TextField } from "@mui/material";
 
 /**
- * Generates a HTML block that displays a user's friend list by creating
- *    a FriendBox for each friend in their friend list.
- * Shows all friends or a "no friends" message is applicable.
+ * Generates a HTML block that displays a list of Users based
+ * on the inputted text.
  *
- * @return {*} - FriendPage HTML
+ * @return {*} - FriendSearch HTML
  */
 function FriendSearch() {
   const [dbCall, setUsers] = useState(null);
-  const [input, setInput] = useState("")
+  const [input, setInput] = useState("");
   return (
     <div className="search">
       <h1>User Search</h1>
-      <TextField 
-        label="Username" 
-        variant="outlined" 
-        focused 
+      <TextField
+        label="Username"
+        variant="outlined"
+        focused
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-          setInput(event.target.value)
-        }
-        }/>
-      <Button 
-      variant="contained" 
-      onClick={
-        () => {
-          callDB(setUsers, input)
-        }
-      }>
+          setInput(event.target.value);
+        }}
+      />
+      <Button
+        variant="contained"
+        onClick={() => {
+          callDB(setUsers, input);
+        }}
+      >
         Search
       </Button>
 
@@ -76,29 +69,32 @@ function checkNullList(friends: User[] | null) {
   }
 }
 
-async function callDB(setUsers : any, msg : string) {
-
+/**
+ * Function used to query FireBase for the friends list.
+ * Sets dbCall Hook in FriendSearch after database call finished
+ *
+ * @param {*} setFriends - Hook to set friends list
+ */
+async function callDB(setUsers: any, msg: string) {
   await getDocs(
     query(
       collection(db, "Users"),
       where("profile.username", ">=", msg),
-      where('profile.username', '<=', msg+ '\uf8ff')
+      where("profile.username", "<=", msg + "\uf8ff")
     )
   ).then(async (usersData) => {
-    const users : User[] = [];
+    const users: User[] = [];
 
     usersData.forEach((user) => {
-        const data : User | undefined = userConverter.fromFirestore(user)
-        if (data !== undefined) {
-          users.push(data)
-        }
+      const data: User | undefined = userConverter.fromFirestore(user);
+      if (data !== undefined) {
+        users.push(data);
       }
-    )
-    
+    });
+
     setUsers(users);
-    console.log("db call")
-  }
-  );
+    console.log("db call");
+  });
 }
 
 export default FriendSearch;

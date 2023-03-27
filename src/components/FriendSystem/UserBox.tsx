@@ -9,23 +9,22 @@ import User from "../../data/User";
  * @param {User} displayUser - The user to display
  * @return {*} - FriendBox HTML
  */
-function UserBox(displayUser: User,  buttons : (arg0: User) => (JSX.Element)) {
+function UserBox(displayUser: User, buttons: (arg0: User) => JSX.Element) {
   if (displayUser === undefined) {
-    return (<div></div>)
+    return <div></div>;
   }
-  const imgPath: string = "/src/assets/images/" + displayUser.profile.profilePicture; // database call to grab image
+  const imgPath: string =
+    "/src/assets/images/" + displayUser.profile.profilePicture; // database call to grab image
 
   // Generating string of interests, cutting off after ~25 characters
   let interests: string = displayUser.profile.interests[0];
   for (let i = 1; i < displayUser.profile.interests.length; i++) {
-    if (interests.length > 25) {
+    if (interests.length + displayUser.profile.interests[i].length > 25) {
       interests += "...";
       break;
     }
     interests += ", " + displayUser.profile.interests[i];
   }
-
-//   const buttons : JSX.Element = currUser.friendsList.includes(friend.userid) ? currentFriendButtons(friend) : nonFriendButtons(friend) 
 
   return (
     <div className="container">
@@ -44,9 +43,7 @@ function UserBox(displayUser: User,  buttons : (arg0: User) => (JSX.Element)) {
           {displayUser.profile.firstName} {displayUser.profile.lastName}{" "}
         </h3>
       </div>
-      <div>
-        {buttons(displayUser)}
-      </div>
+      <div>{buttons(displayUser)}</div>
     </div>
   );
 }
