@@ -8,7 +8,7 @@ class Profile {
   private _userName: string;
   private _bio = "";
   private _interests: string[] = [];
-  private _profilePicture = "";
+  private _profilePicture = "defprofileimg.jpg";
   private _coverPhoto = "";
   private _birthDate: Date = new Date(0, 0, 0);
 

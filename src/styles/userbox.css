@@ -1,0 +1,86 @@
+/* Main container */
+  .container {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-evenly;
+    width: auto;
+    margin: auto;
+    border: 1px solid black;
+    vertical-align: middle;
+    height: auto;
+    height: 100px;
+    max-height: 100px;
+    min-width: 200px;
+    max-width: 400px;
+  }
+
+  /* Friend information (name, interests, etc.) */
+  .smallContent {
+    font-size: 15px;
+    text-align: left;
+    width: 50%;
+    padding-right: 5%;
+
+  }
+
+  /* Friend information (name, interests, etc.) */
+  .bigContent {
+    font-size: 15px;
+    text-align: left;
+    width: 50%;
+    padding-right: 5%;
+    white-space:normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 100px;
+  }
+  
+  /* Container holding buttons */
+  .buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding-right: 10px;
+  position: relative;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  }
+  
+  /* Buttons */
+  .button {
+    border: 1px solid black;
+    color: black;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 5px;
+    cursor: pointer;
+    vertical-align: middle;
+  }
+  
+  /* Profile Picture */
+  .propic {
+    justify-content: center;
+    padding-right: 10px;
+
+  }
+
+@media (max-width: 500px) {
+  .smallContent {
+    display: block;
+  }
+  .bigContent {
+    display: none;
+  }
+}
+
+@media (min-width: 501px) {
+  .smallContent {
+    display: none;
+  }
+  .bigContent {
+    display: block;
+  }
+}

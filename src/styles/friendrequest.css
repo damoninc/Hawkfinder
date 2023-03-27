@@ -1,0 +1,111 @@
+/* Main container */
+.page {
+  display: block;
+  border: 3px dashed teal;
+  margin: auto;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Holds all FriendBox components */
+.userBlock {
+  display: flex;
+  flex-wrap: wrap;
+  flex-grow: 2;
+  justify-content: center;
+}
+
+/* Holds each individual FriendBox */
+.user {
+  justify-content: space-evenly;
+  padding: 10px;
+}
+
+.loaduser {
+  padding: 10px
+}
+ 
+.requests {
+  display: flex;
+  justify-content: space-evenly;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.block {
+  display: block;
+  display: flex;
+  justify-content: space-evenly;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Friend information (name, interests, etc.) */
+.smallContent {
+  font-size: 15px;
+  text-align: left;
+  width: 50%;
+  padding-right: 5%;
+}
+
+/* Friend information (name, interests, etc.) */
+.bigContent {
+  font-size: 15px;
+  text-align: left;
+  width: 50%;
+  padding-right: 5%;
+  white-space:normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 100px;
+}
+  
+/* Container holding buttons */
+.buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding-right: 10px;
+  position: relative;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+    
+/* Buttons */
+.button {
+  border: 1px solid black;
+  color: black;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 5px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+  
+/* Profile Picture */
+.propic {
+  justify-content: center;
+  padding-right: 10px;
+
+}
+
+@media (max-width: 500px) {
+  .smallContent {
+    display: block;
+  }
+  .bigContent {
+    display: none;
+  }
+}
+
+@media (min-width: 501px) {
+  .smallContent {
+    display: none;
+  }
+  .bigContent {
+    display: block;
+  }
+}
