@@ -36,7 +36,7 @@ function FriendPage() {
   }
   return (
     <div>
-      <div className="list">
+      <div className="friends-list">
         <h1>Friends List</h1>
         <SearchForm
           outsideSubmit={addFriend}

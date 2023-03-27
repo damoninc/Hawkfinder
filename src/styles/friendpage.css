@@ -1,39 +1,37 @@
 /* Constainer holding list and search*/
 .page {
-    display: flex
+  display: flex;
 }
 .search {
-    border: 3px dashed teal;
-    margin: auto;
-    justify-content: center;
-    text-align: center;
-    padding: 10px
+  border: 3px dashed teal;
+  margin: auto;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
 }
 
 /* Main container for list of all friends */
-.list {
-
-    border: 3px dashed teal;
-    margin: auto;
-    justify-content: center;
-    text-align: center;
+.friends-list {
+  border: 3px dashed teal;
+  margin: auto;
+  justify-content: center;
+  text-align: center;
 }
 
 /* Holds all FriendBox components */
 .friendBlock {
-    display: flex;
-    flex-wrap: wrap;
-    flex-grow: 2;
-    justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  flex-grow: 2;
+  justify-content: center;
 }
 
 /* Holds each individual FriendBox */
 .friend {
-    justify-content: space-evenly;
-    padding: 10px;
+  justify-content: space-evenly;
+  padding: 10px;
 }
 
 .loadFriend {
-    padding: 10px
+  padding: 10px;
 }
-

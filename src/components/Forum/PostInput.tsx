@@ -92,6 +92,8 @@ const PostInput = () => {
         variant="outlined"
         onChange={(e) => setPostText(e.target.value)}
       />
+      {/* If there is text any post text inputted, 
+      then the user can click the post button */}
       {postText != "" ? (
         <Button type="submit" variant="outlined" onClick={handlePost}>
           Post
