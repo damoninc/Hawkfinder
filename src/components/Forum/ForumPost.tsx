@@ -7,8 +7,11 @@ import { IconButton } from "@mui/material";
 import "../../styles/forumpost.css";
 
 function ForumPost(props: any) {
+  // Hook for the ratings of each post
   const [ratings, setRatings] = useState(props.rating);
+  // Determines whether the user has upvoted
   const [upvoted, setUpvoted] = useState(false);
+  // Determines whether the user has downvoted
   const [downvoted, setDownvoted] = useState(false);
 
   const upvote = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

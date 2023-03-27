@@ -28,6 +28,10 @@ const PostInput = () => {
     width: "100px",
   };
 
+  /**
+   * Temporary functionality for posting to the forum,
+   * only console.logs the input
+   */
   function handlePost() {
     if (postText != "") {
       console.log("Post sent! Sending info to firebase:");
