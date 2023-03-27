@@ -1,22 +1,48 @@
 import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import "../../styles/postinput.css";
-import { getValue } from "@mui/system";
-import { Button, MenuItem, Select, Input } from "@mui/material";
+import {
+  FormControl,
+  Button,
+  MenuItem,
+  Select,
+  Input,
+  InputLabel,
+} from "@mui/material";
 
 const PostInput = () => {
-  const [selectedImage, setSelectedImage] = useState(null);
+  // These hooks keep track of the input by the user for their post
+  const [selectedImage, setSelectedImage] = useState<any>(null);
   const [interest, setInterest] = useState("");
   const [postText, setPostText] = useState("");
 
+  // General style for input fields
   const sx = {
     maxHeight: "56px",
     marginRight: "3%",
   };
 
-  //   function handleTextFieldChange(e) {
-  //     setPostText
-  //   }
+  const interestsx = {
+    maxHeight: "56px",
+    marginRight: "3%",
+    width: "100px",
+  };
+
+  function handlePost() {
+    if (postText != "") {
+      console.log("Post sent! Sending info to firebase:");
+      console.log(
+        "ImageFile: ",
+        selectedImage,
+        "; Interest: ",
+        interest,
+        "; Text: ",
+        postText
+      );
+    } else {
+      console.log("Post not sent, ");
+    }
+  }
 
   return (
     <div className="post-input">
@@ -37,22 +63,24 @@ const PostInput = () => {
         type="file"
         name="myImage"
         onChange={(event: React.ChangeEvent<HTMLInputElement> | any) => {
-          console.log(event.target.files[0]);
           setSelectedImage(event.target.files[0]);
         }}
       />
-      <Select
-        sx={Object.assign(sx, {})}
-        label="Interest"
-        value={interest}
-        onChange={(event: React.ChangeEvent<HTMLInputElement> | any) => {
-          setInterest(event.target.value);
-        }}
-      >
-        <MenuItem value={"Music"}>Music</MenuItem>
-        <MenuItem value={"Food"}>Food</MenuItem>
-        <MenuItem value={"Film"}>Film</MenuItem>
-      </Select>
+      <FormControl>
+        <InputLabel>Interest</InputLabel>
+        <Select
+          sx={interestsx}
+          label="Interest"
+          value={interest}
+          onChange={(event: React.ChangeEvent<HTMLInputElement> | any) => {
+            setInterest(event.target.value);
+          }}
+        >
+          <MenuItem value={"Music"}>Music</MenuItem>
+          <MenuItem value={"Food"}>Food</MenuItem>
+          <MenuItem value={"Film"}>Film</MenuItem>
+        </Select>
+      </FormControl>
       <TextField
         sx={sx}
         value={postText}
@@ -60,9 +88,15 @@ const PostInput = () => {
         variant="outlined"
         onChange={(e) => setPostText(e.target.value)}
       />
-      <Button type="submit" variant="outlined">
-        Post
-      </Button>
+      {postText != "" ? (
+        <Button type="submit" variant="outlined" onClick={handlePost}>
+          Post
+        </Button>
+      ) : (
+        <Button type="submit" variant="outlined" onClick={handlePost} disabled>
+          Post
+        </Button>
+      )}
     </div>
   );
 };
