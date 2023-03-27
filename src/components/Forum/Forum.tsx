@@ -13,10 +13,17 @@ function Forum() {
   // State for posts must be set with any so the modal knows
   // which component to render without having to use .map()
   const [posts, setPosts] = useState<Post[]>([]);
+  // For the modal to determine which post was clicked
   const [postIndex, setPostIndex] = useState(0);
+  // Boolean to show the modal or not
   const [open, setOpen] = useState(false);
+  // Shows loading while fetchPosts() is running
   const [loading, setLoading] = useState(false);
 
+  /**
+   * Makes a call to the db, grabbing every document
+   * in the Posts collection
+   */
   const fetchPosts = async () => {
     setLoading(true);
     await getDocs(collection(db, "Posts")).then((querySnapshot) => {
@@ -36,10 +43,19 @@ function Forum() {
     });
   };
 
+  /**
+   * Makes sure fetchPosts() only runs once with
+   * a dependance on nothing
+   */
   useEffect(() => {
     fetchPosts();
   }, []);
 
+  /**
+   * Determines the post that was clicked on
+   * to show on the modal
+   * @param p index number
+   */
   const handleOpen = (p: any) => {
     console.log("Post Clicked...", p);
     setPostIndex(p);
