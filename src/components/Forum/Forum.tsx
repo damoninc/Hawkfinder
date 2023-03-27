@@ -4,6 +4,7 @@ import { collection, getDocs } from "firebase/firestore";
 import Post from "../../data/Post";
 import PostView from "../Post/PostView";
 import ForumPost from "./ForumPost";
+import PostInput from "./PostInput";
 import { Modal, Box } from "@mui/material";
 import { CircularProgress } from "@mui/material";
 import "../../styles/forum.css";
@@ -47,6 +48,7 @@ function Forum() {
 
   return (
     <div className="forum-container">
+      <PostInput />
       {!loading ? (
         <>
           {posts.map((post: Post, index) => {
