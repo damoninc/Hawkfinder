@@ -150,6 +150,11 @@ export async function removeFriend(friend: User) {
       const indexFriend = user.friendsList.indexOf(friend.userid, 0);
       const indexUser = friend.friendsList.indexOf(user.userid, 0);
 
+      if (indexFriend < 0 || indexUser < 0) {
+        alert("You are not friends");
+        return;
+      }
+
       indexUser > -1 ? user.friendsList.splice(indexFriend, 1) : null;
       indexFriend > -1 ? friend.friendsList.splice(indexUser, 1) : null;
 
