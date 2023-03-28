@@ -4,8 +4,7 @@ import User from "../../data/User";
 import React from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { db } from "../../App";
-import { auth } from "../../App";
+import { db, auth } from "../../firebase/config";
 import { FirebaseError } from "firebase/app";
 import { Button, CircularProgress, Grid, TextField } from "@mui/material";
 import { useFormik } from "formik";
@@ -13,7 +12,7 @@ import { Container } from "@mui/system";
 import { useNavigate, Link } from "react-router-dom";
 
 /**
- * Sign up has 4 fields which are used to create a User object
+ * Sign up has fields which are used to create a User object
  * @returns The sign up screen component
  */
 function SignUpScreen() {
@@ -26,7 +25,9 @@ function SignUpScreen() {
     firstname?: string;
     lastname?: string;
   }
-
+  /**
+   * Similar to Login, does most of the heavy lifting. Instead of using a function for validate, it does it inline.
+   */
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -47,16 +48,14 @@ function SignUpScreen() {
         errors.password = "Must fill out password field.";
       } else if (values.password.length < 8) {
         errors.password = "Password must be 8 characters long";
-      }
-      else if (values.confirmPassword != values.password) {
-        errors.password = "Password fields do not match!"
+      } else if (values.confirmPassword != values.password) {
+        errors.password = "Password fields do not match!";
       }
 
       if (values.confirmPassword == "") {
-        errors.confirmPassword = "Must confirm password."
-      } 
-      else if (values.confirmPassword != values.password) {
-        errors.confirmPassword = "Password fields do not match!"
+        errors.confirmPassword = "Must confirm password.";
+      } else if (values.confirmPassword != values.password) {
+        errors.confirmPassword = "Password fields do not match!";
       }
 
       if (values.firstname == "") {
@@ -79,6 +78,10 @@ function SignUpScreen() {
     },
   });
 
+  /**
+   * Will give an error message if something goes wrong, otherwise, it'll load with a circular sign
+   * @returns An error message, loading circle, or null
+   */
   function loadingUserMessage() {
     if (signupMessage == "") {
       return null;
@@ -90,8 +93,8 @@ function SignUpScreen() {
   }
 
   /**
-   * Creates a new User in the User array in User.ts. Doesn't permanently save the User.
-   * @returns false is a placeholder, it doesn't do anything
+   * Create a new user using the auth method, and then navigates to another screen
+   * @returns null
    */
   function createUser(
     emailInput: string,
@@ -186,9 +189,13 @@ function SignUpScreen() {
                   onChange={formik.handleChange}
                   value={formik.values.confirmPassword}
                   error={
-                    formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)
+                    formik.touched.confirmPassword &&
+                    Boolean(formik.errors.confirmPassword)
                   }
-                  helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+                  helperText={
+                    formik.touched.confirmPassword &&
+                    formik.errors.confirmPassword
+                  }
                 />
               </Grid>
             </Container>
@@ -234,8 +241,13 @@ function SignUpScreen() {
             </Container>
             <Container>
               <Grid item>
-                <h2 style={{fontSize: "15px"}}>Already have an account?</h2>
-                <Link to="/components/Login" style={{color: "#1ed5db", fontSize: "20px"}}>Login here!</Link>
+                <h2 style={{ fontSize: "15px" }}>Already have an account?</h2>
+                <Link
+                  to="/components/Login"
+                  style={{ color: "#1ed5db", fontSize: "20px" }}
+                >
+                  Login here!
+                </Link>
               </Grid>
             </Container>
           </Grid>

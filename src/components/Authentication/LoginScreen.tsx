@@ -1,13 +1,10 @@
 import "../../styles/loginscreen.css";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { auth, db } from "../../App";
+import { auth, db } from "../../firebase/config";
 import React from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import {
-  getDoc,
-  doc,
-} from "firebase/firestore";
+import { getDoc, doc } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
 import { Button, CircularProgress, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
@@ -28,9 +25,7 @@ function LoginScreen() {
     password?: string;
   }
 
-  /*
-  A long winded story:
-  
+  /* 
   validate is used to determine if any of the textareas are wrong, as it will return a specfic error message.
   The issue is that for it to pass, it has to return a "{}", but writing "const errors = {}" gives you an error, stating
   that "Property email/password does not exist on type '{}'", however the code will run without errors. In order to remove
@@ -38,6 +33,10 @@ function LoginScreen() {
   values to not be created, meaning it can pass the tests and will create them if there are errors. Whoopee.
 
   */
+  /**
+   * Checks if the text fields contain any errors and returns that error.
+   * @returns ErrorLoginInfo object
+   */
   function validate() {
     const errors: ErrorLoginInfo = {};
     if (!formik.values.email) {
@@ -53,6 +52,7 @@ function LoginScreen() {
 
   /**
    * This is the core backbone of the forums. Most of the heavy lifting is done by this hook.
+   * It expects an initialValue, a validation, and a submission method.
    */
   const formik = useFormik({
     initialValues: {
@@ -67,7 +67,6 @@ function LoginScreen() {
 
   /**
    * Uses the FireBase method to sign in with an email and password
-   * @returns null
    */
   function checkExist(usernameInput: string, passwordInput: string) {
     setAccountMessage("Looking for user...");
@@ -90,7 +89,7 @@ function LoginScreen() {
             setAccountMessage("User not found!");
             break;
           case "auth/wrong-password":
-            setAccountMessage("Wrong password!");
+            setAccountMessage("User not found");
             break;
           default:
             setAccountMessage(`UH OH! Unknown error: ${error.code}.`);
@@ -161,8 +160,13 @@ function LoginScreen() {
             </Container>
             <Container>
               <Grid item>
-                <h2 style={{fontSize: "15px"}}>New user?</h2>
-                <Link to="/components/Signup" style={{color: "#1ed5db", fontSize: "20px"}}>Sign up now!</Link>
+                <h2 style={{ fontSize: "15px" }}>New user?</h2>
+                <Link
+                  to="/components/Signup"
+                  style={{ color: "#1ed5db", fontSize: "20px" }}
+                >
+                  Sign up now!
+                </Link>
               </Grid>
             </Container>
           </Grid>

@@ -5,7 +5,7 @@ import FriendBox from "./FriendBox";
 import FriendSearch from "./FriendSearch";
 import SearchForm from "./SearchForm";
 import { CircularProgress } from "@mui/material";
-import { db } from "../../App";
+import { db } from "../../firebase/config";
 import {
   doc,
   collection,
@@ -36,7 +36,7 @@ function FriendPage() {
   }
   return (
     <div>
-      <div className="list">
+      <div className="friends-list">
         <h1>Friends List</h1>
         <SearchForm
           outsideSubmit={addFriend}

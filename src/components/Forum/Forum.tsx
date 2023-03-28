@@ -1,78 +1,131 @@
-import React from "react";
-import { useState } from "react";
-import "../../styles/Forum.css";
+import React, { useEffect, useState } from "react";
+import { db } from "../../firebase/config";
+import { collection, getDocs } from "firebase/firestore";
+import Post from "../../data/Post";
+import PostView from "../Post/PostView";
+import ForumPost from "./ForumPost";
+import PostInput from "./PostInput";
+import { Modal, Box } from "@mui/material";
+import { CircularProgress } from "@mui/material";
+import "../../styles/forum.css";
 
-function Forum(props: any) {
-  const [ratings, setRatings] = useState(props.rating);
-  const [upvoted, setUpvoted] = useState(false);
-  const [downvoted, setDownvoted] = useState(false);
+function Forum() {
+  // State for posts must be set with any so the modal knows
+  // which component to render without having to use .map()
+  const [posts, setPosts] = useState<Post[]>([]);
+  // For the modal to determine which post was clicked
+  const [postIndex, setPostIndex] = useState(0);
+  // Boolean to show the modal or not
+  const [open, setOpen] = useState(false);
+  // Shows loading while fetchPosts() is running
+  const [loading, setLoading] = useState(false);
 
-  const upvote = () => {
-    if (!upvoted && !downvoted) {
-      setRatings(ratings + 1);
-      setUpvoted(true);
-    } else if (!upvoted && downvoted) {
-      setRatings(ratings + 2);
-      setDownvoted(false);
-      setUpvoted(true);
-    } else {
-      setRatings(ratings - 1);
-      setUpvoted(false);
-    }
+  /**
+   * Makes a call to the db, grabbing every document
+   * in the Posts collection
+   */
+  const fetchPosts = async () => {
+    setLoading(true);
+    await getDocs(collection(db, "Posts")).then((querySnapshot) => {
+      const tempPosts: any = querySnapshot.docs.map((doc) => {
+        console.log("DB CALL");
+        return new Post(
+          doc.id,
+          doc.data().postDate.toDate(),
+          doc.data().description,
+          doc.data().interest,
+          doc.data().imageURL,
+          new Map(Object.entries(doc.data().ratings))
+        );
+      });
+      setPosts(tempPosts);
+      setLoading(false);
+    });
   };
 
-  const downvote = () => {
-    if (!downvoted && !upvoted) {
-      // Case where downvote and upvote are not set
-      setRatings(ratings - 1);
-      setDownvoted(true);
-    } else if (!downvoted && upvoted) {
-      // Case where post is upvoted
-      setRatings(ratings - 2);
-      setUpvoted(false);
-      setDownvoted(true);
-    } else {
-      // Case where post is downvoted
-      setRatings(ratings + 1);
-      setDownvoted(false);
-    }
-  };
+  /**
+   * Makes sure fetchPosts() only runs once with
+   * a dependance on nothing
+   */
+  useEffect(() => {
+    fetchPosts();
+  }, []);
 
-  const postImgPath = `/src/assets/images/${props.imageURL}`;
+  /**
+   * Determines the post that was clicked on
+   * to show on the modal
+   * @param p index number
+   */
+  const handleOpen = (p: any) => {
+    console.log("Post Clicked...", p);
+    setPostIndex(p);
+    setOpen(true);
+  };
 
   return (
-    // Data passed in from props
-    /* {props._postID}
-        {props._postDate.toString}
-        {props._description}
-        {props._interest}
-        {props._imageURL}
-        {props._ratings} */
-    <div className="post-container">
-      <div className="pic-crop">
-        <img className="profile-pic" src="\src\assets\images\profileimg.jpg" />
-      </div>
-      <div className="post-img-container">
-        <img className="post-img" src={postImgPath} />
-      </div>
-      <p className="post-description">{props.description}</p>
-      <h4>{props.ratings.length}</h4>
-      <div className="ratings">
-        <button
-          className={upvoted ? "rating-button-selected" : "rating-button"}
-          onClick={upvote}
-        >
-          Upvote
-        </button>
-        <span>{ratings}</span>
-        <button
-          className={downvoted ? "rating-button-selected" : "rating-button"}
-          onClick={downvote}
-        >
-          Downvote
-        </button>
-      </div>
-      <span className="post-interest">{props.interest}</span>
+    <div className="forum-container">
+      <PostInput />
+      {!loading ? (
+        <>
+          {posts.map((post: Post, index) => {
+            console.log("NEW POST COMPONENT RETURNED");
+            return (
+              <div
+                key={index}
+                onClick={() => handleOpen(index)}
+                className="post-handler"
+              >
+                <ForumPost
+                  // key={post.postID}
+                  postDate={post.postDate}
+                  description={post.description}
+                  interest={post.interest}
+                  imageURL={post.imageURL}
+                  ratings={post.ratings}
+                  rating={post.calculateRating()}
+                />
+              </div>
+            );
+          })}
+          <Modal open={open} onClose={() => setOpen(false)}>
+            <Box
+              sx={{
+                display: "flex",
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 0.6,
+                bgcolor: "background.paper",
+                border: "2px solid #000",
+                boxShadow: 24,
+                p: 4,
+              }}
+            >
+              {/* This expression is required or else this code will somehow
+                run before the db call is made and return an typeerror */}
+              {posts.length > 0 ? (
+                <PostView
+                  key={postIndex}
+                  postDate={posts[postIndex].postDate}
+                  description={posts[postIndex].description}
+                  interest={posts[postIndex].interest}
+                  imageURL={posts[postIndex].imageURL}
+                  ratings={posts[postIndex].ratings}
+                  rating={posts[postIndex].calculateRating()}
+                />
+              ) : (
+                <></>
+              )}
+            </Box>
+          </Modal>
+        </>
+      ) : (
+        <>
+          <h2>Loading Forum...</h2>
+          <CircularProgress />
+        </>
+      )}
     </div>
   );
 }

@@ -3,7 +3,7 @@ import User, { userConverter } from "../../data/User";
 import "../../styles/friendpage.css";
 import FriendBox from "./FriendBox";
 import * as fp from "./FriendPage";
-import { db } from "../../App";
+import { db } from "../../firebase/config";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { Button, TextField } from "@mui/material";
 

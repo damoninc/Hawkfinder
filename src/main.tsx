@@ -8,16 +8,15 @@ import App from "./App";
  */
 const screecherTheme = createTheme({
   palette: {
-    mode: "dark",  // dark mode will only work if we have a MUI background, such as Paper or Container.
     primary: {
       main: "#1ed5db",
       light: "#acedee",
-      dark: "#006461"
+      dark: "#006461",
     },
     secondary: {
       main: "#db241e",
       light: "#ed6f6a",
-      dark: "#79000e"
+      dark: "#79000e",
     },
   },
 });
@@ -25,7 +24,7 @@ const screecherTheme = createTheme({
 // The theme provider will add this theme to our whole app.
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <ThemeProvider theme={screecherTheme}> 
+    <ThemeProvider theme={screecherTheme}>
       <App />
     </ThemeProvider>
   </React.StrictMode>

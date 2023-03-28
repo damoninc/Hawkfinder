@@ -3,7 +3,7 @@ import User, { userConverter } from "../../data/User";
 import "../../styles/friendrequest.css";
 import * as fp from "./FriendPage";
 import { CircularProgress } from "@mui/material";
-import { db } from "../../App";
+import { db } from "../../firebase/config";
 import {
   doc,
   collection,

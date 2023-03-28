@@ -1,0 +1,90 @@
+.post-container {
+  display: flex;
+  position: relative;
+  height: 150px;
+  width: 100%;
+  gap: 2%;
+  align-items: center;
+  border: 2px solid gray;
+  border-radius: 5px;
+  padding: 1% 2%;
+}
+
+.pic-crop {
+  width: 100px;
+  min-width: 100px;
+  height: 100px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.profile-pic {
+  display: inline;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.post-img-container {
+  margin: 0;
+}
+
+.post-img {
+  height: 140px;
+  border-radius: 5px;
+}
+
+.post-description {
+  width: 150px;
+}
+
+.ratings {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80px;
+  margin-left: auto;
+}
+
+.ratings > button {
+  padding: 0.5em 0;
+  width: 110%;
+  font-weight: bold;
+}
+
+.post-interest {
+  position: absolute;
+  top: 2%;
+  right: 1%;
+}
+
+.rating-button {
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+}
+
+.rating {
+  font-weight: bold;
+}
+
+.rating-button:hover,
+.rating-button-selected:hover {
+  background-color: rgb(56, 56, 56);
+  transition: 200ms;
+}
+
+.expand-post-icon {
+  position: absolute;
+  border-radius: 3px;
+  width: 24px;
+  height: 24px;
+  bottom: 2%;
+  right: 1%;
+}
+
+.expand-post-icon:hover {
+  background-color: gray;
+  transition: 200ms;
+}

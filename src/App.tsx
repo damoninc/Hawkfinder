@@ -3,54 +3,10 @@ import PostView from "./components/Post/PostView";
 import FriendPage from "./components/FriendSystem/FriendPage";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import "./App.css";
-import { SAMPLE_POSTS } from "./data/Post";
 import React from "react";
-
-const posts = SAMPLE_POSTS.map((post) => {
-  const json: string = JSON.stringify(post);
-  const postJSON = JSON.parse(json);
-  console.log(postJSON);
-  return (
-    <Forum
-      key={postJSON._postID}
-      postID={post.postID}
-      postDate={post.postDate}
-      description={post.description}
-      interest={post.interest}
-      imageURL={post.imageURL}
-      ratings={post.ratings}
-      rating={post.calculateRating()}
-    />
-  );
-});
-
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
-import SignUpScreen from "./components/Authentication/SignUpScreen";
 import LoginScreen from "./components/Authentication/LoginScreen";
-import {getStorage} from "firebase/storage";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDNM-tQPGKeAblOqQPqZnBKwRnpGxOvc0Q",
-  authDomain: "csc-450-project.firebaseapp.com",
-  projectId: "csc-450-project",
-  storageBucket: "csc-450-project.appspot.com",
-  messagingSenderId: "877784266308",
-  appId: "1:877784266308:web:31ab02901a000bc93fae11",
-  measurementId: "G-RVEP3DC122",
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const storage = getStorage(app);
+import SignUpScreen from "./components/Authentication/SignUpScreen";
+import ProfilePage from "./components/ProfileSystem/ProfilePage";
 
 function App() {
   return (
@@ -63,9 +19,6 @@ function App() {
             John
             <li>
               <Link to="/components/Forum">Forum</Link>
-            </li>
-            <li>
-              <Link to="/components/Post">Post</Link>
             </li>
           </ul>
           <ul>
@@ -83,13 +36,19 @@ function App() {
               <Link to="/components/Signup">Signup</Link>
             </li>
           </ul>
+          <ul>
+            Damon
+            <li>
+              <Link to="/components/Profile">Profile</Link>
+            </li>
+          </ul>
         </nav>
         <Routes>
-          <Route path="/components/Forum" element={posts} />
-          <Route path="/components/Post" element={<PostView />} />
+          <Route path="/components/Forum" element={<Forum />} />
           <Route path="/components/Friends" element={<FriendPage />} />
           <Route path="/components/Login" element={<LoginScreen />} />
           <Route path="/components/Signup" element={<SignUpScreen />} />
+          <Route path="/components/Profile" element={<ProfilePage />} />
         </Routes>
       </Router>
     </div>
