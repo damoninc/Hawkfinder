@@ -12,7 +12,7 @@ import { Container } from "@mui/system";
 import { useNavigate, Link } from "react-router-dom";
 
 /**
- * Sign up has 4 fields which are used to create a User object
+ * Sign up has fields which are used to create a User object
  * @returns The sign up screen component
  */
 function SignUpScreen() {
@@ -25,7 +25,9 @@ function SignUpScreen() {
     firstname?: string;
     lastname?: string;
   }
-
+  /**
+   * Similar to Login, does most of the heavy lifting. Instead of using a function for validate, it does it inline.
+   */
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -76,6 +78,10 @@ function SignUpScreen() {
     },
   });
 
+  /**
+   * Will give an error message if something goes wrong, otherwise, it'll load with a circular sign
+   * @returns An error message, loading circle, or null
+   */
   function loadingUserMessage() {
     if (signupMessage == "") {
       return null;
@@ -87,8 +93,8 @@ function SignUpScreen() {
   }
 
   /**
-   * Creates a new User in the User array in User.ts. Doesn't permanently save the User.
-   * @returns false is a placeholder, it doesn't do anything
+   * Create a new user using the auth method, and then navigates to another screen
+   * @returns null
    */
   function createUser(
     emailInput: string,
