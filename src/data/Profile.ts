@@ -1,10 +1,14 @@
+/*
+ * A profile class that is used as a parameter of the user class. Profiles cannot exist independently without a User to go with it.
+ * Profile should never be instanstiated outside of an instance of User.
+ */
 class Profile {
   private _firstName: string;
   private _lastName: string;
   private _userName: string;
   private _bio = "";
   private _interests: string[] = [];
-  private _profilePicture = "";
+  private _profilePicture = "defprofileimg.jpg";
   private _coverPhoto = "";
   private _birthDate: Date = new Date(0, 0, 0);
 

@@ -1,0 +1,102 @@
+.hawkfinder {
+  top: auto;
+  left: 50%;
+  position: relative;
+  align-self: center;
+  padding-right: 0px;
+}
+.profile-info {
+  margin-left: 10%;
+  margin-right: 10%;
+  max-width: 2000px;
+  height: 600px;
+  display: flex;
+  position: relative;
+  box-shadow: 5px 5px 10px 0px #d4d4d4;
+  align-items: center;
+  border-color: var(--dl-color-gray-black);
+  border-width: 1px;
+  background-color: whitesmoke;
+  border-radius: var(--dl-radius-radius-radius4);
+  transition: height 0.3s ease; /* add transition property */
+  grid-area: overlap;
+}
+
+.cover-photo {
+  position: relative;
+  padding-left: 5%;
+  padding-right: 5%;
+  margin: auto;
+  height: 90%;
+  width: 100%;
+  max-height: 500px;
+  max-width: 1700px;
+  object-fit: cover;
+  z-index: 1;
+}
+.profile-name {
+  left: 317px;
+  bottom: 30px;
+  position: absolute;
+  padding-right: 0px;
+  font-weight: bold;
+}
+.friend-count {
+  left: 317px;
+  bottom: 10px;
+  position: absolute;
+  padding-right: 0px;
+}
+.edit-button {
+  right: 15%;
+  z-index: 1;
+  top: 560px;
+}
+.profile-photo {
+  left: 144px;
+  width: 164px;
+  bottom: 1px;
+  height: 157px;
+  margin: auto;
+  z-index: 100;
+  position: absolute;
+  align-self: flex-end;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.about {
+  margin-left: 10%;
+  margin-top: 2%;
+  width: 500px;
+  height: 266px;
+  display: flex;
+  align-items: flex-start;
+  border-color: black;
+  border-width: 2px;
+  border-style: solid;
+  padding-right: 0px;
+  flex-direction: column;
+}
+.about-title {
+  align-self: center;
+}
+.interests {
+  margin-left: 10%;
+  width: 500px;
+  height: 300px;
+  display: flex;
+  align-items: flex-start;
+  border-color: black;
+  border-width: 2px;
+  border-style: solid;
+  flex-direction: column;
+}
+.text4 {
+  align-self: center;
+}
+@media (max-width: 768px) {
+  .profile-info {
+    max-height: 400px; /* change max-height for smaller screens */
+  }
+}
+
