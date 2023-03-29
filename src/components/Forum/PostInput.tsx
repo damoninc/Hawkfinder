@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
-import "../../styles/postinput.css";
+import { auth, db, storage } from "../../firebase/config";
 import {
   FormControl,
   Button,
@@ -9,6 +9,13 @@ import {
   Input,
   InputLabel,
 } from "@mui/material";
+import "../../styles/postinput.css";
+import {
+  addDoc,
+  collection,
+  serverTimestamp,
+  Timestamp,
+} from "@firebase/firestore";
 
 const PostInput = () => {
   // These hooks keep track of the input by the user for their post
@@ -32,19 +39,20 @@ const PostInput = () => {
    * Temporary functionality for posting to the forum,
    * only console.logs the input
    */
-  function handlePost() {
+  async function handlePost() {
     if (postText != "") {
-      console.log("Post sent! Sending info to firebase:");
-      console.log(
-        "ImageFile: ",
-        selectedImage,
-        "; Interest: ",
-        interest,
-        "; Text: ",
-        postText
-      );
+      console.log("DB WRITE");
+      const docRef = await addDoc(collection(db, "Posts"), {
+        description: postText,
+        imageURL: selectedImage.name,
+        interest: interest,
+        postDate: serverTimestamp(),
+        ratings: Object.fromEntries(new Map<string, string>()),
+        userID: "jgj4899fwre8j49",
+      });
+      console.log("Document written with ID: ", docRef.id);
     } else {
-      console.log("Post not sent, ");
+      console.log("Post not sent, there must be text input!");
     }
   }
 
