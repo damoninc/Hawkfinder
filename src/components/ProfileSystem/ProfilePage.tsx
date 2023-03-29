@@ -15,19 +15,7 @@ import {
 import { auth, db, storage } from "../../firebase/config";
 import { ref, getDownloadURL } from "firebase/storage";
 import Navbar from "../Navbar/Navbar";
-import {
-  Autocomplete,
-  Box,
-  Button,
-  Modal,
-  Stack,
-  TextField,
-  Typography,
-  IconButton,
-} from "@mui/material";
-import { useState } from "react";
-import PortraitIcon from "@mui/icons-material/Portrait";
-import PanoramaIcon from "@mui/icons-material/Panorama";
+import { Box, Typography } from "@mui/material";
 import EditPage from "./EditPage";
 
 // !FIREBASE STUFF
