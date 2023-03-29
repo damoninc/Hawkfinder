@@ -10,7 +10,13 @@ import {
 } from "@mui/material";
 import PortraitIcon from "@mui/icons-material/Portrait";
 import PanoramaIcon from "@mui/icons-material/Panorama";
-import { doc, DocumentData, getDoc, updateDoc } from "firebase/firestore";
+import {
+  doc,
+  DocumentData,
+  DocumentReference,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 import React, { useState } from "react";
 import { db } from "../../firebase/config";
 const interestRef = doc(db, "Interests", "Interests");
@@ -22,7 +28,7 @@ const baseInterests = interestSnap.data();
  * A user can only see this on their own page.
  * @returns The edit page button/modal combo
  */
-function EditPage(user: any, docRef: any) {
+function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
   if (user?.userid == "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1") {
     // Modal Handlers
     const [open, setOpen] = React.useState(false);
