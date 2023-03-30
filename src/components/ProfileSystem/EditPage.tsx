@@ -33,24 +33,28 @@ const baseInterests = interestSnap.data();
  */
 function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
   if (user?.userid == "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1") {
-    // Modal Handlers
+    // MAIN EDIT PAGE MODAL HANDLERS
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    // inner Modal Handlers
+    // PHOTO MODAL HANDLERS
     const [photosLoaded, setPhotosLoaded] = useState("");
     const [images, setImages] = useState<string[]>([]);
     const [innerOpen, setInnerOpen] = React.useState(false);
+
+    // COVER PHOTO BUTTON
     const handleInnerOpenCover = () => {
       setInnerOpen(true);
       setPhotosLoaded(user?.userid + "/Cover Photos");
     };
+    // PROF PIC BUTTON
     const handleInnerOpenProfile = () => {
       setInnerOpen(true);
       setPhotosLoaded(user?.userid + "/Profile Pictures");
     };
 
+    // THIS LOADS PHOTOS INTO THE PHOTO MODAL
     useEffect(() => {
       if (photosLoaded) {
         // Retrieve a list of image references from Firebase Storage
@@ -70,9 +74,6 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
       }
     }, [photosLoaded]);
     const handleInnerClose = () => setInnerOpen(false);
-    // Text Handlers
-
-    // Interests
 
     /**
      * This function sends back the interest field that is used in the edit page modal.
