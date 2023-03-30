@@ -73,7 +73,10 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
           });
       }
     }, [photosLoaded]);
-    const handleInnerClose = () => setInnerOpen(false);
+    const handleInnerClose = () => {
+      setInnerOpen(false);
+      setImages([]);
+    };
 
     /**
      * This function sends back the interest field that is used in the edit page modal.
@@ -250,13 +253,28 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
                   }}
                 >
                   <ImageList
-                    sx={{ width: 500, height: 450 }}
-                    cols={3}
+                    sx={{ width: 1000, height: 450 }}
+                    cols={6}
                     rowHeight={164}
                   >
                     {images.map((item) => (
-                      <ImageListItem key={item}>
-                        <img src={item} srcSet={item} loading="lazy" />
+                      <ImageListItem
+                        sx={{
+                          width: "164px",
+                          height: "164px",
+                        }}
+                        key={item}
+                      >
+                        <img
+                          src={`${item}?w=164&h=164&fit=cover&auto=format`}
+                          srcSet={`${item}?w=164&h=164&fit=cover&auto=format&dpr=2 2x`}
+                          loading="lazy"
+                          style={{
+                            objectFit: "cover",
+                            width: "100%",
+                            height: "100%",
+                          }}
+                        />
                       </ImageListItem>
                     ))}
                   </ImageList>
