@@ -7,6 +7,8 @@ import {
   Modal,
   Typography,
   IconButton,
+  ImageList,
+  ImageListItem,
 } from "@mui/material";
 import PortraitIcon from "@mui/icons-material/Portrait";
 import PanoramaIcon from "@mui/icons-material/Panorama";
@@ -17,8 +19,9 @@ import {
   getDoc,
   updateDoc,
 } from "firebase/firestore";
-import React, { useState } from "react";
-import { db } from "../../firebase/config";
+import React, { useEffect, useState } from "react";
+import { db, storage } from "../../firebase/config";
+import { getDownloadURL, listAll, ref } from "firebase/storage";
 const interestRef = doc(db, "Interests", "Interests");
 const interestSnap = await getDoc(interestRef);
 const baseInterests = interestSnap.data();
@@ -35,6 +38,38 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
+    // inner Modal Handlers
+    const [photosLoaded, setPhotosLoaded] = useState("");
+    const [images, setImages] = useState<string[]>([]);
+    const [innerOpen, setInnerOpen] = React.useState(false);
+    const handleInnerOpenCover = () => {
+      setInnerOpen(true);
+      setPhotosLoaded(user?.userid + "/Cover Photos");
+    };
+    const handleInnerOpenProfile = () => {
+      setInnerOpen(true);
+      setPhotosLoaded(user?.userid + "/Profile Pictures");
+    };
+
+    useEffect(() => {
+      if (photosLoaded) {
+        // Retrieve a list of image references from Firebase Storage
+        const listRef = ref(storage, photosLoaded);
+        listAll(listRef)
+          .then((res) => {
+            const urls = res.items.map((itemRef) =>
+              getDownloadURL(itemRef).then((url) => url)
+            );
+            Promise.all(urls).then((urls) => {
+              setImages(urls);
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    }, [photosLoaded]);
+    const handleInnerClose = () => setInnerOpen(false);
     // Text Handlers
 
     // Interests
@@ -153,6 +188,7 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
                   height: "150px",
                   width: "150px",
                 }}
+                onClick={handleInnerOpenProfile}
               >
                 <Box
                   sx={{
@@ -178,6 +214,7 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
                   height: "150px",
                   width: "150px",
                 }}
+                onClick={handleInnerOpenCover}
               >
                 <Box
                   sx={{
@@ -197,6 +234,36 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
                   </Typography>
                 </Box>
               </IconButton>
+              <Modal open={innerOpen} onClose={handleInnerClose}>
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: 1000,
+                    bgcolor: "background.paper",
+                    border: "2px solid #000",
+                    boxShadow: 24,
+                    p: 4,
+                  }}
+                >
+                  <ImageList
+                    sx={{ width: 500, height: 450 }}
+                    cols={3}
+                    rowHeight={164}
+                  >
+                    {images.map((item) => (
+                      <ImageListItem key={item}>
+                        <img src={item} srcSet={item} loading="lazy" />
+                      </ImageListItem>
+                    ))}
+                  </ImageList>
+                  <Button color="warning" onClick={handleInnerClose}>
+                    Cancel
+                  </Button>
+                </Box>
+              </Modal>
             </Box>
             <TextField
               onChange={handlefirstName}
@@ -227,16 +294,7 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
             />
 
             <InterestHook />
-            <Button color="warning" onClick={handleClose}>
-              Cancel
-            </Button>
-            <Button
-              sx={{ position: "absolute", right: "50px" }}
-              color="primary"
-              onClick={handleSave}
-            >
-              Save
-            </Button>
+            {EscapeButtons(handleClose, handleSave)}
           </Box>
         </Modal>
       </Box>
@@ -244,5 +302,22 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
   } else {
     return null;
   } // as of right now it is hardcoded until we have a solution to check user credentials between pages
+
+  function EscapeButtons(handlerClosing: any, handlerSaving: any) {
+    return (
+      <>
+        <Button color="warning" onClick={handlerClosing}>
+          Cancel
+        </Button>
+        <Button
+          sx={{ position: "absolute", right: "50px" }}
+          color="primary"
+          onClick={handlerSaving}
+        >
+          Save
+        </Button>
+      </>
+    );
+  }
 }
 export default EditPage;
