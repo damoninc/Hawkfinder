@@ -1,13 +1,40 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
 import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
 import { IconButton } from "@mui/material";
+import { storage } from "../../firebase/config";
+import { getDownloadURL, ref } from "firebase/storage";
 
 function PostView(props: any) {
+  // Creates a pointer reference to the image of the post
+  const imageRef = ref(storage, "Posts/" + props.id + ".jpg");
+
+  // HOOKS ----------------------------------------------------------------
+  // Hook for the ratings of each post
   const [ratings, setRatings] = useState(props.rating);
   const [upvoted, setUpvoted] = useState(false);
   const [downvoted, setDownvoted] = useState(false);
+  const [image, setImage] = useState("");
+
+  const fetchImage = () => {
+    if (props.imageURL != "") {
+      console.log("getting image...");
+      getDownloadURL(imageRef)
+        .then((url) => {
+          // const newURL = url + ".jpg";
+          setImage(url);
+          console.log("IMAGE: ", url);
+        })
+        .catch((err) => {
+          console.log("Error fetching image");
+        });
+    }
+  };
+
+  useEffect(() => {
+    fetchImage();
+  }, []);
 
   const upvote = () => {
     if (!upvoted && !downvoted) {
@@ -40,8 +67,6 @@ function PostView(props: any) {
     }
   };
 
-  const postImgPath = `/src/assets/images/${props.imageURL}`;
-
   return (
     <div className="post-container">
       <div className="pic-crop">
@@ -49,7 +74,7 @@ function PostView(props: any) {
       </div>
       <div className="post-img-container">
         {props.imageURL !== "" ? (
-          <img className="post-img" src={postImgPath} />
+          <img className="post-img" src={image} />
         ) : (
           <></>
         )}

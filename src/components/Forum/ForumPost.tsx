@@ -1,18 +1,44 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
+import { storage } from "../../firebase/config";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
 import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
 import { IconButton } from "@mui/material";
 import "../../styles/forumpost.css";
+import { getDownloadURL, ref } from "firebase/storage";
 
 function ForumPost(props: any) {
+  // Creates a pointer reference to the image of the post
+  const imageRef = ref(storage, "Posts/" + props.id + ".jpg");
+
+  // HOOKS ----------------------------------------------------------------
   // Hook for the ratings of each post
   const [ratings, setRatings] = useState(props.rating);
   // Determines whether the user has upvoted
   const [upvoted, setUpvoted] = useState(false);
   // Determines whether the user has downvoted
   const [downvoted, setDownvoted] = useState(false);
+  // The image of the post
+  const [image, setImage] = useState("");
+
+  const fetchImage = () => {
+    if (props.imageURL != "") {
+      getDownloadURL(imageRef)
+        .then((url) => {
+          // const newURL = url + ".jpg";
+          setImage(url);
+          console.log("IMAGE: ", url);
+        })
+        .catch((err) => {
+          console.log("Error fetching image");
+        });
+    }
+  };
+
+  useEffect(() => {
+    fetchImage();
+  }, []);
 
   const upvote = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     /**
@@ -51,7 +77,6 @@ function ForumPost(props: any) {
     }
   };
 
-  const postImgPath = `/src/assets/images/${props.imageURL}`;
   return (
     // Data passed in from props
     /* {props.postID}
@@ -66,7 +91,7 @@ function ForumPost(props: any) {
       </div>
       <div className="post-img-container">
         {props.imageURL !== "" ? (
-          <img className="post-img" src={postImgPath} />
+          <img className="post-img" src={image} />
         ) : (
           <></>
         )}

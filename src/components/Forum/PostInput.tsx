@@ -14,8 +14,9 @@ import {
   addDoc,
   collection,
   serverTimestamp,
-  Timestamp,
+  updateDoc,
 } from "@firebase/firestore";
+import { ref, uploadBytes } from "firebase/storage";
 
 const PostInput = () => {
   // These hooks keep track of the input by the user for their post
@@ -36,21 +37,57 @@ const PostInput = () => {
   };
 
   /**
-   * Temporary functionality for posting to the forum,
-   * only console.logs the input
+   *
+   * @param originalFile
+   * @param newName
+   * @returns updated File object
    */
+  function renameFile(oldFile: File, newName: string) {
+    return new File([oldFile], newName, {
+      type: oldFile.type,
+      lastModified: oldFile.lastModified,
+    });
+  }
+
+  const metadata = {
+    contentType: "image/jpeg",
+  };
+
+  async function uploadImage(image: File) {
+    const postsRef = ref(storage, "Posts/" + image.name);
+    uploadBytes(postsRef, image, metadata).then(() => {
+      console.log("Uploaded image!");
+    });
+  }
+
   async function handlePost() {
     if (postText != "") {
       console.log("DB WRITE");
       const docRef = await addDoc(collection(db, "Posts"), {
         description: postText,
-        imageURL: selectedImage.name,
+        imageURL: "",
         interest: interest,
         postDate: serverTimestamp(),
         ratings: Object.fromEntries(new Map<string, string>()),
         userID: "jgj4899fwre8j49",
       });
-      console.log("Document written with ID: ", docRef.id);
+      // Using the doc.id generated above to use as a unique reference
+      // that the post will use to get the image from storage
+      if (selectedImage) {
+        const imgID = docRef.id;
+        const imgExt = selectedImage.name.split(".").pop();
+        const imgName = imgID + "." + imgExt;
+        // UPLOADING IMG TO FIREBASE STORAGE
+        const newFile: File = renameFile(selectedImage, imgName);
+        uploadImage(newFile);
+        // UPDATING POST DOCUMENT WITH POINTER TO FIREBASE STORAGE
+        await updateDoc(docRef, {
+          imageURL: imgName,
+        });
+        // console.log("New imgname: " + newFile.name);
+      }
+
+      // console.log("Document written with ID: ", docRef.id);
     } else {
       console.log("Post not sent, there must be text input!");
     }

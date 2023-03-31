@@ -76,7 +76,7 @@ function Forum() {
                 className="post-handler"
               >
                 <ForumPost
-                  // key={post.postID}
+                  id={post.postID}
                   postDate={post.postDate}
                   description={post.description}
                   interest={post.interest}
@@ -107,6 +107,7 @@ function Forum() {
               {posts.length > 0 ? (
                 <PostView
                   key={postIndex}
+                  id={posts[postIndex].postID}
                   postDate={posts[postIndex].postDate}
                   description={posts[postIndex].description}
                   interest={posts[postIndex].interest}
