@@ -7,6 +7,7 @@ import React from "react";
 import LoginScreen from "./components/Authentication/LoginScreen";
 import SignUpScreen from "./components/Authentication/SignUpScreen";
 import ProfilePage from "./components/ProfileSystem/ProfilePage";
+import SpotifyPage from "./components/SpotifyIntegration/SpotifyPage";
 
 function App() {
   return (
@@ -25,6 +26,9 @@ function App() {
             Nicholaus
             <li>
               <Link to="/components/Friends">Friends List</Link>
+            </li>
+            <li>
+              <Link to="/components/Spotify">Spotify Int</Link>
             </li>
           </ul>
           <ul>
@@ -49,6 +53,8 @@ function App() {
           <Route path="/components/Login" element={<LoginScreen />} />
           <Route path="/components/Signup" element={<SignUpScreen />} />
           <Route path="/components/Profile" element={<ProfilePage />} />
+          <Route path="/components/Spotify" element={<SpotifyPage />} />
+
         </Routes>
       </Router>
     </div>

@@ -1,6 +1,7 @@
 import React from "react";
 import "../../styles/userbox.css";
 import User from "../../data/User";
+import CurrentSong from "../SpotifyIntegration/CurrentSong";
 
 /**
  * Generates a HTML block that displays a user based on their Profile information
@@ -37,6 +38,7 @@ function UserBox(displayUser: User, buttons: (arg0: User) => JSX.Element) {
           {displayUser.profile.firstName} {displayUser.profile.lastName}{" "}
         </h3>
         <p>{interests}</p>
+        {CurrentSong(displayUser)}
       </div>
       <div className="smallContent">
         <h3>
