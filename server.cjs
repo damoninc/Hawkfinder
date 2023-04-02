@@ -29,7 +29,7 @@ var generateRandomString = function (length) {
 };
 
 app.get('/api/spotify', (req, res) => {
-  var scope = "streaming user-read-email user-read-private"
+  var scope = "streaming user-read-currently-playing user-top-read user-follow-read user-read-recently-played"
 
   var state = generateRandomString(16);
 
@@ -76,6 +76,30 @@ app.get('/api/spotify/callback', (req, res) => {
       console.log(body.expires_in)
 
       res.redirect(redirect_uri_front + `#access_token=${body.access_token}&refresh_token=${body.refresh_token}`)
+    }
+  });
+});
+
+app.get('/api/spotify/refresh_token', function(req, res) {
+
+  var refresh_token = req.query.refresh_token;
+  var authOptions = {
+    url: 'https://accounts.spotify.com/api/token',
+    // eslint-disable-next-line no-undef
+    headers: { 'Authorization': 'Basic ' + (new Buffer.from(spotify_client_id + ':' + spotify_client_secret).toString('base64')) },
+    form: {
+      grant_type: 'refresh_token',
+      refresh_token: refresh_token
+    },
+    json: true
+  };
+
+  request.post(authOptions, function(error, response, body) {
+    if (!error && response.statusCode === 200) {
+      var access_token = body.access_token;
+      res.send({
+        'access_token': access_token
+      });
     }
   });
 });

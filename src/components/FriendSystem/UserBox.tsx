@@ -1,7 +1,7 @@
 import React from "react";
 import "../../styles/userbox.css";
 import User from "../../data/User";
-import CurrentSong from "../SpotifyIntegration/CurrentSong";
+import CurrentSong from "../SpotifyIntegration/SpotifyComponents";
 
 /**
  * Generates a HTML block that displays a user based on their Profile information

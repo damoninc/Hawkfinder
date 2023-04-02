@@ -8,7 +8,8 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import SpotifyLogin from "../SpotifyIntegration/SpotifyLogin";
-import CurrentSong from "./CurrentSong";
+import CurrentSong, { RecentSongs, TopSongs } from "./SpotifyComponents";
+import { CircularProgress } from "@mui/material";
 
 // use: concurrently "npm run dev" "npm run start"    
 // to run server and vite at the same time
@@ -31,12 +32,27 @@ function SpotifyPage() {
     callDB(setUser);
   }
   return (
-    <div>
-      {SpotifyLogin(user)}
-      {/* {CurrentSong(user)} */}
+    <div style={{display:"flex", justifyContent:"space-evenly"}}>
+      <div>
+        <h1>Authorize Spotify</h1>
+        {SpotifyLogin(user)}
+      </div>
+      <div>
+        <h1>Current Song</h1>
+        {CurrentSong(user, false)}
+      </div>
+      <div>
+        <h1>Top Songs</h1>
+        {TopSongs(user, 10)}
+      </div>
+      <div>
+        <h1>Recent Songs</h1>
+        {RecentSongs(user, 10)}
+      </div>
     </div>
   );
 }
+
 
 /**
  * Function used to query FireBase for the friends list.
