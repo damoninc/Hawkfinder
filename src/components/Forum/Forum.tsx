@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../../firebase/config";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, orderBy, onSnapshot, query } from "firebase/firestore";
 import Post from "../../data/Post";
 import PostView from "../Post/PostView";
 import ForumPost from "./ForumPost";
@@ -23,11 +23,14 @@ function Forum() {
   /**
    * Makes a call to the db, grabbing every document
    * in the Posts collection
+   * onSnapshot will add a listener to the Posts collection
+   * so that the forum will reload when a new post is made
    */
-  const fetchPosts = async () => {
+  useEffect(() => {
     setLoading(true);
-    await getDocs(collection(db, "Posts")).then((querySnapshot) => {
-      const tempPosts: any = querySnapshot.docs.map((doc) => {
+    const q = query(collection(db, "Posts"), orderBy("postDate", "desc"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const tempPosts = querySnapshot.docs.map((doc) => {
         console.log("DB CALL");
         return new Post(
           doc.id,
@@ -38,17 +41,12 @@ function Forum() {
           new Map(Object.entries(doc.data().ratings))
         );
       });
+      tempPosts.sort((a, b) => b.postDate.getTime() - a.postDate.getTime());
       setPosts(tempPosts);
       setLoading(false);
     });
-  };
-
-  /**
-   * Makes sure fetchPosts() only runs once with
-   * a dependance on nothing
-   */
-  useEffect(() => {
-    fetchPosts();
+    setLoading(false);
+    return () => unsubscribe();
   }, []);
 
   /**

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
-import { auth, db, storage } from "../../firebase/config";
+import { db, storage } from "../../firebase/config";
 import {
   FormControl,
   Button,
@@ -9,7 +9,7 @@ import {
   Input,
   InputLabel,
 } from "@mui/material";
-import "../../styles/postinput.css";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
 import {
   addDoc,
   collection,
@@ -17,9 +17,10 @@ import {
   updateDoc,
 } from "@firebase/firestore";
 import { ref, uploadBytes } from "firebase/storage";
+import "../../styles/postinput.css";
 
 const PostInput = () => {
-  // These hooks keep track of the input by the user for their post
+  // These hooks keep track of user input
   const [selectedImage, setSelectedImage] = useState<any>(null);
   const [interest, setInterest] = useState("");
   const [postText, setPostText] = useState("");
@@ -30,6 +31,7 @@ const PostInput = () => {
     marginRight: "3%",
   };
 
+  // Styling specific for the interest selection box
   const interestsx = {
     maxHeight: "56px",
     marginRight: "3%",
@@ -37,7 +39,8 @@ const PostInput = () => {
   };
 
   /**
-   *
+   * Renames the user's image input filename to the
+   * id of the newly created Post
    * @param originalFile
    * @param newName
    * @returns updated File object
@@ -53,6 +56,10 @@ const PostInput = () => {
     contentType: "image/jpeg",
   };
 
+  /**
+   * Uploads the user's image input to Firebase storage
+   * @param image: Raw Image File
+   */
   async function uploadImage(image: File) {
     const postsRef = ref(storage, "Posts/" + image.name);
     uploadBytes(postsRef, image, metadata).then(() => {
@@ -84,10 +91,7 @@ const PostInput = () => {
         await updateDoc(docRef, {
           imageURL: imgName,
         });
-        // console.log("New imgname: " + newFile.name);
       }
-
-      // console.log("Document written with ID: ", docRef.id);
     } else {
       console.log("Post not sent, there must be text input!");
     }
@@ -107,14 +111,25 @@ const PostInput = () => {
         </div>
       )}
 
-      <Input
+      {/* <Input
         sx={sx}
         type="file"
         name="myImage"
         onChange={(event: React.ChangeEvent<HTMLInputElement> | any) => {
           setSelectedImage(event.target.files[0]);
         }}
-      />
+      /> */}
+      <Button variant="outlined" component="label">
+        <FileUploadIcon style={{ fill: "teal" }} />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(event: React.ChangeEvent<HTMLInputElement> | any) => {
+            setSelectedImage(event.target.files[0]);
+          }}
+          hidden
+        />
+      </Button>
       <FormControl>
         <InputLabel>Interest</InputLabel>
         <Select
@@ -144,7 +159,7 @@ const PostInput = () => {
           Post
         </Button>
       ) : (
-        <Button type="submit" variant="outlined" onClick={handlePost} disabled>
+        <Button type="submit" variant="outlined" disabled>
           Post
         </Button>
       )}
