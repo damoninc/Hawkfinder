@@ -28,7 +28,7 @@ function UserBox(displayUser: User, buttons: (arg0: User) => JSX.Element) {
   }
 
   return (
-    <div className="container">
+    <div className="usercontainer">
       <div className="propic">
         <img src={imgPath} width="100" height="100"></img>
       </div>
@@ -38,7 +38,7 @@ function UserBox(displayUser: User, buttons: (arg0: User) => JSX.Element) {
           {displayUser.profile.firstName} {displayUser.profile.lastName}{" "}
         </h3>
         <p>{interests}</p>
-        {CurrentSong(displayUser)}
+        {/* {CurrentSong(displayUser, true)} */}
       </div>
       <div className="smallContent">
         <h3>

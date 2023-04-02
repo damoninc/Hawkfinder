@@ -1,11 +1,11 @@
-p {
+/* p {
     line-height:0px;
     padding-left: 15px;
 }
 h3 {
     line-height: 0px;
     margin-top: 0;
-}
+} */
 .songBox {
     box-sizing: border-box;
     display: flex;

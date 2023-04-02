@@ -7,7 +7,7 @@ import { LinearProgress } from "@mui/material";
 const api_uri = "https://api.spotify.com/v1";
 const spotifyLogo = "https://firebasestorage.googleapis.com/v0/b/csc-450-project.appspot.com/o/HAWKFINDER%2Ffile-spotify-logo-png-4.png?alt=media&token=4ffa3420-edf1-4f8e-8ee4-8b1b7fc19093"
 
-const spotifyPulled : boolean[] = [false, false]
+export const spotifyPulled : boolean[] = [false, false]
 
 async function makeRequest(user : User, setResult : any, request_uri : string, boolIndex : number) {
   const result = await axios.get(api_uri + request_uri, {
@@ -49,9 +49,9 @@ function DisplaySong(song: { album: { images: { url: string | null; } []; name: 
         <img src={song.album.images[1].url == null ? "" : song.album.images[1].url} style={{width:"100px", height:"100px"}}/>
       </div>
       <div className="songText">
-        <h3 className="songTitle">{song.name}</h3>
-        <p>by {song.artists.length == 1 ? song.artists[0].name : song.artists[0].name + " and others"}</p>
-        <p>on {song.album.name}</p>
+        <h3 style={{marginTop:"0px", lineHeight:"0px"}}>{song.name}</h3>
+        <p style={{paddingLeft: "15px", lineHeight:"0px"}}>by {song.artists.length == 1 ? song.artists[0].name : song.artists[0].name + " and others"}</p>
+        <p style={{paddingLeft: "15px", lineHeight:"0px"}}>on {song.album.name}</p>
       </div>
       <a href={song.external_urls.spotify} target="_blank" rel="noopener noreferrer">
         <img src={spotifyLogo} style={{height:"30px", width:"30px", margin:"20px"}}/>
@@ -82,37 +82,7 @@ function DisplaySong(song: { album: { images: { url: string | null; } []; name: 
 
 function DisplaySongSmall(song: { album: { images: { url: string | null; } []; name: string | null; }; name: string | null; artists: string | any[]; }, times? : number[]) {
   return (
-    <div style={{display:"block"}}>
-    <div className="songBox">
-      <div className="songText">
-        <h3>{song.name}</h3>
-        <p>by {song.artists.length == 1 ? song.artists[0].name : song.artists[0].name + " and others"}</p>
-        <p>on {song.album.name}</p>
-      </div>
-      <a href={song.external_urls.spotify} target="_blank" rel="noopener noreferrer">
-        <img src={spotifyLogo} style={{height:"30px", width:"30px", margin:"20px"}}/>
-      </a>    
-    </div>
-    {times == null ? 
-      <div></div> : 
-      <div style={{display:"flex", flexDirection:"row"}}>
-        <p style={{fontSize:"16px"}}>
-          {`0${Math.floor((times[0]/1000/60) << 0)}`.slice(-2)}
-          :{`0${Math.floor((times[0]/1000) % 60)}`.slice(-2)}
-        </p>
-        <LinearProgress   
-          value={times[0]/times[1]*100} 
-          variant="determinate"
-          style={{ width: "100%", marginRight: "4px", marginLeft: "4px" }} />
-
-        <p style={{fontSize:"16px"}}>
-          {`0${Math.floor((times[1]/1000/60) << 0)}`.slice(-2)}
-          :{`0${Math.floor((times[1]/1000) % 60)}`.slice(-2)}
-        </p>
-      </div>
-      }
-    </div>
-
+      <marquee style={{ color: 'black', fontSize: '1em' }}>Listening to: <b>{song.name}</b> by {song.artists.length == 1 ? song.artists[0].name : song.artists[0].name + " and others"}</marquee>
   );
 }
 
