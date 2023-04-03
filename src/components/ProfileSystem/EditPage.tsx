@@ -265,6 +265,17 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
                         }}
                         key={item}
                       >
+                         <Button
+                          component="a"
+                          href={item}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            padding: 0,
+                          }}
+                        >
                         <img
                           src={`${item}?w=164&h=164&fit=cover&auto=format`}
                           srcSet={`${item}?w=164&h=164&fit=cover&auto=format&dpr=2 2x`}
@@ -274,7 +285,14 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
                             width: "100%",
                             height: "100%",
                           }}
+                          onMouseOver={(e) => {
+                            e.currentTarget.style.filter = "brightness(0.8)";
+                          }}
+                          onMouseOut={(e) => {
+                            e.currentTarget.style.filter = "none";
+                          }}
                         />
+                      </Button>
                       </ImageListItem>
                     ))}
                   </ImageList>
