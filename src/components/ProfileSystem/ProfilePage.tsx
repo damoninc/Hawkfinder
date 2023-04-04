@@ -37,6 +37,12 @@ function getUser() {
   }
 }
 //! END OF FIREBASE STUFF
+let owner: boolean;
+if (user?.userid == "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1") {
+  owner = true;
+} else {
+  owner = false;
+}
 
 /**
  * This is the main profile page that displays a users profile
@@ -66,7 +72,7 @@ function ProfilePage() {
           loading="lazy"
           className="profile-photo"
         />
-        {EditPage(user, docRef)}
+        {owner && EditPage(user, docRef)}
       </Box>
       <Box className="about">
         <Box className="about-title">
