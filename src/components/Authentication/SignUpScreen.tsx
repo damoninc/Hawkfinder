@@ -116,6 +116,9 @@ function SignUpScreen() {
           email: emailInput,
           userid: cred.user.uid,
           friendsList: [],
+          incomingRequests: [],
+          outgoingRequests: [],
+          spotifyTokens: {},
           profile: {
             firstName: firstnameInput,
             lastName: lastnameInput,

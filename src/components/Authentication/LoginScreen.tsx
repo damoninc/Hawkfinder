@@ -75,6 +75,7 @@ function LoginScreen() {
         const docRef = doc(db, "Users", cred.user.uid);
         const docSnap = await getDoc(docRef);
         const userAuth = docSnap.data();
+        localStorage.setItem("token", cred?.user.uid);
         alert(
           "Signed in as " +
             userAuth?.profile.firstName +
