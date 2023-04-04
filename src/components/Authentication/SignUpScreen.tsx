@@ -130,8 +130,10 @@ function SignUpScreen() {
           },
         });
         alert(`New account created with email ${emailInput}!`);
+        localStorage.setItem("token", cred?.user.uid);
         navigate("/components/Login");
-      }) // TODO: Again, I gotta change these error messages
+        window.location.reload();  // TODO: Will want to reconsider, it doesn't navigate to where you want after reloading.
+      })
       .catch((error: FirebaseError) => {
         switch (error.code) {
           case "auth/email-already-in-use":

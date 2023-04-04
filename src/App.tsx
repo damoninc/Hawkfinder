@@ -1,12 +1,14 @@
 import Forum from "./components/Forum/Forum";
 import PostView from "./components/Post/PostView";
 import FriendPage from "./components/FriendSystem/FriendPage";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-router-dom";
 import "./App.css";
 import React from "react";
 import LoginScreen from "./components/Authentication/LoginScreen";
 import SignUpScreen from "./components/Authentication/SignUpScreen";
 import ProfilePage from "./components/ProfileSystem/ProfilePage";
+import InterceptorScreen from "./components/Authentication/InterceptorScreen";
+import ValidToken from "./components/Authentication/CheckSignedIn";
 
 function App() {
   return (
@@ -44,11 +46,12 @@ function App() {
           </ul>
         </nav>
         <Routes>
-          <Route path="/components/Forum" element={<Forum />} />
-          <Route path="/components/Friends" element={<FriendPage />} />
+          <Route path="/components/Forum" element={ ValidToken() ? <Navigate to="/components/Interceptor" /> : <Forum />} />
+          <Route path="/components/Friends" element={ ValidToken() ? <Navigate to="/components/Interceptor" /> : <FriendPage />} />
           <Route path="/components/Login" element={<LoginScreen />} />
           <Route path="/components/Signup" element={<SignUpScreen />} />
-          <Route path="/components/Profile" element={<ProfilePage />} />
+          <Route path="/components/Profile" element={ ValidToken() ? <Navigate to="/components/Interceptor" /> : <ProfilePage />} />
+          <Route path="/components/Interceptor" element={<InterceptorScreen />} />
         </Routes>
       </Router>
     </div>
