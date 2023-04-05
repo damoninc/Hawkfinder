@@ -5,7 +5,7 @@ function InterceptorScreen(){
     const navigate = useNavigate();
     return(
     <h1>
-        You are not currently signed in! <Link to="/components/Login">Go to login</ Link>
+        You are not currently signed in! <Link to="/">Go to login</ Link>
     </h1>
     )
 }

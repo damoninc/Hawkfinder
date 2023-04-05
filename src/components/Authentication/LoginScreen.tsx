@@ -50,6 +50,7 @@ function LoginScreen() {
     return errors;
   }
 
+
   /**
    * This is the core backbone of the forums. Most of the heavy lifting is done by this hook.
    * It expects an initialValue, a validation, and a submission method.
@@ -82,8 +83,7 @@ function LoginScreen() {
             " " +
             userAuth?.profile.lastName
         );
-        navigate("/components/Forum");
-        window.location.reload();  // TODO: Will want to reconsider, it doesn't navigate to where you want after reloading.
+        navigate("/components/SignedIn");
       })
       .catch((error: FirebaseError) => {
         switch (error.code) {

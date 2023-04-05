@@ -9,8 +9,15 @@ import SignUpScreen from "./components/Authentication/SignUpScreen";
 import ProfilePage from "./components/ProfileSystem/ProfilePage";
 import InterceptorScreen from "./components/Authentication/InterceptorScreen";
 import ValidToken from "./components/Authentication/CheckSignedIn";
+import SignedIn from "./components/Authentication/SignedInScreen";
+import checkAuthState from "./components/Authentication/MonitorAuthState";
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from "./firebase/config";
+import isUserLoggin from "./components/Authentication/TestAuth";
+
 
 function App() {
+  const [user, loading, error] = useAuthState(auth);
   return (
     <div className="app">
       <h3>All the pages we are working on</h3>
@@ -32,10 +39,13 @@ function App() {
           <ul>
             Octavio
             <li>
-              <Link to="/components/Login">Login</Link>
+              <Link to="/">Login</Link>
             </li>
             <li>
               <Link to="/components/Signup">Signup</Link>
+            </li>
+            <li>
+              <Link to="/components/SignedIn">SignedInPage</Link>
             </li>
           </ul>
           <ul>
@@ -48,10 +58,11 @@ function App() {
         <Routes>
           <Route path="/components/Forum" element={ ValidToken() ? <Navigate to="/components/Interceptor" /> : <Forum />} />
           <Route path="/components/Friends" element={ ValidToken() ? <Navigate to="/components/Interceptor" /> : <FriendPage />} />
-          <Route path="/components/Login" element={<LoginScreen />} />
+          <Route path="/" element={isUserLoggin(user) ? <Navigate to="/components/SignedIn" /> : <LoginScreen />} />
           <Route path="/components/Signup" element={<SignUpScreen />} />
           <Route path="/components/Profile" element={ ValidToken() ? <Navigate to="/components/Interceptor" /> : <ProfilePage />} />
           <Route path="/components/Interceptor" element={<InterceptorScreen />} />
+          <Route path="/components/SignedIn" element={ isUserLoggin(user) ? <SignedIn /> : <Navigate to="/components/Interceptor" />} />
         </Routes>
       </Router>
     </div>
