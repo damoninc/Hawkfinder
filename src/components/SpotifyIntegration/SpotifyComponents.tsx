@@ -90,8 +90,6 @@ export default function CurrentSong(user: User, small : boolean) {
     const [result, setCurrSongs] = useState(null)
     const [time, setTime] = useState(new Date());
 
-    const originalTime = new Date()
-
     useEffect(() => {
       const interval = setInterval(() => {
         setTime(new Date());
