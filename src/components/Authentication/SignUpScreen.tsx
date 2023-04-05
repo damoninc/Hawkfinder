@@ -130,9 +130,7 @@ function SignUpScreen() {
           },
         });
         alert(`New account created with email ${emailInput}!`);
-        localStorage.setItem("token", cred?.user.uid);
-        navigate("/components/Login");
-        window.location.reload();  // TODO: Will want to reconsider, it doesn't navigate to where you want after reloading.
+        navigate("/");
       })
       .catch((error: FirebaseError) => {
         switch (error.code) {

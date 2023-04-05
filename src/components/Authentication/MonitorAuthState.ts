@@ -2,6 +2,7 @@ import { onAuthStateChanged } from "@firebase/auth";
 import { auth } from "../../firebase/config";
 
 async function checkAuthState() {
+    
     onAuthStateChanged(auth, user => {
         if (user) {
             console.log("Signed in!")

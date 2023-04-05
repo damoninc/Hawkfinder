@@ -17,7 +17,7 @@ import isUserLoggin from "./components/Authentication/TestAuth";
 
 
 function App() {
-  const [user, loading, error] = useAuthState(auth);
+  const [user] = useAuthState(auth);
   return (
     <div className="app">
       <h3>All the pages we are working on</h3>
@@ -56,13 +56,13 @@ function App() {
           </ul>
         </nav>
         <Routes>
-          <Route path="/components/Forum" element={ ValidToken() ? <Navigate to="/components/Interceptor" /> : <Forum />} />
-          <Route path="/components/Friends" element={ ValidToken() ? <Navigate to="/components/Interceptor" /> : <FriendPage />} />
+          <Route path="/components/Forum" element={ isUserLoggin(user) ? <Forum /> : <Navigate to="/components/Interceptor" /> } />
+          <Route path="/components/Friends" element={ isUserLoggin(user) ? <FriendPage /> : <Navigate to="/components/Interceptor" /> } />
           <Route path="/" element={isUserLoggin(user) ? <Navigate to="/components/SignedIn" /> : <LoginScreen />} />
-          <Route path="/components/Signup" element={<SignUpScreen />} />
-          <Route path="/components/Profile" element={ ValidToken() ? <Navigate to="/components/Interceptor" /> : <ProfilePage />} />
+          <Route path="/components/Signup" element={isUserLoggin(user) ? <Navigate to="/components/SignedIn" /> : <SignUpScreen />} />
+          <Route path="/components/Profile" element={ isUserLoggin(user) ?  <ProfilePage /> : <Navigate to="/components/Interceptor" />} />
           <Route path="/components/Interceptor" element={<InterceptorScreen />} />
-          <Route path="/components/SignedIn" element={ isUserLoggin(user) ? <SignedIn /> : <Navigate to="/components/Interceptor" />} />
+          <Route path="/components/SignedIn" element={ isUserLoggin(user) ? <SignedIn uCreds={user} /> : <Navigate to="/components/Interceptor" />} />
         </Routes>
       </Router>
     </div>
