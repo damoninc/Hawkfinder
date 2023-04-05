@@ -6,10 +6,10 @@ import {
   Button,
   MenuItem,
   Select,
-  Input,
   InputLabel,
 } from "@mui/material";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import {
   addDoc,
   collection,
@@ -27,15 +27,15 @@ const PostInput = () => {
 
   // General style for input fields
   const sx = {
-    maxHeight: "56px",
-    marginRight: "3%",
+    // maxHeight: "56px",
+    // marginRight: "3%",
   };
 
   // Styling specific for the interest selection box
   const interestsx = {
-    maxHeight: "56px",
-    marginRight: "3%",
-    width: "100px",
+    // maxHeight: "56px",
+    // marginRight: "3%",
+    // width: "100px",
   };
 
   /**
@@ -47,11 +47,12 @@ const PostInput = () => {
    */
   function renameFile(oldFile: File, newName: string) {
     return new File([oldFile], newName, {
-      type: oldFile.type,
+      type: "image/jpeg",
       lastModified: oldFile.lastModified,
     });
   }
 
+  // Any image uploaded will be turned into a jpg file
   const metadata = {
     contentType: "image/jpeg",
   };
@@ -68,7 +69,7 @@ const PostInput = () => {
   }
 
   async function handlePost() {
-    if (postText != "") {
+    if (postText != "" && interest != "") {
       console.log("DB WRITE");
       const docRef = await addDoc(collection(db, "Posts"), {
         description: postText,
@@ -82,8 +83,7 @@ const PostInput = () => {
       // that the post will use to get the image from storage
       if (selectedImage) {
         const imgID = docRef.id;
-        const imgExt = selectedImage.name.split(".").pop();
-        const imgName = imgID + "." + imgExt;
+        const imgName = imgID + ".jpg";
         // UPLOADING IMG TO FIREBASE STORAGE
         const newFile: File = renameFile(selectedImage, imgName);
         uploadImage(newFile);
@@ -99,38 +99,35 @@ const PostInput = () => {
 
   return (
     <div className="post-input">
+      <TextField
+        className="text-input"
+        sx={sx}
+        value={postText}
+        label="Share your interests..."
+        variant="outlined"
+        multiline
+        rows={4}
+        onChange={(e) => setPostText(e.target.value)}
+      />
       {selectedImage && (
-        <div>
+        <div className="post-input-img">
           <img
             alt="post-input-img"
             height={"100px"}
             src={URL.createObjectURL(selectedImage)}
           />
           <br />
-          <button onClick={() => setSelectedImage(null)}>Remove</button>
+          {/* <button className="remove-img" onClick={() => setSelectedImage(null)}>
+            <HighlightOffIcon />
+          </button> */}
+          <HighlightOffIcon
+            className="remove-img"
+            style={{ fill: "rgb(15, 15, 15)" }}
+            onClick={() => setSelectedImage(null)}
+          />
         </div>
       )}
-
-      {/* <Input
-        sx={sx}
-        type="file"
-        name="myImage"
-        onChange={(event: React.ChangeEvent<HTMLInputElement> | any) => {
-          setSelectedImage(event.target.files[0]);
-        }}
-      /> */}
-      <Button variant="outlined" component="label">
-        <FileUploadIcon style={{ fill: "teal" }} />
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(event: React.ChangeEvent<HTMLInputElement> | any) => {
-            setSelectedImage(event.target.files[0]);
-          }}
-          hidden
-        />
-      </Button>
-      <FormControl>
+      <FormControl className="interest-input">
         <InputLabel>Interest</InputLabel>
         <Select
           sx={interestsx}
@@ -145,21 +142,35 @@ const PostInput = () => {
           <MenuItem value={"Film"}>Film</MenuItem>
         </Select>
       </FormControl>
-      <TextField
-        sx={sx}
-        value={postText}
-        label="Share your interests..."
-        variant="outlined"
-        onChange={(e) => setPostText(e.target.value)}
-      />
+      <Button variant="outlined" component="label" className="upload-image">
+        <FileUploadIcon style={{ fill: "teal" }} />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(event: React.ChangeEvent<HTMLInputElement> | any) => {
+            setSelectedImage(event.target.files[0]);
+          }}
+          hidden
+        />
+      </Button>
       {/* If there is text any post text inputted, 
       then the user can click the post button */}
-      {postText != "" ? (
-        <Button type="submit" variant="outlined" onClick={handlePost}>
+      {postText != "" && interest != "" ? (
+        <Button
+          className="post-button"
+          type="submit"
+          variant="outlined"
+          onClick={handlePost}
+        >
           Post
         </Button>
       ) : (
-        <Button type="submit" variant="outlined" disabled>
+        <Button
+          className="post-button"
+          type="submit"
+          variant="outlined"
+          disabled
+        >
           Post
         </Button>
       )}

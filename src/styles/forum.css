@@ -1,6 +1,12 @@
 .forum-container {
-  width: 80%;
-  display: flex;
+  width: 50%;
+  display: grid;
+  margin: auto;
   flex-direction: column;
-  gap: 0.8em;
+  /* gap: 0.5em; */
+  align-items: center;
+}
+
+.forum-handler {
+  width: 100%;
 }
