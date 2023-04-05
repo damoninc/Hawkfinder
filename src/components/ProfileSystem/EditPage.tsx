@@ -38,83 +38,45 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
   const handleClose = () => setOpen(false);
 
   // PHOTO MODAL HANDLERS
+  const [profilePhotoModal, setProfilePhotoModal] = useState(false);
+  const [coverPhotoModal, setCoverPhotoModal] = useState(false);
   const [photosLoaded, setPhotosLoaded] = useState("");
   const [images, setImages] = useState<string[]>([]);
   const [rawImages, setRawImages] = useState<string[]>([]);
+  const [profilePicture, setProfilePicture] = useState("");
+  const [coverPhoto, setCoverPhoto] = useState("");
   const [innerOpen, setInnerOpen] = React.useState(false);
 
   // COVER PHOTO BUTTON
   const handleInnerOpenCover = () => {
+    setCoverPhotoModal(true);
     setInnerOpen(true);
     setPhotosLoaded(user?.userid + "/Cover Photos");
   };
   // PROF PIC BUTTON
   const handleInnerOpenProfile = () => {
+    setProfilePhotoModal(true);
     setInnerOpen(true);
     setPhotosLoaded(user?.userid + "/Profile Pictures");
   };
 
-  // THIS LOADS PHOTOS INTO THE PHOTO MODAL
-  useEffect(() => {
-    if (photosLoaded) {
-      // Retrieve a list of image references from Firebase Storage
-      const listRef = ref(storage, photosLoaded);
-      listAll(listRef)
-        .then((res) => {
-          const urls = res.items.map((itemRef) =>
-            getDownloadURL(itemRef).then((url) => url)
-          );
-          Promise.all(urls).then((urls) => {
-            setImages(urls);
-          });
-
-          const images = res.items.map((itemRef) => itemRef.fullPath);
-          Promise.all(images).then((images) => {
-            console.log(images);
-            setRawImages(images);
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  }, [photosLoaded]);
-  console.log(rawImages);
   const handleInnerClose = () => {
+    setProfilePhotoModal(false);
+    setCoverPhotoModal(false);
     setInnerOpen(false);
+    setPhotosLoaded("");
     setImages([]);
     setRawImages([]);
   };
 
-  /**
-   * This function sends back the interest field that is used in the edit page modal.
-   * @returns interest field
-   */
-  const InterestHook = () => {
-    return (
-      <Stack spacing={3}>
-        <Autocomplete
-          onChange={handleInterests}
-          multiple
-          id="tags-standard"
-          options={baseInterests?.Interests}
-          getOptionLabel={(option) => option}
-          defaultValue={user?.profile.interests}
-          value={interests}
-          renderInput={(params) => (
-            <TextField
-              sx={{ width: "100%" }}
-              {...params}
-              variant="outlined"
-              label="Interests"
-              placeholder="Choose any"
-              margin="normal"
-            />
-          )}
-        />
-      </Stack>
-    );
-  };
+  function handleInnerSelectPhoto(index: any) {
+    if (profilePhotoModal) {
+      setProfilePicture(rawImages[index]);
+    }
+    if (coverPhotoModal) {
+      setCoverPhoto(rawImages[index]);
+    }
+  }
 
   const [firstName, setfirstname] = React.useState(user?.profile.firstname);
   const [lastName, setlastName] = React.useState(user?.profile.lastname);
@@ -151,9 +113,70 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
     if (interests) {
       dataToUpdate["profile.interests"] = interests;
     }
+    if (profilePicture) {
+      dataToUpdate["profile.profilePicture"] = profilePicture;
+    }
+    if (coverPhoto) {
+      dataToUpdate["profile.coverPhoto"] = coverPhoto;
+    }
     updateDoc(docRef, dataToUpdate);
     handleClose();
   };
+  // THIS LOADS PHOTOS INTO THE PHOTO MODAL
+  useEffect(() => {
+    if (photosLoaded) {
+      // Retrieve a list of image references from Firebase Storage
+      const listRef = ref(storage, photosLoaded);
+      listAll(listRef)
+        .then((res) => {
+          const urls = res.items.map((itemRef) =>
+            getDownloadURL(itemRef).then((url) => url)
+          );
+          Promise.all(urls).then((urls) => {
+            setImages(urls);
+          });
+
+          const images = res.items.map((itemRef) => itemRef.fullPath);
+          Promise.all(images).then((images) => {
+            setRawImages(images);
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [photosLoaded]);
+
+  /**
+   * This function sends back the interest field that is used in the edit page modal.
+   * @returns interest field
+   */
+  const InterestHook = () => {
+    return (
+      <Stack spacing={3}>
+        <Autocomplete
+          onChange={handleInterests}
+          multiple
+          id="tags-standard"
+          options={baseInterests?.Interests}
+          getOptionLabel={(option) => option}
+          defaultValue={user?.profile.interests}
+          value={interests}
+          renderInput={(params) => (
+            <TextField
+              sx={{ width: "100%" }}
+              {...params}
+              variant="outlined"
+              label="Interests"
+              placeholder="Choose any"
+              margin="normal"
+            />
+          )}
+        />
+      </Stack>
+    );
+  };
+
   return (
     <Box>
       <Button
@@ -282,6 +305,7 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
                           height: "100%",
                           padding: 0,
                         }}
+                        onClick={() => handleInnerSelectPhoto(index)}
                       >
                         <img
                           src={`${item}?w=164&h=164&fit=cover&auto=format`}
@@ -304,7 +328,21 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
                   ))}
                 </ImageList>
                 <Button color="warning" onClick={handleInnerClose}>
-                  Cancel
+                  Back
+                </Button>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  sx={{ ml: 44, mr: 44 }}
+                >
+                  Add Photo
+                </Button>
+                <Button
+                  color="primary"
+                  variant="outlined"
+                  onClick={handleInnerClose}
+                >
+                  Select
                 </Button>
               </Box>
             </Modal>

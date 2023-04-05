@@ -18,14 +18,17 @@ import Navbar from "../Navbar/Navbar";
 import { Box, Typography } from "@mui/material";
 import EditPage from "./EditPage";
 
-// !FIREBASE STUFF
+// !FIREBASE STUFF;
 const docRef = doc(db, "Users", "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1");
 const docSnap = await getDoc(docRef);
-const user = getUser();
-const userProfPic = getDownloadURL(
-  ref(storage, user?.userid + "/Profile Pictures/profileimg.jpg")
+const signedInUser = getUser();
+const userProfPic = await getDownloadURL(
+  ref(storage, signedInUser?.profile.profilePicture) //value here will be replaced with string in firestore
 );
-const userCoverPic = ref(storage, user?.userid + "Cover Photos/coverphoto.jpg");
+console.log(userProfPic);
+const userCoverPic = await getDownloadURL(
+  ref(storage, signedInUser?.profile.coverPhoto)
+); //ditto
 
 function getUser() {
   if (docSnap.exists()) {
@@ -38,7 +41,7 @@ function getUser() {
 }
 //! END OF FIREBASE STUFF
 let owner: boolean;
-if (user?.userid == "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1") {
+if (signedInUser?.userid == window.localStorage.getItem("token")) {
   owner = true;
 } else {
   owner = false;
@@ -53,33 +56,33 @@ function ProfilePage() {
     <>
       <Navbar />
       <Box className="profile-info">
-        <img
-          src={"/src/assets/images/coverphoto.jpg"}
-          alt="image"
-          className="cover-photo"
-        />
+        <img src={`${userCoverPic}`} alt="image" className="cover-photo" />
         <span className="profile-name">
-          <span>{user?.profile.firstName + " " + user?.profile.lastName}</span>
+          <span>
+            {signedInUser?.profile.firstName +
+              " " +
+              signedInUser?.profile.lastName}
+          </span>
           <br></br>
         </span>
         <span className="friend-count">
-          <span>{user?.friendsList.length + " Friends"}</span>
+          <span>{signedInUser?.friendsList.length + " Friends"}</span>
           <br />
         </span>
         <img
-          src={"/src/assets/images/profileimg.jpg"}
+          src={`${userProfPic}`}
           alt="image"
           loading="lazy"
           className="profile-photo"
         />
-        {owner && EditPage(user, docRef)}
+        {owner && EditPage(signedInUser, docRef)}
       </Box>
       <Box className="about">
         <Box className="about-title">
           <Typography sx={{ fontWeight: "bold" }}> About Me</Typography>
           <br></br>
         </Box>
-        <Typography sx={{ m: 2 }}>{user?.profile.bio}</Typography>
+        <Typography sx={{ m: 2 }}>{signedInUser?.profile.bio}</Typography>
       </Box>
       <Box className="interests">
         <Box className="text4">
@@ -87,7 +90,7 @@ function ProfilePage() {
           <br></br>
         </Box>
         <ul className="list">
-          {user?.profile.interests.map((interest: any) => (
+          {signedInUser?.profile.interests.map((interest: any) => (
             <li key={interest}>{interest}</li>
           ))}
         </ul>
