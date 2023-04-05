@@ -75,6 +75,7 @@ function LoginScreen() {
         const docRef = doc(db, "Users", cred.user.uid);
         const docSnap = await getDoc(docRef);
         const userAuth = docSnap.data();
+        localStorage.setItem("token", cred?.user.uid);
         alert(
           "Signed in as " +
             userAuth?.profile.firstName +
@@ -82,7 +83,8 @@ function LoginScreen() {
             userAuth?.profile.lastName
         );
         navigate("/components/Forum");
-      }) // TODO: Will want to ask if we want a general error message.
+        window.location.reload();  // TODO: Will want to reconsider, it doesn't navigate to where you want after reloading.
+      })
       .catch((error: FirebaseError) => {
         switch (error.code) {
           case "auth/user-not-found":
