@@ -20,23 +20,11 @@ import { ref, uploadBytes } from "firebase/storage";
 import "../../styles/postinput.css";
 
 const PostInput = () => {
+  // HOOKS ----------------------------------------------------------------
   // These hooks keep track of user input
   const [selectedImage, setSelectedImage] = useState<any>(null);
   const [interest, setInterest] = useState("");
   const [postText, setPostText] = useState("");
-
-  // General style for input fields
-  const sx = {
-    // maxHeight: "56px",
-    // marginRight: "3%",
-  };
-
-  // Styling specific for the interest selection box
-  const interestsx = {
-    // maxHeight: "56px",
-    // marginRight: "3%",
-    // width: "100px",
-  };
 
   /**
    * Renames the user's image input filename to the
@@ -61,7 +49,7 @@ const PostInput = () => {
    * Uploads the user's image input to Firebase storage
    * @param image: Raw Image File
    */
-  async function uploadImage(image: File) {
+  function uploadImage(image: File) {
     const postsRef = ref(storage, "Posts/" + image.name);
     uploadBytes(postsRef, image, metadata).then(() => {
       console.log("Uploaded image!");
@@ -92,6 +80,9 @@ const PostInput = () => {
           imageURL: imgName,
         });
       }
+      setSelectedImage(null);
+      setInterest("");
+      setPostText("");
     } else {
       console.log("Post not sent, there must be text input!");
     }
@@ -101,7 +92,6 @@ const PostInput = () => {
     <div className="post-input">
       <TextField
         className="text-input"
-        sx={sx}
         value={postText}
         label="Share your interests..."
         variant="outlined"
@@ -130,7 +120,6 @@ const PostInput = () => {
       <FormControl className="interest-input">
         <InputLabel>Interest</InputLabel>
         <Select
-          sx={interestsx}
           label="Interest"
           value={interest}
           onChange={(event: React.ChangeEvent<HTMLInputElement> | any) => {

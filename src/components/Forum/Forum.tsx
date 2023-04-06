@@ -10,6 +10,7 @@ import { CircularProgress } from "@mui/material";
 import "../../styles/forum.css";
 
 function Forum() {
+  // HOOKS ----------------------------------------------------------------
   // State for posts must be set with any so the modal knows
   // which component to render without having to use .map()
   const [posts, setPosts] = useState<Post[]>([]);
@@ -66,7 +67,6 @@ function Forum() {
       {!loading ? (
         <>
           {posts.map((post: Post, index) => {
-            console.log("NEW POST COMPONENT RETURNED");
             return (
               <div
                 key={index}

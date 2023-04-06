@@ -5,10 +5,8 @@
   grid-template-rows: repeat(3, 1fr);
   grid-column-gap: 0px;
   grid-row-gap: 0px;
-  /* gap: 1%; */
-  margin-bottom: 1em;
   width: 104.5%;
-  margin: auto;
+  margin: 0 0 0.4em 0;
 }
 
 .text-input {

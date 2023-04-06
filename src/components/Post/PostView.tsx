@@ -22,9 +22,7 @@ function PostView(props: any) {
       console.log("getting image...");
       getDownloadURL(imageRef)
         .then((url) => {
-          // const newURL = url + ".jpg";
           setImage(url);
-          console.log("IMAGE: ", url);
         })
         .catch((err) => {
           console.log("Error fetching image");

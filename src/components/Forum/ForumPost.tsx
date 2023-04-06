@@ -22,22 +22,20 @@ function ForumPost(props: any) {
   // The image of the post
   const [image, setImage] = useState("");
 
-  const fetchImage = () => {
+  /**
+   * Grabs the appropriate imageURL for the
+   * specific post that is rendered
+   */
+  useEffect(() => {
     if (props.imageURL != "") {
       getDownloadURL(imageRef)
         .then((url) => {
-          // const newURL = url + ".jpg";
           setImage(url);
-          console.log("IMAGE: ", url);
         })
-        .catch((err) => {
+        .catch(() => {
           console.log("Error fetching image");
         });
     }
-  };
-
-  useEffect(() => {
-    fetchImage();
   }, []);
 
   const upvote = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -147,11 +145,6 @@ function ForumPost(props: any) {
         </div>
       </div>
       <span className="post-interest">{props.interest}</span>
-      {/* <Link to="/components/Forum/post" state={props}>
-        <div className="expand-post-icon">
-          <OpenWithIcon />
-        </div>
-      </Link> */}
     </div>
   );
 }
