@@ -17,7 +17,6 @@ import {
 } from "firebase/firestore";
 import FriendRequests from "./FriendRequests";
 
-const currUser = "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1";
 export let user: User;
 
 let dbPulled = false;
@@ -26,13 +25,13 @@ let dbPulled = false;
  * Generates a HTML block that displays a user's friend list by creating
  *    a FriendBox for each friend in their friend list.
  * Shows all friends or a "no friends" message is applicable.
- *
+ * @param signedUser : string
  * @return {*} - FriendPage HTML
  */
 function FriendPage() {
   const [dbCall, setFriends] = useState(null);
   if (!dbPulled || dbCall == null) {
-    callDB(setFriends);
+    callDB("sq0kklKJQLYTuFQ6IQf6fzxi4Iu1", setFriends);
   }
   return (
     <div>
@@ -103,11 +102,11 @@ export async function addFriend(friendUsername?: string) {
           if (friend !== undefined) {
             if (!user.friendsList.includes(friend.userid)) {
               user.outgoingRequests.push(friend.userid);
-              friend.incomingRequests.push(currUser);
+              friend.incomingRequests.push(user.userid);
 
               // update outgoing requests in FireStore
               await updateDoc(
-                doc(db, "Users", currUser),
+                doc(db, "Users", user.userid),
                 "outgoingRequests",
                 user.outgoingRequests
               );
@@ -160,7 +159,7 @@ export async function removeFriend(friend: User) {
 
       // Update User's and friend's friends list to reflect the removal
       await updateDoc(
-        doc(db, "Users", currUser),
+        doc(db, "Users", user.userid),
         "friendsList",
         user.friendsList
       ).then(async () => {
@@ -194,10 +193,10 @@ export function goToProfile(friend: User) {
  *
  * @param {*} setFriends - Hook to set friends list
  */
-async function callDB(setFriends: any) {
+async function callDB(signedUser: string, setFriends: any) {
   // Query Firestore for information from currently logged in user
   const querySnapshot = await getDoc(
-    doc(db, "Users", currUser).withConverter(userConverter)
+    doc(db, "Users", signedUser).withConverter(userConverter)
   );
   console.log("DB Call");
   const dbUser = querySnapshot.data();
