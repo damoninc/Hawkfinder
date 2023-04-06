@@ -32,6 +32,7 @@ const baseInterests = interestSnap.data();
  * @returns The edit page button/modal combo
  */
 function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
+  const owner = user?.userid === window.localStorage.getItem("token");
   // MAIN EDIT PAGE MODAL HANDLERS
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -177,225 +178,227 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
     );
   };
 
-  return (
-    <Box>
-      <Button
-        sx={{ position: "absolute" }}
-        onClick={handleOpen}
-        className="edit-button"
-        variant="outlined"
-      >
-        Edit Profile
-      </Button>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "background.paper",
-            border: "2px solid #000",
-            boxShadow: 24,
-            p: 4,
-          }}
+  if (true) {
+    return (
+      <Box>
+        <Button
+          sx={{ position: "absolute" }}
+          onClick={handleOpen}
+          className="edit-button"
+          variant="outlined"
         >
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Edit your profile
-          </Typography>
-
+          Edit Profile
+        </Button>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
           <Box
-            id="picture icons box"
             sx={{
-              display: "flex", // add display property to enable flexbox layout
-              justifyContent: "center",
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 400,
+              bgcolor: "background.paper",
+              border: "2px solid #000",
+              boxShadow: 24,
+              p: 4,
             }}
           >
-            <IconButton
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Edit your profile
+            </Typography>
+
+            <Box
+              id="picture icons box"
               sx={{
-                borderRadius: "0px",
-                height: "150px",
-                width: "150px",
+                display: "flex", // add display property to enable flexbox layout
+                justifyContent: "center",
               }}
-              onClick={handleInnerOpenProfile}
             >
-              <Box
+              <IconButton
                 sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
+                  borderRadius: "0px",
+                  height: "150px",
+                  width: "150px",
                 }}
+                onClick={handleInnerOpenProfile}
               >
-                <PortraitIcon
+                <Box
                   sx={{
-                    fontSize: "80px",
-                    color: "teal",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
                   }}
-                />
-                <Typography sx={{ fontWeight: "bold" }}>
-                  Change profile picture
-                </Typography>
-              </Box>
-            </IconButton>
-            <IconButton
-              sx={{
-                borderRadius: "0px",
-                height: "150px",
-                width: "150px",
-              }}
-              onClick={handleInnerOpenCover}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <PanoramaIcon
-                  sx={{
-                    fontSize: "80px",
-                    color: "teal",
-                  }}
-                />
-                <Typography sx={{ fontWeight: "bold" }}>
-                  Change cover photo
-                </Typography>
-              </Box>
-            </IconButton>
-            <Modal open={innerOpen} onClose={handleInnerClose}>
-              <Box
-                sx={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  width: 1000,
-                  bgcolor: "background.paper",
-                  border: "2px solid #000",
-                  boxShadow: 24,
-                  p: 4,
-                }}
-              >
-                <ImageList
-                  sx={{ width: 1000, height: 450 }}
-                  cols={6}
-                  rowHeight={164}
                 >
-                  {images.map((item, index) => (
-                    <ImageListItem
-                      sx={{
-                        width: "164px",
-                        height: "164px",
-                      }}
-                      key={item}
-                    >
-                      <Button
-                        component="a"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          padding: 0,
+                  <PortraitIcon
+                    sx={{
+                      fontSize: "80px",
+                      color: "teal",
+                    }}
+                  />
+                  <Typography sx={{ fontWeight: "bold" }}>
+                    Change profile picture
+                  </Typography>
+                </Box>
+              </IconButton>
+              <IconButton
+                sx={{
+                  borderRadius: "0px",
+                  height: "150px",
+                  width: "150px",
+                }}
+                onClick={handleInnerOpenCover}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <PanoramaIcon
+                    sx={{
+                      fontSize: "80px",
+                      color: "teal",
+                    }}
+                  />
+                  <Typography sx={{ fontWeight: "bold" }}>
+                    Change cover photo
+                  </Typography>
+                </Box>
+              </IconButton>
+              <Modal open={innerOpen} onClose={handleInnerClose}>
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: 1000,
+                    bgcolor: "background.paper",
+                    border: "2px solid #000",
+                    boxShadow: 24,
+                    p: 4,
+                  }}
+                >
+                  <ImageList
+                    sx={{ width: 1000, height: 450 }}
+                    cols={6}
+                    rowHeight={164}
+                  >
+                    {images.map((item, index) => (
+                      <ImageListItem
+                        sx={{
+                          width: "164px",
+                          height: "164px",
                         }}
-                        onClick={() => handleInnerSelectPhoto(index)}
+                        key={item}
                       >
-                        <img
-                          src={`${item}?w=164&h=164&fit=cover&auto=format`}
-                          srcSet={`${item}?w=164&h=164&fit=cover&auto=format&dpr=2 2x`}
-                          loading="lazy"
+                        <Button
+                          component="a"
+                          target="_blank"
+                          rel="noopener noreferrer"
                           style={{
-                            objectFit: "cover",
                             width: "100%",
                             height: "100%",
+                            padding: 0,
                           }}
-                          onMouseOver={(e) => {
-                            e.currentTarget.style.filter = "brightness(0.8)";
-                          }}
-                          onMouseOut={(e) => {
-                            e.currentTarget.style.filter = "none";
-                          }}
-                        />
-                      </Button>
-                    </ImageListItem>
-                  ))}
-                </ImageList>
-                <Button color="warning" onClick={handleInnerClose}>
-                  Back
-                </Button>
-                <Button
-                  color="primary"
-                  variant="contained"
-                  sx={{ ml: 44, mr: 44 }}
-                >
-                  Add Photo
-                </Button>
-                <Button
-                  color="primary"
-                  variant="outlined"
-                  onClick={handleInnerClose}
-                >
-                  Select
-                </Button>
-              </Box>
-            </Modal>
-          </Box>
-          <TextField
-            onChange={handlefirstName}
-            defaultValue={user?.profile.firstName}
-            label="First Name"
-            variant="outlined"
-            sx={{ width: "48%", pr: 1 }}
-            margin="normal"
-            required={true}
-          />
-          <TextField
-            onChange={handlelastName}
-            defaultValue={user?.profile.lastName}
-            label="Last Name"
-            variant="outlined"
-            sx={{ width: "48%", pl: 1 }}
-            margin="normal"
-            required={true}
-          />
-          <TextField
-            onChange={handleBio}
-            defaultValue={user?.profile.bio}
-            label="About You"
-            variant="outlined"
-            sx={{ width: "100%" }}
-            multiline={true}
-            maxRows="9"
-          />
+                          onClick={() => handleInnerSelectPhoto(index)}
+                        >
+                          <img
+                            src={`${item}?w=164&h=164&fit=cover&auto=format`}
+                            srcSet={`${item}?w=164&h=164&fit=cover&auto=format&dpr=2 2x`}
+                            loading="lazy"
+                            style={{
+                              objectFit: "cover",
+                              width: "100%",
+                              height: "100%",
+                            }}
+                            onMouseOver={(e) => {
+                              e.currentTarget.style.filter = "brightness(0.8)";
+                            }}
+                            onMouseOut={(e) => {
+                              e.currentTarget.style.filter = "none";
+                            }}
+                          />
+                        </Button>
+                      </ImageListItem>
+                    ))}
+                  </ImageList>
+                  <Button color="warning" onClick={handleInnerClose}>
+                    Back
+                  </Button>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    sx={{ ml: 44, mr: 44 }}
+                  >
+                    Add Photo
+                  </Button>
+                  <Button
+                    color="primary"
+                    variant="outlined"
+                    onClick={handleInnerClose}
+                  >
+                    Select
+                  </Button>
+                </Box>
+              </Modal>
+            </Box>
+            <TextField
+              onChange={handlefirstName}
+              defaultValue={user?.profile.firstName}
+              label="First Name"
+              variant="outlined"
+              sx={{ width: "48%", pr: 1 }}
+              margin="normal"
+              required={true}
+            />
+            <TextField
+              onChange={handlelastName}
+              defaultValue={user?.profile.lastName}
+              label="Last Name"
+              variant="outlined"
+              sx={{ width: "48%", pl: 1 }}
+              margin="normal"
+              required={true}
+            />
+            <TextField
+              onChange={handleBio}
+              defaultValue={user?.profile.bio}
+              label="About You"
+              variant="outlined"
+              sx={{ width: "100%" }}
+              multiline={true}
+              maxRows="9"
+            />
 
-          <InterestHook />
-          {EscapeButtons(handleClose, handleSave)}
-        </Box>
-      </Modal>
-    </Box>
-  );
-}
-function EscapeButtons(handlerClosing: any, handlerSaving: any) {
-  return (
-    <>
-      <Button color="warning" onClick={handlerClosing}>
-        Cancel
-      </Button>
-      <Button
-        sx={{ position: "absolute", right: "50px" }}
-        color="primary"
-        onClick={handlerSaving}
-      >
-        Save
-      </Button>
-    </>
-  );
+            <InterestHook />
+            {EscapeButtons(handleClose, handleSave)}
+          </Box>
+        </Modal>
+      </Box>
+    );
+  }
+  function EscapeButtons(handlerClosing: any, handlerSaving: any) {
+    return (
+      <>
+        <Button color="warning" onClick={handlerClosing}>
+          Cancel
+        </Button>
+        <Button
+          sx={{ position: "absolute", right: "50px" }}
+          color="primary"
+          onClick={handlerSaving}
+        >
+          Save
+        </Button>
+      </>
+    );
+  }
 }
 export default EditPage;

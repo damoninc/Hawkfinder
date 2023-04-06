@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import User from "../../data/User";
 import "../../styles/Profile.css";
 import {
@@ -11,6 +11,7 @@ import {
   updateDoc,
   onSnapshot,
   DocumentData,
+  DocumentSnapshot,
 } from "firebase/firestore";
 import { auth, db, storage } from "../../firebase/config";
 import { ref, getDownloadURL } from "firebase/storage";
@@ -22,39 +23,50 @@ import EditPage from "./EditPage";
  * This is the main profile page that displays a users profile
  * @returns the webpage
  */
-async function ProfilePage(passedUserObj: any) {
-  //TODO Keep this for now until implemented. Will remove later.
-  passedUserObj = "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1"; //! FOR TESTING YOU CAN SAFELY REMOVE THIS VARIABLE
-  // !FIREBASE STUFF
-  const docRef = doc(db, "Users", passedUserObj);
-  const docSnap = await getDoc(docRef);
-  const userPage = getUser();
-  const userProfPic = await getDownloadURL(
-    ref(storage, userPage?.profile.profilePicture) //value here will be replaced with string in firestore
-  );
-  console.log(userProfPic);
-  const userCoverPic = await getDownloadURL(
-    ref(storage, userPage?.profile.coverPhoto)
-  ); //ditto
+//! END OF PAGE OWNER INFO
 
-  function getUser() {
-    if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
-      return docSnap.data();
-    } else {
-      // doc.data() will be undefined in this case
-      console.log("No such document!");
-    }
+function ProfilePage() {
+  const passedUserObj = "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1";
+
+  const [userPage, setUserPage] = useState<any>();
+  const [userProfPic, setUserProfPic] = useState("");
+  const [userCoverPic, setUserCoverPic] = useState("");
+
+  const docRef = doc(db, "Users", passedUserObj);
+  useEffect(() => {
+    getDoc(docRef)
+      .then((docSnap) => {
+        const userPageData = docSnap.data();
+        setUserPage(userPageData);
+        const userProfPicRef = ref(
+          storage,
+          userPageData?.profile.profilePicture
+        );
+        const userCoverPicRef = ref(storage, userPageData?.profile.coverPhoto);
+        Promise.all([
+          getDownloadURL(userProfPicRef),
+          getDownloadURL(userCoverPicRef),
+        ])
+          .then(([userProfPicUrl, userCoverPicUrl]) => {
+            setUserProfPic(userProfPicUrl);
+            setUserCoverPic(userCoverPicUrl);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  if (!userPage || !userProfPic || !userCoverPic) {
+    return <div hidden>{EditPage(userPage, docRef)}</div>;
   }
-  //! END OF FIREBASE STUFF
-  //! PAGE OWNER INFO
-  let owner: boolean;
-  if (userPage?.userid == window.localStorage.getItem("token")) {
-    owner = true;
-  } else {
-    owner = false;
-  }
-  //! END OF PAGE OWNER INFO
+
+  const owner = userPage?.userid === window.localStorage.getItem("token");
+  console.log(userPage.profile.firstName);
+  console.log(userProfPic);
   return (
     <>
       <Navbar />
@@ -76,7 +88,7 @@ async function ProfilePage(passedUserObj: any) {
           loading="lazy"
           className="profile-photo"
         />
-        {owner && EditPage(userPage, docRef)}
+        {EditPage(userPage, docRef)}
       </Box>
       <Box className="about">
         <Box className="about-title">
