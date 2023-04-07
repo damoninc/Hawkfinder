@@ -101,6 +101,9 @@ app.get('/api/spotify/refresh_token', function(req, res) {
         'access_token': access_token
       });
     }
+    else if (response.statusCode === 401) {
+      console.log("bad token from server")
+    }
   });
 });
 

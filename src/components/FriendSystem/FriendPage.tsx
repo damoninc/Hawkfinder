@@ -16,6 +16,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import FriendRequests from "./FriendRequests";
+import CurrentSong, { TopSongs } from "../SpotifyIntegration/SpotifyComponents";
 
 export let user: User;
 
@@ -37,11 +38,11 @@ function FriendPage() {
     <div>
       <div className="friends-list">
         <h1>Friends List</h1>
-        <SearchForm
+        {/* <SearchForm
           outsideSubmit={addFriend}
           title={"Username: "}
           buttonName={"Add"}
-        />
+        /> */}
         {checkNullList(dbCall)}
       </div>
       <FriendSearch />

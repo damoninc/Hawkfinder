@@ -10,7 +10,12 @@ import CurrentSong from "../SpotifyIntegration/SpotifyComponents";
  * @param {User} displayUser - The user to display
  * @return {*} - FriendBox HTML
  */
-function UserBox(displayUser: User, buttons: (arg0: User) => JSX.Element) {
+function UserBox(
+  displayUser: User,
+  buttons: (arg0: User) => JSX.Element,
+  spotify = false,
+  friends = false
+) {
   if (displayUser === undefined) {
     return <div></div>;
   }
@@ -38,7 +43,11 @@ function UserBox(displayUser: User, buttons: (arg0: User) => JSX.Element) {
           {displayUser.profile.firstName} {displayUser.profile.lastName}{" "}
         </h3>
         <p>{interests}</p>
-        {/* {CurrentSong(displayUser, true)} */}
+        {friends ? (
+          <CurrentSong user={displayUser} small={true} />
+        ) : (
+          <div></div>
+        )}
       </div>
       <div className="smallContent">
         <h3>

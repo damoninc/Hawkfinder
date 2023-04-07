@@ -3,6 +3,7 @@ import "../../styles/userbox.css";
 import User from "../../data/User";
 import UserBox from "./UserBox";
 import * as fp from "./FriendPage";
+import CurrentSong from "../SpotifyIntegration/SpotifyComponents";
 /**
  * Generates a HTML block that displays a user based on their Profile information
  *      Currently displays the name and interests as well as having buttons to go to
@@ -15,11 +16,11 @@ function FriendBox(currUser: User, friend: User) {
   if (currUser === undefined || friend === undefined) {
     return <div></div>;
   }
-  const buttons = currUser.friendsList.includes(friend.userid)
-    ? currentFriendButtons
-    : nonFriendButtons;
-
-  return <div>{UserBox(friend, buttons)}</div>;
+  if (currUser.friendsList.includes(friend.userid)) {
+    return <div>{UserBox(friend, currentFriendButtons, true, true)}</div>;
+  } else {
+    return <div>{UserBox(friend, nonFriendButtons, true)}</div>;
+  }
 }
 
 /**
@@ -32,14 +33,6 @@ function FriendBox(currUser: User, friend: User) {
 function currentFriendButtons(friend: User) {
   return (
     <div className="buttons">
-      <button
-        className="button"
-        onClick={() => {
-          fp.goToMessages(friend);
-        }}
-      >
-        Messages
-      </button>
       <button
         className="button"
         onClick={() => {

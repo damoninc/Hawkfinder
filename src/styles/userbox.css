@@ -8,8 +8,8 @@
     border: 1px solid black;
     vertical-align: middle;
     height: auto;
-    height: 100px;
-    max-height: 100px;
+    height: 120px;
+    max-height: 150px;
     min-width: 200px;
     max-width: 400px;
   }
@@ -30,7 +30,7 @@
     width: 50%;
     padding-right: 5%;
     white-space:normal;
-    overflow: hidden;
+    /* overflow: hidden; */
     text-overflow: ellipsis;
     min-width: 100px;
   }
