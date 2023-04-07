@@ -130,7 +130,7 @@ function SignUpScreen() {
           },
         });
         alert(`New account created with email ${emailInput}!`);
-        navigate("/");
+        navigate("/components/Forum");
       })
       .catch((error: FirebaseError) => {
         switch (error.code) {
@@ -246,7 +246,7 @@ function SignUpScreen() {
               <Grid item>
                 <h2 style={{ fontSize: "15px" }}>Already have an account?</h2>
                 <Link
-                  to="/components/Login"
+                  to="/"
                   style={{ color: "#1ed5db", fontSize: "20px" }}
                 >
                   Login here!

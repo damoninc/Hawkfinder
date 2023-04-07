@@ -82,7 +82,7 @@ function LoginScreen() {
             " " +
             userAuth?.profile.lastName
         );
-        navigate("/components/SignedIn");
+        navigate("/components/Forum");
       })
       .catch((error: FirebaseError) => {
         switch (error.code) {

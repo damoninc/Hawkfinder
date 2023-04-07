@@ -15,6 +15,11 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
+import { useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { Button } from "@mui/material";
+import { auth } from "../../firebase/config";
+import PeopleIcon from "@mui/icons-material/People";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -61,6 +66,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
  * @returns navigation bar
  */
 export default function Navbar() {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -102,8 +108,27 @@ export default function Navbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem
+        onClick={() => {
+          handleMenuClose;
+          navigate("/components/Profile");
+        }}
+      >
+        Profile
+      </MenuItem>
+      <MenuItem
+        onClick={() => {
+          handleMenuClose;
+          navigate("/components/SignedIn");
+        }}
+      >
+        My account
+      </MenuItem>
+      <MenuItem>
+        <Button variant="contained" onClick={() => signOut(auth)}>
+          Sign out
+        </Button>
+      </MenuItem>
     </Menu>
   );
 
@@ -167,7 +192,7 @@ export default function Navbar() {
             variant="h6"
             noWrap
             component="a"
-            href="/"
+            href="/components/Forum"
             sx={{
               mr: 3,
               display: { xs: "none", md: "flex" },
@@ -179,7 +204,7 @@ export default function Navbar() {
             }}
           >
             HAWK
-            <img src="src/assets/images/My_project.png" height="35px" />
+            <img src="/src/assets/images/My_project.png" height="35px" />
             FINDER
           </Typography>
           <Search>
@@ -206,9 +231,10 @@ export default function Navbar() {
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
+              href="/components/Friends"
             >
-              <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
+              <Badge color="error">
+                <PeopleIcon />
               </Badge>
             </IconButton>
             <IconButton
