@@ -10,7 +10,7 @@ const api_uri = "https://api.spotify.com/v1";
 const spotifyLogo =
   "https://firebasestorage.googleapis.com/v0/b/csc-450-project.appspot.com/o/HAWKFINDER%2Ffile-spotify-logo-png-4.png?alt=media&token=4ffa3420-edf1-4f8e-8ee4-8b1b7fc19093";
 
-export const spotifyPulled: boolean[] = [false, false];
+const spotifyPulled: boolean[] = [false, false, false];
 
 async function makeRequest(
   user: User,
@@ -153,55 +153,70 @@ class spotifyComponent extends React.Component<IProps, IState> {
 
   async makeRequest(user: User, request_uri: string, boolIndex: number) {
     console.log("making request");
+    if (user.spotify.accessToken != "null") {
+      await axios
+        .get(api_uri + request_uri, {
+          method: "GET",
+          headers: { Authorization: `Bearer ${user.spotify.accessToken}` },
+        })
+        .then((response) => {
+          if (response.data != "" && !spotifyPulled[boolIndex]) {
+            spotifyPulled[boolIndex] = true;
+            console.log(response.data);
+          }
+          this.setState({ result: response.data });
+        })
+        .catch(async (error) => {
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+            if (error.response.status === 401) {
+              this.refreshToken();
+            }
+          } else if (error.request) {
+            // The request was made but no response was received
+            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+            // http.ClientRequest in node.js
+            console.log(error.request);
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log("Error", error.message);
+          }
+          console.log(error.config);
+        });
+    }
+  }
+  async refreshToken() {
+    console.log("bad access token, refreshing");
     await axios
-      .get(api_uri + request_uri, {
+      .get("/api/spotify/refresh_token", {
         method: "GET",
-        headers: { Authorization: `Bearer ${user.spotify.accessToken}` },
+        params: {
+          refresh_token: this.props.user.spotify.refreshToken,
+        },
       })
       .then((response) => {
-        if (response.data != "" && !spotifyPulled[boolIndex]) {
-          spotifyPulled[boolIndex] = true;
-          console.log(response.data);
+        console.log("db access update");
+        this.props.user.spotify.accessToken = response.data.access_token;
+        updateDoc(
+          doc(db, "Users", this.props.user.userid),
+          "spotifyTokens.accessToken",
+          this.props.user.spotify.accessToken
+        );
+        if (this.props.user.spotify.accessToken == "null") {
+          console.log("bad refresh, reauthenticate");
+          this.props.user.spotify.refreshToken = "null";
+          updateDoc(
+            doc(db, "Users", this.props.user.userid),
+            "spotifyTokens.refreshToken",
+            this.props.user.spotify.refreshToken
+          );
         }
-        this.setState({ result: response.data });
-      })
-      .catch(function (error) {
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-          console.log("bad refresh token, clearing");
-          axios
-            .get("/api/spotify/refresh_token", {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${user.spotify.refreshToken}`,
-              },
-            })
-            .then((response) => {
-              console.log("db access update");
-              user.spotify.accessToken = response.data.access_token;
-              updateDoc(
-                doc(db, "Users", user.userid),
-                "spotifyTokens.accessToken",
-                user.spotify.accessToken
-              );
-              console.log("db refresh update");
-
-              spotifyPulled[boolIndex] = true;
-            });
-        } else if (error.request) {
-          // The request was made but no response was received
-          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-          // http.ClientRequest in node.js
-          console.log(error.request);
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          console.log("Error", error.message);
-        }
-        console.log(error.config);
+        console.log("db refresh update");
+        this.setState({ result: null });
       });
   }
 }
@@ -220,6 +235,7 @@ export default class CurrentSong extends spotifyComponent {
       this.props.small ? 60000 : 20000
     );
   }
+
   render() {
     if (!spotifyPulled[0] && this.props.user !== undefined) {
       spotifyPulled[0] = true;
