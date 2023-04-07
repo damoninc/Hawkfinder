@@ -23,10 +23,8 @@ import EditPage from "./EditPage";
  * This is the main profile page that displays a users profile
  * @returns the webpage
  */
-//! END OF PAGE OWNER INFO
-
-function ProfilePage() {
-  const passedUserObj = "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1";
+function ProfilePage(passedUser: any) {
+  const passedUserObj = "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1"; //Feel free to change this to the passed in object for testing. Make sure its of type string.
 
   const [userPage, setUserPage] = useState<any>();
   const [userProfPic, setUserProfPic] = useState("");
