@@ -1,5 +1,5 @@
 /* Main container */
-  .container {
+  .usercontainer {
     box-sizing: border-box;
     display: flex;
     justify-content: space-evenly;
