@@ -64,7 +64,7 @@ function App() {
           <Route path="/components/Friends" element={ isUserLoggin(user) ? <FriendPage /> : <Navigate to="/components/Interceptor" /> } />
           <Route path="/" element={isUserLoggin(user) ? <Navigate to="/components/SignedIn" /> : <LoginScreen />} />
           <Route path="/components/Signup" element={isUserLoggin(user) ? <Navigate to="/components/SignedIn" /> : <SignUpScreen />} />
-          <Route path="/components/Profile" element={ isUserLoggin(user) ?  <ProfilePage /> : <Navigate to="/components/Interceptor" />} />
+          <Route path="/components/Profile" element={ isUserLoggin(user) ?  <ProfilePage uCreds={user} /> : <Navigate to="/components/Interceptor" />} />
           <Route path="/components/Interceptor" element={<InterceptorScreen />} />
           <Route path="/components/SignedIn" element={ isUserLoggin(user) ? <SignedIn uCreds={user} /> : <Navigate to="/components/Interceptor" />} />
         </Routes>
