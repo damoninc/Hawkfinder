@@ -1,0 +1,30 @@
+/* p {
+    line-height:0px;
+    padding-left: 15px;
+}
+h3 {
+    line-height: 0px;
+    margin-top: 0;
+} */
+.songBox {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-evenly;
+    width: auto;
+    margin: auto;
+    border: 1px solid black;
+    height: 100px;
+    max-height: 100px;
+    min-width: 200px;
+    max-width: 400px;
+}
+
+.songText {
+    margin: auto;
+    padding:10px;
+    text-overflow: ellipsis;
+    overflow: hidden; 
+    white-space: nowrap;
+    justify-content: left;
+    max-width: 250px;
+}

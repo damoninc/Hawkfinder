@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import User from "../../data/User";
 import "../../styles/Profile.css";
 import {
@@ -11,236 +11,89 @@ import {
   updateDoc,
   onSnapshot,
   DocumentData,
+  DocumentSnapshot,
 } from "firebase/firestore";
 import { auth, db, storage } from "../../firebase/config";
+import { ref, getDownloadURL } from "firebase/storage";
 import Navbar from "../Navbar/Navbar";
-import {
-  Autocomplete,
-  Box,
-  Button,
-  Modal,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { useState } from "react";
+import { Box, Typography } from "@mui/material";
+import EditPage from "./EditPage";
 
-// !FIREBASE STUFF
-const docRef = doc(db, "Users", "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1");
-const interestRef = doc(db, "Interests", "Interests");
-const docSnap = await getDoc(docRef);
-const interestSnap = await getDoc(interestRef);
-const user = getUser();
-const baseInterests = interestSnap.data();
-
-function getUser() {
-  if (docSnap.exists()) {
-    console.log("Document data:", docSnap.data());
-    return docSnap.data();
-  } else {
-    // doc.data() will be undefined in this case
-    console.log("No such document!");
-  }
-}
-//! END OF FIREBASE STUFF
-
-/**
- * This is the edit page button. It is only visible if the logged in user matches the user's profile.
- * A user can only see this on their own page.
- * @returns The edit page button/modal combo
- */
-function EditPage() {
-  if (user?.userid == "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1") {
-    // Modal Handlers
-    const [open, setOpen] = React.useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
-
-    // Text Handlers
-
-    // Interests
-
-    /**
-     * This function sends back the interest field that is used in the edit page modal.
-     * @returns interest field
-     */
-    const InterestHook = () => {
-      return (
-        <Stack spacing={3}>
-          <Autocomplete
-            onChange={handleInterests}
-            multiple
-            id="tags-standard"
-            options={baseInterests?.Interests}
-            getOptionLabel={(option) => option}
-            defaultValue={user?.profile.interests}
-            value={interests}
-            renderInput={(params) => (
-              <TextField
-                sx={{ width: "94%" }}
-                {...params}
-                variant="outlined"
-                label="Interests"
-                placeholder="Choose any"
-                margin="normal"
-              />
-            )}
-          />
-        </Stack>
-      );
-    };
-
-    const [firstName, setfirstname] = React.useState(user?.profile.firstname);
-    const [lastName, setlastName] = React.useState(user?.profile.lastname);
-    const [bio, setbio] = useState(user?.profile.bio);
-    const [interests, setinterests] = React.useState(user?.profile.interests);
-
-    const handlefirstName = (e: { target: { value: any } }) => {
-      setfirstname(e.target.value);
-    };
-
-    const handlelastName = (e: { target: { value: any } }) => {
-      setlastName(e.target.value);
-    };
-
-    const handleBio = (e: { target: { value: any } }) => {
-      setbio(e.target.value);
-    };
-
-    const handleInterests = (event: any, newValue: string[]) => {
-      setinterests(newValue);
-    };
-
-    const handleSave = () => {
-      const dataToUpdate: any = {};
-      if (firstName) {
-        dataToUpdate["profile.firstName"] = firstName;
-      }
-      if (lastName) {
-        dataToUpdate["profile.lastName"] = lastName;
-      }
-      if (bio) {
-        dataToUpdate["profile.bio"] = bio;
-      }
-      if (interests) {
-        dataToUpdate["profile.interests"] = interests;
-      }
-      updateDoc(docRef, dataToUpdate);
-    };
-    return (
-      <Box>
-        <Button
-          sx={{ position: "absolute" }}
-          onClick={handleOpen}
-          className="edit-button"
-          variant="outlined"
-        >
-          Edit Profile
-        </Button>
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: 400,
-              bgcolor: "background.paper",
-              border: "2px solid #000",
-              boxShadow: 24,
-              p: 4,
-            }}
-          >
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Edit your profile
-            </Typography>
-            <TextField
-              onChange={handlefirstName}
-              defaultValue={user?.profile.firstName}
-              label="First Name"
-              variant="outlined"
-              sx={{ width: "45%", mr: 1 }}
-              margin="normal"
-              required={true}
-            />
-            <TextField
-              onChange={handlelastName}
-              defaultValue={user?.profile.lastName}
-              label="Last Name"
-              variant="outlined"
-              sx={{ width: "45%", ml: 1 }}
-              margin="normal"
-              required={true}
-            />
-            <TextField
-              onChange={handleBio}
-              defaultValue={user?.profile.bio}
-              label="About You"
-              variant="outlined"
-              sx={{ width: "94%" }}
-              multiline={true}
-              maxRows="9"
-            />
-            <InterestHook />
-            <Button color="warning" onClick={handleClose}>
-              Cancel
-            </Button>
-            <Button
-              sx={{ position: "absolute", right: "50px" }}
-              color="primary"
-              onClick={handleSave}
-            >
-              Save
-            </Button>
-          </Box>
-        </Modal>
-      </Box>
-    );
-  } else {
-    return null;
-  } // as of right now it is hardcoded until we have a solution to check user credentials between pages
-}
 /**
  * This is the main profile page that displays a users profile
  * @returns the webpage
  */
-function ProfilePage() {
+function ProfilePage(passedUser: any) {
+  const passedUserObj = "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1"; //Feel free to change this to the passed in object for testing. Make sure its of type string.
+
+  const [userPage, setUserPage] = useState<any>();
+  const [userProfPic, setUserProfPic] = useState("");
+  const [userCoverPic, setUserCoverPic] = useState("");
+
+  const docRef = doc(db, "Users", passedUserObj);
+  useEffect(() => {
+    getDoc(docRef)
+      .then((docSnap) => {
+        const userPageData = docSnap.data();
+        setUserPage(userPageData);
+        const userProfPicRef = ref(
+          storage,
+          userPageData?.profile.profilePicture
+        );
+        const userCoverPicRef = ref(storage, userPageData?.profile.coverPhoto);
+        Promise.all([
+          getDownloadURL(userProfPicRef),
+          getDownloadURL(userCoverPicRef),
+        ])
+          .then(([userProfPicUrl, userCoverPicUrl]) => {
+            setUserProfPic(userProfPicUrl);
+            setUserCoverPic(userCoverPicUrl);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  if (!userPage || !userProfPic || !userCoverPic) {
+    return <div hidden>{EditPage(userPage, docRef)}</div>;
+  }
+
+  const owner = userPage?.userid === window.localStorage.getItem("token");
+  console.log(userPage.profile.firstName);
+  console.log(userProfPic);
   return (
     <>
       <Navbar />
       <Box className="profile-info">
-        <img
-          src={"/src/assets/images/coverphoto.jpg"}
-          alt="image"
-          className="cover-photo"
-        />
+        <img src={`${userCoverPic}`} alt="image" className="cover-photo" />
         <span className="profile-name">
-          <span>{user?.profile.firstName + " " + user?.profile.lastName}</span>
+          <span>
+            {userPage?.profile.firstName + " " + userPage?.profile.lastName}
+          </span>
           <br></br>
         </span>
         <span className="friend-count">
-          <span>{user?.friendsList.length + " Friends"}</span>
+          <span>{userPage?.friendsList.length + " Friends"}</span>
           <br />
         </span>
         <img
-          src={"/src/assets/images/profileimg.jpg"}
+          src={`${userProfPic}`}
           alt="image"
           loading="lazy"
           className="profile-photo"
         />
-        <EditPage />
+        {EditPage(userPage, docRef)}
       </Box>
       <Box className="about">
         <Box className="about-title">
           <Typography sx={{ fontWeight: "bold" }}> About Me</Typography>
           <br></br>
         </Box>
-        <Typography sx={{ m: 2 }}>{user?.profile.bio}</Typography>
+        <Typography sx={{ m: 2 }}>{userPage?.profile.bio}</Typography>
       </Box>
       <Box className="interests">
         <Box className="text4">
@@ -248,7 +101,7 @@ function ProfilePage() {
           <br></br>
         </Box>
         <ul className="list">
-          {user?.profile.interests.map((interest: any) => (
+          {userPage?.profile.interests.map((interest: any) => (
             <li key={interest}>{interest}</li>
           ))}
         </ul>

@@ -15,7 +15,15 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
+import { useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { Button } from "@mui/material";
+import { auth } from "../../firebase/config";
+import PeopleIcon from "@mui/icons-material/People";
 
+/**
+ * The stylization for the searchbar
+ */
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -32,6 +40,9 @@ const Search = styled("div")(({ theme }) => ({
   },
 }));
 
+/**
+ * More stylization for the searchbar
+ */
 const SearchIconWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 2),
   height: "100%",
@@ -42,6 +53,9 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
   justifyContent: "center",
 }));
 
+/**
+ * The stylized base for the navbar
+ */
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
   "& .MuiInputBase-input": {
@@ -58,9 +72,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 /**
  * This is a universal navigation bar that will be implemented in all webpages for a given signed in user.
- * @returns navigation bar
+ * @returns Navigation bar
  */
 export default function Navbar() {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -68,24 +83,43 @@ export default function Navbar() {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+  /**
+   * Handles the behavior when the profile menu is closed
+   * @param event Mouse event
+   */
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
+  /**
+   * Handles the behavior when the profile menu is closed in mobile
+   */
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   };
 
+   /**
+   * Handles the behavior when the profile menu is closed
+   */
   const handleMenuClose = () => {
     setAnchorEl(null);
     handleMobileMenuClose();
   };
 
+  /**
+   * Handles the behavior when the mobile modal is opened.
+   * Sets the mobile anchor 
+   * @param event Mouse event
+   */
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
   const menuId = "primary-search-account-menu";
+
+  /**
+   * This is the default render view for the navbar
+   */
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
@@ -102,12 +136,35 @@ export default function Navbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem
+        onClick={() => {
+          handleMenuClose;
+          navigate("/components/Profile");
+        }}
+      >
+        Profile
+      </MenuItem>
+      <MenuItem
+        onClick={() => {
+          handleMenuClose;
+          navigate("/components/AccountSettings");
+        }}
+      >
+        My account
+      </MenuItem>
+      <MenuItem>
+        <Button variant="contained" onClick={() => signOut(auth)}>
+          Sign out
+        </Button>
+      </MenuItem>
     </Menu>
   );
 
   const mobileMenuId = "primary-search-account-menu-mobile";
+  
+  /**
+   * This is the mobile render view for the navbar
+   */
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
@@ -167,7 +224,7 @@ export default function Navbar() {
             variant="h6"
             noWrap
             component="a"
-            href="/"
+            href="/components/Forum"
             sx={{
               mr: 3,
               display: { xs: "none", md: "flex" },
@@ -179,7 +236,7 @@ export default function Navbar() {
             }}
           >
             HAWK
-            <img src="src/assets/images/My_project.png" height="35px" />
+            <img src="/src/assets/images/My_project.png" height="35px" />
             FINDER
           </Typography>
           <Search>
@@ -206,9 +263,10 @@ export default function Navbar() {
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
+              href="/components/Friends"
             >
-              <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
+              <Badge color="error">
+                <PeopleIcon />
               </Badge>
             </IconButton>
             <IconButton

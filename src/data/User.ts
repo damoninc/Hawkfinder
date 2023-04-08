@@ -11,7 +11,11 @@ class User {
   private _incomingRequests: string[];
   private _outgoingRequests: string[];
   private _profile: Profile;
-  private _userid: string
+  private _userid: string;
+  private _spotify: {
+        accessToken: string,
+        refreshToken: string
+      }
 
   /**
    * A User object which contains the user's information related to many core features.
@@ -32,6 +36,10 @@ class User {
     this._incomingRequests = new Array<string>();
     this._outgoingRequests = new Array<string>();
     this._userid = '';
+    this._spotify = {
+        accessToken: "",
+        refreshToken: ""
+      };
 
     if (profile != null) {
       this._profile = profile;
@@ -198,6 +206,19 @@ class User {
   public set outgoingRequests(outList: Array<string>) {
     this._outgoingRequests = outList
   }
+
+
+    public get spotify(): {accessToken: string, refreshToken: string} {
+      return this._spotify;
+    }
+  
+    /**
+     * Setter accountSettings
+     * @param {Map<string, string>} value
+     */
+    public set spotify(value: {accessToken: string, refreshToken: string}) {
+      this._spotify = value;
+    }
   
   /**
    *
@@ -242,6 +263,8 @@ export const userConverter = {
       newUser.userid = data.userid
       newUser.incomingRequests = data.incomingRequests
       newUser.outgoingRequests = data.outgoingRequests
+      newUser.spotify.accessToken = data.spotifyTokens.accessToken
+      newUser.spotify.refreshToken = data.spotifyTokens.refreshToken
 
 
       newUser.profile.bio = data.profile.bio
