@@ -232,7 +232,7 @@ export default class CurrentSong extends spotifyComponent {
         this.setState({ time: new Date() });
         spotifyPulled[0] = false;
       },
-      this.props.small ? 60000 : 20000
+      this.props.small ? 60000 : 3000
     );
   }
 

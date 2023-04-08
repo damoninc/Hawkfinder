@@ -4,7 +4,13 @@ import "../../styles/friendpage.css";
 import FriendBox from "./FriendBox";
 import FriendSearch from "./FriendSearch";
 import SearchForm from "./SearchForm";
-import { CircularProgress } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Drawer,
+  Modal,
+  Popover,
+} from "@mui/material";
 import { db } from "../../firebase/config";
 import {
   doc,
@@ -16,7 +22,10 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import FriendRequests from "./FriendRequests";
-import CurrentSong, { TopSongs } from "../SpotifyIntegration/SpotifyComponents";
+import CurrentSong, {
+  RecentSongs,
+  TopSongs,
+} from "../SpotifyIntegration/SpotifyComponents";
 
 export let user: User;
 
@@ -31,6 +40,8 @@ let dbPulled = false;
  */
 function FriendPage() {
   const [dbCall, setFriends] = useState(null);
+  const [containerEl, setContainerEl] = useState(null);
+
   if (!dbPulled || dbCall == null) {
     callDB("sq0kklKJQLYTuFQ6IQf6fzxi4Iu1", setFriends);
   }
@@ -52,6 +63,16 @@ function FriendPage() {
 }
 
 function checkNullList(friends: User[] | null) {
+  const [open, setOpen] = React.useState(false);
+
+  function handleOpen() {
+    setOpen(!open);
+  }
+
+  function handleClose() {
+    setOpen(false);
+  }
+
   // Returns a list of FriendBox if the user's friends list is not empty
   if (friends == null) {
     return (
@@ -72,7 +93,23 @@ function checkNullList(friends: User[] | null) {
       <div className="friendBlock">
         {friends.map((friend) => (
           <div className="friend" key={friend.username}>
-            {FriendBox(user, friend)}
+            <Button onClick={handleOpen}>{FriendBox(user, friend)}</Button>
+            <Drawer anchor={"right"} open={open} onClose={handleClose}>
+              <div className="friendDrawer">
+                <h1>
+                  {user.profile.firstName} {user.profile.lastName}
+                </h1>
+                <h3>Bio</h3>
+                <p>{user.profile.bio}</p>
+                <CurrentSong user={user} small={false} />
+                <h3>Interests</h3>
+                <ul>
+                  {user.profile.interests.map((interest) => (
+                    <li key={interest}>{interest}</li>
+                  ))}
+                </ul>
+              </div>
+            </Drawer>
           </div>
         ))}
       </div>
