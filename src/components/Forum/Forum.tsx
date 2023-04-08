@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../../firebase/config";
-import { collection, orderBy, onSnapshot, query } from "firebase/firestore";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import Post from "../../data/Post";
 import PostView from "../Post/PostView";
 import ForumPost from "./ForumPost";
 import PostInput from "./PostInput";
-import { Modal, Box } from "@mui/material";
-import { CircularProgress } from "@mui/material";
+import { Modal, Box, CircularProgress } from "@mui/material";
 import "../../styles/forum.css";
 
 function Forum() {
@@ -29,9 +28,10 @@ function Forum() {
    */
   useEffect(() => {
     setLoading(true);
+
     const q = query(collection(db, "Posts"), orderBy("postDate", "desc"));
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const tempPosts = querySnapshot.docs.map((doc) => {
+    getDocs(q).then((querySnapshot) => {
+      const tempPosts: Post[] = querySnapshot.docs.map((doc) => {
         console.log("DB CALL");
         return new Post(
           doc.id,
@@ -42,13 +42,21 @@ function Forum() {
           new Map(Object.entries(doc.data().ratings))
         );
       });
-      tempPosts.sort((a, b) => b.postDate.getTime() - a.postDate.getTime());
       setPosts(tempPosts);
-      setLoading(false);
     });
+
     setLoading(false);
-    return () => unsubscribe();
   }, []);
+
+  const reloadForum = () => {
+    console.log("Reloading forum...");
+    // This is not the most efficient way to reload the forum, but I've
+    // been banging my head against the wall for 5 hours trying to find
+    // a better way so this will have to suffice for now
+    // If we still have time to figure this out,
+    // I try to do this more efficiently
+    window.location.reload();
+  };
 
   /**
    * Determines the post that was clicked on
@@ -63,7 +71,8 @@ function Forum() {
 
   return (
     <div className="forum-container">
-      <PostInput />
+      {/* <PostInput reloadPosts={reloadPosts} /> */}
+      <PostInput reloadForum={reloadForum} />
       {!loading ? (
         <>
           {posts.map((post: Post, index) => {

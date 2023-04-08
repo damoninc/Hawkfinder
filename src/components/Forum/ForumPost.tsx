@@ -23,7 +23,7 @@ function ForumPost(props: any) {
   const [image, setImage] = useState("");
 
   /**
-   * Grabs the appropriate imageURL for the
+   * Grabs the appropriate image URL for the
    * specific post that is rendered
    */
   useEffect(() => {
@@ -38,6 +38,10 @@ function ForumPost(props: any) {
     }
   }, []);
 
+  /**
+   * Handles the logic for upvoting
+   * @param e: MouseEvent
+   */
   const upvote = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     /**
      * stopPropgation prevents events from bubbling and only runs
@@ -57,6 +61,10 @@ function ForumPost(props: any) {
     }
   };
 
+  /**
+   * Handles the logic for downvoting
+   * @param e: MouseEvent
+   */
   const downvote = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
     if (!downvoted && !upvoted) {
@@ -145,6 +153,7 @@ function ForumPost(props: any) {
         </div>
       </div>
       <span className="post-interest">{props.interest}</span>
+      {/* <span>{props.postDate}</span> */}
     </div>
   );
 }

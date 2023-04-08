@@ -13,13 +13,19 @@ function PostView(props: any) {
   // HOOKS ----------------------------------------------------------------
   // Hook for the ratings of each post
   const [ratings, setRatings] = useState(props.rating);
+  // Determines whether the user has upvoted
   const [upvoted, setUpvoted] = useState(false);
+  // Determines whether the user has downvoted
   const [downvoted, setDownvoted] = useState(false);
+  // The image of the post
   const [image, setImage] = useState("");
 
-  const fetchImage = () => {
+  /**
+   * Grabs the appropriate image URL for the
+   * specific post that is rendered
+   */
+  useEffect(() => {
     if (props.imageURL != "") {
-      console.log("getting image...");
       getDownloadURL(imageRef)
         .then((url) => {
           setImage(url);
@@ -28,12 +34,12 @@ function PostView(props: any) {
           console.log("Error fetching image");
         });
     }
-  };
-
-  useEffect(() => {
-    fetchImage();
   }, []);
 
+  /**
+   * Handles the logic for upvoting
+   * @param e: MouseEvent
+   */
   const upvote = () => {
     if (!upvoted && !downvoted) {
       setRatings(ratings + 1);
@@ -48,6 +54,10 @@ function PostView(props: any) {
     }
   };
 
+  /**
+   * Handles the logic for downvoting
+   * @param e: MouseEvent
+   */
   const downvote = () => {
     if (!downvoted && !upvoted) {
       // Case where downvote and upvote are not set

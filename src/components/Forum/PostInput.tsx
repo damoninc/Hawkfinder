@@ -19,7 +19,8 @@ import {
 import { ref, uploadBytes } from "firebase/storage";
 import "../../styles/postinput.css";
 
-const PostInput = () => {
+// const PostInput = ({ reloadPosts }: { reloadPosts: () => void }) => {
+const PostInput = ({ reloadForum }: any) => {
   // HOOKS ----------------------------------------------------------------
   // These hooks keep track of user input
   const [selectedImage, setSelectedImage] = useState<any>(null);
@@ -56,6 +57,10 @@ const PostInput = () => {
     });
   }
 
+  /**
+   * Determines if the user input is valid and writes it to Firebase
+   * Also reloads the Forum component when the button is clicked
+   */
   async function handlePost() {
     if (postText != "" && interest != "") {
       console.log("DB WRITE");
@@ -83,8 +88,12 @@ const PostInput = () => {
       setSelectedImage(null);
       setInterest("");
       setPostText("");
+      reloadForum();
+      // reloadPosts();
     } else {
-      console.log("Post not sent, there must be text input!");
+      console.log(
+        "Post not sent, you must select an interest and enter text input!"
+      );
     }
   }
 
