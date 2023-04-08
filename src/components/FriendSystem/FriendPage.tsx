@@ -91,27 +91,29 @@ function checkNullList(friends: User[] | null) {
   } else {
     return (
       <div className="friendBlock">
-        {friends.map((friend) => (
-          <div className="friend" key={friend.username}>
-            <Button onClick={handleOpen}>{FriendBox(user, friend)}</Button>
-            <Drawer anchor={"right"} open={open} onClose={handleClose}>
-              <div className="friendDrawer">
-                <h1>
-                  {user.profile.firstName} {user.profile.lastName}
-                </h1>
-                <h3>Bio</h3>
-                <p>{user.profile.bio}</p>
-                <CurrentSong user={user} small={false} />
-                <h3>Interests</h3>
-                <ul>
-                  {user.profile.interests.map((interest) => (
-                    <li key={interest}>{interest}</li>
-                  ))}
-                </ul>
-              </div>
-            </Drawer>
-          </div>
-        ))}
+        {friends.map((friend) => {
+          return (
+            <div className="friend" key={friend.username}>
+              <Button onClick={handleOpen}>{FriendBox(user, friend)}</Button>
+              <Drawer anchor={"right"} open={open} onClose={handleClose}>
+                <div className="friendDrawer">
+                  <h1>
+                    {user.profile.firstName} {user.profile.lastName}
+                  </h1>
+                  <h3>Bio</h3>
+                  <p>{user.profile.bio}</p>
+                  <CurrentSong user={user} small={false} />
+                  <h3>Interests</h3>
+                  <ul>
+                    {user.profile.interests.map((interest) => (
+                      <li key={interest}>{interest}</li>
+                    ))}
+                  </ul>
+                </div>
+              </Drawer>
+            </div>
+          );
+        })}
       </div>
     );
   }

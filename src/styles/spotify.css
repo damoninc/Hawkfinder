@@ -28,3 +28,9 @@ h3 {
     justify-content: left;
     max-width: 250px;
 }
+
+.currSong {
+    display: flex;
+    flex-direction: row;
+    max-width: 400px;
+}

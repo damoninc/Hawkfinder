@@ -60,6 +60,7 @@ function DisplaySong(
 ) {
   return (
     <div style={{ display: "block" }}>
+      <h3 style={{ fontSize: "12px" }}>Listening to on Spotify</h3>
       <div className="songBox">
         <div style={{}}>
           <img
@@ -96,7 +97,7 @@ function DisplaySong(
       {times == null ? (
         <div></div>
       ) : (
-        <div style={{ display: "flex", flexDirection: "row" }}>
+        <div className="currSong">
           <p style={{ fontSize: "16px" }}>
             {`0${Math.floor((times[0] / 1000 / 60) << 0)}`.slice(-2)}:
             {`0${Math.floor((times[0] / 1000) % 60)}`.slice(-2)}
@@ -104,7 +105,13 @@ function DisplaySong(
           <LinearProgress
             value={(times[0] / times[1]) * 100}
             variant="determinate"
-            style={{ width: "100%", marginRight: "4px", marginLeft: "4px" }}
+            style={{
+              width: "100%",
+              marginRight: "8px",
+              marginLeft: "8px",
+              marginTop: "17px",
+              paddingTop: "10px",
+            }}
           />
 
           <p style={{ fontSize: "16px" }}>
