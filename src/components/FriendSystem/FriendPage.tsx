@@ -49,11 +49,6 @@ function FriendPage() {
     <div>
       <div className="friends-list">
         <h1>Friends List</h1>
-        {/* <SearchForm
-          outsideSubmit={addFriend}
-          title={"Username: "}
-          buttonName={"Add"}
-        /> */}
         {checkNullList(dbCall)}
       </div>
       <FriendSearch />
@@ -65,8 +60,13 @@ function FriendPage() {
 function checkNullList(friends: User[] | null) {
   const [open, setOpen] = React.useState(false);
 
+  const topSongs = new TopSongs({ user: user, small: true, limit: 10 });
+  const recentSongs = new RecentSongs({ user: user, small: true, limit: 10 });
+
   function handleOpen() {
     setOpen(!open);
+    topSongs.setState({ time: new Date() });
+    recentSongs.setState({ time: new Date() });
   }
 
   function handleClose() {
@@ -95,6 +95,7 @@ function checkNullList(friends: User[] | null) {
           return (
             <div className="friend" key={friend.username}>
               <Button onClick={handleOpen}>{FriendBox(user, friend)}</Button>
+
               <Drawer anchor={"right"} open={open} onClose={handleClose}>
                 <div className="friendDrawer">
                   <h1>
@@ -109,6 +110,10 @@ function checkNullList(friends: User[] | null) {
                       <li key={interest}>{interest}</li>
                     ))}
                   </ul>
+                  <div style={{ display: "flex", fontSize: "12px" }}>
+                    <TopSongs user={user} small={true} limit={10} />
+                    <RecentSongs user={user} small={true} limit={10} />
+                  </div>
                 </div>
               </Drawer>
             </div>

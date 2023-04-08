@@ -43,11 +43,12 @@ function SpotifyPage() {
       </div>
       <div>
         <h1>Top Songs</h1>
-        {TopSongs(user, 10)}
+        {/* {TopSongs(user, 10)} */}
+        <TopSongs user={user} small={true} limit={10} />
       </div>
       <div>
         <h1>Recent Songs</h1>
-        {RecentSongs(user, 10)}
+        <RecentSongs user={user} small={true} limit={10} />
       </div>
     </div>
   );

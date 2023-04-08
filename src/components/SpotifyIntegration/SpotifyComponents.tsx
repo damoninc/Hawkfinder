@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import User from "../../data/User";
 import axios from "axios";
 import "../../styles/spotify.css";
@@ -12,43 +12,6 @@ const spotifyLogo =
 
 const spotifyPulled: boolean[] = [false, false, false];
 
-async function makeRequest(
-  user: User,
-  setResult: any,
-  request_uri: string,
-  boolIndex: number
-) {
-  await axios
-    .get(api_uri + request_uri, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${user.spotify.accessToken}` },
-    })
-    .then((response) => {
-      if (response.data != "" && !spotifyPulled[boolIndex]) {
-        setResult(response.data);
-
-        spotifyPulled[boolIndex] = true;
-      }
-    })
-    .catch(function (error) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log("Error", error.message);
-      }
-      console.log(error.config);
-    });
-}
 
 function DisplaySong(
   song: {
@@ -60,7 +23,6 @@ function DisplaySong(
 ) {
   return (
     <div style={{ display: "block" }}>
-      <h3 style={{ fontSize: "12px" }}>Listening to on Spotify</h3>
       <div className="songBox">
         <div style={{}}>
           <img
@@ -130,21 +92,47 @@ function DisplaySongSmall(
     name: string | null;
     artists: string | any[];
   },
+  scrolling: boolean,
   times?: number[]
 ) {
-  return (
-    <marquee style={{ color: "black", fontSize: "1em" }}>
-      Listening to: <b>{song.name}</b> by{" "}
-      {song.artists.length == 1
-        ? song.artists[0].name
-        : song.artists[0].name + " and others"}
-    </marquee>
-  );
+  if (scrolling) {
+    return (
+      <marquee style={{ color: "black", fontSize: "1em" }}>
+        Listening to: <b>{song.name}</b> by{" "}
+        {song.artists.length == 1
+          ? song.artists[0].name
+          : song.artists[0].name + " and others"}
+      </marquee>
+    );
+  } else {
+    return (
+      <div
+        style={{
+          lineHeight: "0%",
+          overflow: "hidden",
+          whiteSpace: "nowrap",
+          textOverflow: "ellipsis",
+          marginRight: "15%",
+        }}
+      >
+        <p>
+          <b>{song.name}</b>
+        </p>
+        <p>
+          by{" "}
+          {song.artists.length == 1
+            ? song.artists[0].name
+            : song.artists[0].name + " and others"}
+        </p>
+      </div>
+    );
+  }
 }
 
 interface IProps {
   user: User;
   small: boolean;
+  limit?: number;
 }
 
 interface IState {
@@ -234,6 +222,8 @@ export default class CurrentSong extends spotifyComponent {
   }
 
   componentDidMount() {
+    console.log("current song mounted");
+    this.setState({ time: new Date() });
     setInterval(
       () => {
         this.setState({ time: new Date() });
@@ -260,94 +250,131 @@ export default class CurrentSong extends spotifyComponent {
       ];
       return (
         <div style={{ padding: "10px" }}>
-          {!this.props.small
-            ? DisplaySong(this.state.result.item, times)
-            : DisplaySongSmall(this.state.result.item, times)}
+          {!this.props.small ? (
+            <div>
+              <h3 style={{ fontSize: "12px" }}>Listening to on Spotify</h3>
+              {DisplaySong(this.state.result.item, times)}
+            </div>
+          ) : (
+            DisplaySongSmall(this.state.result.item, true, times)
+          )}
         </div>
       );
     }
   }
 }
 
-export function CurrentSongFunc(user: User, small: boolean) {
-  const [result, setCurrSongs] = useState(null);
-  const [time, setTime] = useState(new Date());
-
-  setInterval(() => {
-    setTime(new Date());
-    spotifyPulled[0] = false;
-  }, 10000);
-
-  if (!spotifyPulled[0] && user !== undefined) {
-    makeRequest(user, setCurrSongs, "/me/player/currently-playing", 0);
+export class TopSongs extends spotifyComponent {
+  constructor(props: IProps) {
+    super(props);
   }
-  if (result == null) {
-    return <div></div>;
-  } else {
-    if (result.item == null) {
-      return <div></div>;
-    }
-    const times: number[] = [result.progress_ms, result.item.duration_ms];
 
-    return (
-      <div style={{ padding: "10px" }}>
-        <h3>Listening To On Spotify</h3>
-        {!small
-          ? DisplaySong(result.item, times)
-          : DisplaySongSmall(result.item, times)}
-        <h1> </h1>
-        <h2>Current Song but small</h2>
-        <h3>Listening To On Spotify</h3>
-        {DisplaySongSmall(result.item, times)}
-      </div>
-    );
+  componentDidMount() {
+    console.log("top songs mounted");
+    this.setState({ time: new Date() });
+  }
+
+  render() {
+    if (
+      !spotifyPulled[1] &&
+      this.state.result == null &&
+      this.props.user !== undefined
+    ) {
+      this.makeRequest(this.props.user, "/me/top/tracks", 1);
+    }
+    if (this.state.result == null) {
+      return <div></div>;
+    } else {
+      if (this.state.result.items == null) {
+        return <div></div>;
+      }
+    }
+    if (this.props.small) {
+      return (
+        <div>
+          <h3>Top Songs</h3>
+          <ul style={{ paddingLeft: "5%" }}>
+            {this.state.result.items
+              .slice(-this.props.limit!)
+              .map((song: any) => (
+                <li key={song.id}>{DisplaySongSmall(song, false)}</li>
+              ))}
+          </ul>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <h3>Top Songs</h3>
+          {this.state.result.items
+            .slice(-this.props.limit!)
+            .map((song: any) => (
+              <div key={song.id}>{DisplaySong(song)}</div>
+            ))}
+        </div>
+      );
+    }
   }
 }
 
-export function TopSongs(user: User, totalSongs: number) {
-  const [result, setTopSongs] = useState(null);
-  if (!spotifyPulled[1] && result == null && user !== undefined) {
-    makeRequest(user, setTopSongs, "/me/top/tracks", 1);
+export class RecentSongs extends spotifyComponent {
+  constructor(props: IProps) {
+    super(props);
   }
-  if (result == null) {
-    return <div></div>;
-  } else {
-    if (result.items == null) {
-      return <div></div>;
-    }
-    return (
-      <div>
-        <h3>Top Songs</h3>
-        {result.items.slice(-totalSongs).map((song) => (
-          <div key={song.id}>{DisplaySong(song)}</div>
-        ))}
-      </div>
-    );
-  }
-}
 
-export function RecentSongs(user: User, totalSongs: number) {
-  const [result, setRecentSongs] = useState(null);
-  if (!spotifyPulled[2] && result == null && user !== undefined) {
-    makeRequest(user, setRecentSongs, "/me/player/recently-played", 2);
+  componentDidMount() {
+    console.log("recent songs mounted");
+    this.setState({ time: new Date() });
   }
-  if (result == null) {
-    return <div></div>;
-  } else {
-    if (result.items == null) {
-      return <div></div>;
+
+  render() {
+    if (
+      !spotifyPulled[1] &&
+      this.state.result == null &&
+      this.props.user !== undefined
+    ) {
+      spotifyPulled[1] = true;
+      this.makeRequest(this.props.user, "/me/player/recently-played", 2);
     }
-    return (
-      <div>
-        <h3>Recent Songs</h3>
-        {result.items.slice(-totalSongs).map((song) => (
-          <div
-            key={song.track.id + Math.floor(Math.random() * 3000).toString()}
-          >
-            {DisplaySong(song.track)}
+    if (this.state.result == null) {
+      return <div></div>;
+    } else {
+      if (this.state.result.items == null) {
+        return <div></div>;
+      }
+      if (this.props.small) {
+        return (
+          <div>
+            <h3>Recent Songs</h3>
+            <ul style={{ paddingLeft: "5%" }}>
+              {this.state.result.items.slice(-this.props.limit!).map((song) => (
+                <li
+                  key={
+                    song.track.id + Math.floor(Math.random() * 3000).toString()
+                  }
+                >
+                  {DisplaySongSmall(song.track, false)}
+                </li>
+              ))}
+            </ul>
           </div>
-        ))}
-      </div>
-    );
+        );
+      } else {
+        return (
+          <div>
+            <h3>Recent Songs</h3>
+            {this.state.result.items.slice(-this.props.limit!).map((song : any) => (
+              <div
+                key={
+                  song.track.id + Math.floor(Math.random() * 3000).toString()
+                }
+              >
+                {DisplaySong(song.track)}
+              </div>
+            ))}
+          </div>
+        );
+      }
+    }
   }
 }
