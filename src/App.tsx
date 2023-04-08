@@ -1,6 +1,12 @@
 import Forum from "./components/Forum/Forum";
 import FriendPage from "./components/FriendSystem/FriendPage";
-import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  Navigate,
+} from "react-router-dom";
 import "./App.css";
 import React from "react";
 import LoginScreen from "./components/Authentication/LoginScreen";
@@ -9,7 +15,7 @@ import ProfilePage from "./components/ProfileSystem/ProfilePage";
 import SpotifyPage from "./components/SpotifyIntegration/SpotifyPage";
 import InterceptorScreen from "./components/Authentication/InterceptorScreen";
 import SignedIn from "./components/Authentication/SignedInScreen";
-import { useAuthState } from 'react-firebase-hooks/auth';
+import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase/config";
 import isUserLoggin from "./components/Authentication/TestAuth";
 import AccountSettingsPage from "./components/ProfileSystem/AccountSettingsPage";
@@ -65,14 +71,90 @@ function App() {
           </ul>
         </nav>
         <Routes>
-          <Route path="/components/Forum" element={ isUserLoggin(user) ? <Forum /> : <Navigate to="/components/Interceptor" /> } />
-          <Route path="/components/Friends" element={ isUserLoggin(user) ? <FriendPage /> : <Navigate to="/components/Interceptor" /> } />
-          <Route path="/" element={isUserLoggin(user) ? <Navigate to="/components/SignedIn" /> : <LoginScreen />} />
-          <Route path="/components/Signup" element={isUserLoggin(user) ? <Navigate to="/components/SignedIn" /> : <SignUpScreen />} />
-          <Route path="/components/Profile" element={ isUserLoggin(user) ?  <ProfilePage uCreds={user} /> : <Navigate to="/components/Interceptor" />} />
-          <Route path="/components/Interceptor" element={<InterceptorScreen />} />
-          <Route path="/components/SignedIn" element={ isUserLoggin(user) ? <SignedIn uCreds={user} /> : <Navigate to="/components/Interceptor" />} />
-          <Route path="/components/AccountSettings" element={ isUserLoggin(user) ? <AccountSettingsPage uCreds={user} /> : <Navigate to="/components/Interceptor" />} />
+          <Route
+            path="/components/Forum"
+            element={
+              isUserLoggin(user) ? (
+                <Forum />
+              ) : (
+                <Navigate to="/components/Interceptor" />
+              )
+            }
+          />
+          <Route
+            path="/components/Friends"
+            element={
+              isUserLoggin(user) ? (
+                <FriendPage />
+              ) : (
+                <Navigate to="/components/Interceptor" />
+              )
+            }
+          />
+          <Route
+            path="/components/Spotify"
+            element={
+              isUserLoggin(user) ? (
+                <SpotifyPage />
+              ) : (
+                <Navigate to="/components/Interceptor" />
+              )
+            }
+          />
+          <Route
+            path="/"
+            element={
+              isUserLoggin(user) ? (
+                <Navigate to="/components/SignedIn" />
+              ) : (
+                <LoginScreen />
+              )
+            }
+          />
+          <Route
+            path="/components/Signup"
+            element={
+              isUserLoggin(user) ? (
+                <Navigate to="/components/SignedIn" />
+              ) : (
+                <SignUpScreen />
+              )
+            }
+          />
+          <Route
+            path="/components/Profile"
+            element={
+              isUserLoggin(user) ? (
+                <ProfilePage uCreds={user} />
+              ) : (
+                <Navigate to="/components/Interceptor" />
+              )
+            }
+          />
+          <Route
+            path="/components/Interceptor"
+            element={<InterceptorScreen />}
+          />
+          <Route
+            path="/components/SignedIn"
+            element={
+              isUserLoggin(user) ? (
+                <SignedIn uCreds={user} />
+              ) : (
+                <Navigate to="/components/Interceptor" />
+              )
+            }
+          />
+          <Route
+            path="/components/AccountSettings"
+            element={
+              isUserLoggin(user) ? (
+                <AccountSettingsPage uCreds={user} />
+              ) : (
+                <Navigate to="/components/Interceptor" />
+              )
+            }
+          />
         </Routes>
       </Router>
     </div>
