@@ -178,7 +178,7 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
     );
   };
 
-  if (true) {
+  if (owner) {
     return (
       <Box>
         <Button
