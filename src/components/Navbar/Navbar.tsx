@@ -179,7 +179,7 @@ export default function Navbar() {
             }}
           >
             HAWK
-            <img src="src/assets/images/My_project.png" height="35px" />
+            <img src="/src/assets/images/My_project.png" height="35px" />
             FINDER
           </Typography>
           <Search>
