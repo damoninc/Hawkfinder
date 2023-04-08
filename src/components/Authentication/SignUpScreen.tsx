@@ -12,8 +12,9 @@ import { Container } from "@mui/system";
 import { useNavigate, Link } from "react-router-dom";
 
 /**
- * Sign up has fields which are used to create a User object
- * @returns The sign up screen component
+ * The Sign Up page, which allows users to sign up and creates a new account for them
+ * Has various fields a user must fill out to proceed.
+ * @returns SignUp Component
  */
 function SignUpScreen() {
   const navigate = useNavigate();
@@ -109,7 +110,6 @@ function SignUpScreen() {
       firstnameInput,
       lastnameInput
     );
-
     createUserWithEmailAndPassword(auth, emailInput, passwordInput)
       .then((cred) => {
         setDoc(doc(db, "Users", cred.user.uid), {

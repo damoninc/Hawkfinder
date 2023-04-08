@@ -1,5 +1,4 @@
 import Forum from "./components/Forum/Forum";
-import PostView from "./components/Post/PostView";
 import FriendPage from "./components/FriendSystem/FriendPage";
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-router-dom";
 import "./App.css";
@@ -9,14 +8,16 @@ import SignUpScreen from "./components/Authentication/SignUpScreen";
 import ProfilePage from "./components/ProfileSystem/ProfilePage";
 import SpotifyPage from "./components/SpotifyIntegration/SpotifyPage";
 import InterceptorScreen from "./components/Authentication/InterceptorScreen";
-import ValidToken from "./components/Authentication/CheckSignedIn";
 import SignedIn from "./components/Authentication/SignedInScreen";
-import checkAuthState from "./components/Authentication/MonitorAuthState";
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from "./firebase/config";
 import isUserLoggin from "./components/Authentication/TestAuth";
 
-
+/**
+ * The top level of our App. Our routes are declared here, and use these routes
+ * as a reference in the other file.
+ * @returns The Router DOM
+ */
 function App() {
   const [user] = useAuthState(auth);
   return (

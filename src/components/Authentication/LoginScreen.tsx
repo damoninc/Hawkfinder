@@ -12,14 +12,16 @@ import { useFormik } from "formik";
 import { Container } from "@mui/system";
 
 /**
- *
- * Login Screen checks for a user within the database using email and password authentication
- * @returns The login screen component
+ * Login Screen checks for a user within Firebase using email and password authentication.
+ * @returns Login Screen Component
  */
 function LoginScreen() {
   const navigate = useNavigate();
   const [accountMessage, setAccountMessage] = useState("");
 
+  /**
+   * This is the interface that is used within Validation. Checks for email and password.
+   */
   interface ErrorLoginInfo {
     email?: string;
     password?: string;
@@ -33,6 +35,7 @@ function LoginScreen() {
   values to not be created, meaning it can pass the tests and will create them if there are errors. Whoopee.
 
   */
+
   /**
    * Checks if the text fields contain any errors and returns that error.
    * @returns ErrorLoginInfo object
@@ -67,7 +70,11 @@ function LoginScreen() {
   });
 
   /**
-   * Uses the FireBase method to sign in with an email and password
+   * This will attempt to sign in a user based on their credentials.
+   * An error message will be produced if the User cannot login, with
+   * an appropriate error message
+   * @param usernameInput string : username input
+   * @param passwordInput string : username input
    */
   function checkExist(usernameInput: string, passwordInput: string) {
     setAccountMessage("Looking for user...");

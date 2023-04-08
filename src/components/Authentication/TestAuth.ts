@@ -1,10 +1,14 @@
-import { User } from "@firebase/auth";
 import React from "react";
-export let signinUID = "";
+
+/**
+ * Uses the FireBase Auth hook to check if a user exists.
+ * If a user is signed in, it will be true. Otherwise, false.
+ * @param cUser Firebase User
+ * @returns boolean
+ */
 function isUserLoggin(cUser : any) {
     if (cUser) {
-        console.log("Sign in, here's the sauce " + cUser.uid);
-        signinUID = cUser.uid;
+        console.log("Signed in!");
         return true;
     }
     else {
