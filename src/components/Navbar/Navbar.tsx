@@ -147,7 +147,7 @@ export default function Navbar() {
       <MenuItem
         onClick={() => {
           handleMenuClose;
-          navigate("/components/SignedIn");
+          navigate("/components/AccountSettings");
         }}
       >
         My account

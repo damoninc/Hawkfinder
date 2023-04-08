@@ -24,7 +24,7 @@ function AccountSettingsPage(passedUser: any) {
   const [signupMessage, setSignupMessage] = useState("");
   const [userData, setUserData] = useState<any>();
 
-  const docRef = doc(db, "Users", passedUser.uid);
+  const docRef = doc(db, "Users", passedUser.uCreds.uid);
   useEffect(() => {
     getDoc(docRef)
       .then((docSnap) => {

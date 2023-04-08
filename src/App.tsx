@@ -12,10 +12,11 @@ import SignedIn from "./components/Authentication/SignedInScreen";
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from "./firebase/config";
 import isUserLoggin from "./components/Authentication/TestAuth";
+import AccountSettingsPage from "./components/ProfileSystem/AccountSettingsPage";
 
 /**
  * The top level of our App. Our routes are declared here, and use these routes
- * as a reference in the other file.
+ * as a reference in the other files.
  * @returns The Router DOM
  */
 function App() {
@@ -58,6 +59,9 @@ function App() {
             <li>
               <Link to="/components/Profile">Profile</Link>
             </li>
+            <li>
+              <Link to="/components/AccountSettings">Account Settings</Link>
+            </li>
           </ul>
         </nav>
         <Routes>
@@ -68,6 +72,7 @@ function App() {
           <Route path="/components/Profile" element={ isUserLoggin(user) ?  <ProfilePage uCreds={user} /> : <Navigate to="/components/Interceptor" />} />
           <Route path="/components/Interceptor" element={<InterceptorScreen />} />
           <Route path="/components/SignedIn" element={ isUserLoggin(user) ? <SignedIn uCreds={user} /> : <Navigate to="/components/Interceptor" />} />
+          <Route path="/components/AccountSettings" element={ isUserLoggin(user) ? <AccountSettingsPage uCreds={user} /> : <Navigate to="/components/Interceptor" />} />
         </Routes>
       </Router>
     </div>
