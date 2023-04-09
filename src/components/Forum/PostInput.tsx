@@ -1,79 +1,129 @@
 import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
-import "../../styles/postinput.css";
+import { db, storage } from "../../firebase/config";
 import {
   FormControl,
   Button,
   MenuItem,
   Select,
-  Input,
   InputLabel,
 } from "@mui/material";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import {
+  addDoc,
+  collection,
+  serverTimestamp,
+  updateDoc,
+} from "@firebase/firestore";
+import { ref, uploadBytes } from "firebase/storage";
+import "../../styles/postinput.css";
 
-const PostInput = () => {
-  // These hooks keep track of the input by the user for their post
+const PostInput = ({ reloadForum }: any) => {
+  // HOOKS ----------------------------------------------------------------
+  // These hooks keep track of user input
   const [selectedImage, setSelectedImage] = useState<any>(null);
   const [interest, setInterest] = useState("");
   const [postText, setPostText] = useState("");
 
-  // General style for input fields
-  const sx = {
-    maxHeight: "56px",
-    marginRight: "3%",
-  };
+  /**
+   * Renames the user's image input filename to the
+   * id of the newly created Post
+   * @param originalFile
+   * @param newName
+   * @returns updated File object
+   */
+  function renameFile(oldFile: File, newName: string) {
+    return new File([oldFile], newName, {
+      type: "image/jpeg",
+      lastModified: oldFile.lastModified,
+    });
+  }
 
-  const interestsx = {
-    maxHeight: "56px",
-    marginRight: "3%",
-    width: "100px",
+  // Any image uploaded will be turned into a jpg file
+  const metadata = {
+    contentType: "image/jpeg",
   };
 
   /**
-   * Temporary functionality for posting to the forum,
-   * only console.logs the input
+   * Uploads the user's image input to Firebase storage
+   * @param image: Raw Image File
    */
-  function handlePost() {
-    if (postText != "") {
-      console.log("Post sent! Sending info to firebase:");
-      console.log(
-        "ImageFile: ",
-        selectedImage,
-        "; Interest: ",
-        interest,
-        "; Text: ",
-        postText
-      );
+  function uploadImage(image: File) {
+    const postsRef = ref(storage, "Posts/" + image.name);
+    uploadBytes(postsRef, image, metadata).then(() => {
+      console.log("Uploaded image!");
+    });
+  }
+
+  /**
+   * Determines if the user input is valid and writes it to Firebase
+   * Also reloads the Forum component when the button is clicked
+   */
+  async function handlePost() {
+    if (postText != "" && interest != "") {
+      console.log("DB WRITE");
+      const docRef = await addDoc(collection(db, "Posts"), {
+        description: postText,
+        imageURL: "",
+        interest: interest,
+        postDate: serverTimestamp(),
+        ratings: Object.fromEntries(new Map<string, string>()),
+        userID: "jgj4899fwre8j49",
+      });
+      // Using the doc.id generated above to use as a unique reference
+      // that the post will use to get the image from storage
+      if (selectedImage) {
+        const imgID = docRef.id;
+        const imgName = imgID + ".jpg";
+        // UPLOADING IMG TO FIREBASE STORAGE
+        const newFile: File = renameFile(selectedImage, imgName);
+        uploadImage(newFile);
+        // UPDATING POST DOCUMENT WITH POINTER TO FIREBASE STORAGE
+        await updateDoc(docRef, {
+          imageURL: imgName,
+        });
+      }
+      setSelectedImage(null);
+      setInterest("");
+      setPostText("");
+      reloadForum();
     } else {
-      console.log("Post not sent, ");
+      console.log(
+        "Post not sent, you must select an interest and enter text input!"
+      );
     }
   }
 
   return (
     <div className="post-input">
+      <TextField
+        className="text-input"
+        value={postText}
+        label="Share your interests..."
+        variant="outlined"
+        multiline
+        rows={4}
+        onChange={(e) => setPostText(e.target.value)}
+      />
       {selectedImage && (
-        <div>
+        <div className="post-input-img">
           <img
             alt="post-input-img"
             height={"100px"}
             src={URL.createObjectURL(selectedImage)}
           />
           <br />
-          <button onClick={() => setSelectedImage(null)}>Remove</button>
+          <HighlightOffIcon
+            className="remove-img"
+            style={{ fill: "rgb(15, 15, 15)" }}
+            onClick={() => setSelectedImage(null)}
+          />
         </div>
       )}
-
-      <Input
-        sx={sx}
-        type="file"
-        name="myImage"
-        onChange={(event: React.ChangeEvent<HTMLInputElement> | any) => {
-          setSelectedImage(event.target.files[0]);
-        }}
-      />
-      <FormControl>
+      <FormControl className="interest-input">
         <InputLabel>Interest</InputLabel>
         <Select
-          sx={interestsx}
           label="Interest"
           value={interest}
           onChange={(event: React.ChangeEvent<HTMLInputElement> | any) => {
@@ -85,21 +135,35 @@ const PostInput = () => {
           <MenuItem value={"Film"}>Film</MenuItem>
         </Select>
       </FormControl>
-      <TextField
-        sx={sx}
-        value={postText}
-        label="Share your interests..."
-        variant="outlined"
-        onChange={(e) => setPostText(e.target.value)}
-      />
+      <Button variant="outlined" component="label" className="upload-image">
+        <FileUploadIcon style={{ fill: "teal" }} />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(event: React.ChangeEvent<HTMLInputElement> | any) => {
+            setSelectedImage(event.target.files[0]);
+          }}
+          hidden
+        />
+      </Button>
       {/* If there is text any post text inputted, 
       then the user can click the post button */}
-      {postText != "" ? (
-        <Button type="submit" variant="outlined" onClick={handlePost}>
+      {postText != "" && interest != "" ? (
+        <Button
+          className="post-button"
+          type="submit"
+          variant="outlined"
+          onClick={handlePost}
+        >
           Post
         </Button>
       ) : (
-        <Button type="submit" variant="outlined" onClick={handlePost} disabled>
+        <Button
+          className="post-button"
+          type="submit"
+          variant="outlined"
+          disabled
+        >
           Post
         </Button>
       )}
