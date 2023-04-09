@@ -27,12 +27,20 @@
   .bigContent {
     font-size: 15px;
     text-align: left;
+    
+  }
+
+  .insideStack {
+    display:flex;
+    font-size: 15px;
+    text-align: left;
     width: 50%;
     padding-right: 5%;
-    white-space:normal;
+    white-space: normal;
     overflow: hidden;
     text-overflow: ellipsis;
     min-width: 100px;
+    line-height: 0px;
   }
   
   /* Container holding buttons */

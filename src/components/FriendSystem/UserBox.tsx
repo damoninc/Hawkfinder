@@ -2,6 +2,7 @@ import React from "react";
 import "../../styles/userbox.css";
 import User from "../../data/User";
 import CurrentSong from "../SpotifyIntegration/SpotifyComponents";
+import { Stack } from "@mui/material";
 
 /**
  * Generates a HTML block that displays a user based on their Profile information
@@ -10,7 +11,12 @@ import CurrentSong from "../SpotifyIntegration/SpotifyComponents";
  * @param {User} displayUser - The user to display
  * @return {*} - FriendBox HTML
  */
-function UserBox(displayUser: User, buttons: (arg0: User) => JSX.Element) {
+function UserBox(
+  displayUser: User,
+  buttons: (arg0: User) => JSX.Element,
+  spotify = false,
+  friends = false
+) {
   if (displayUser === undefined) {
     return <div></div>;
   }
@@ -33,12 +39,19 @@ function UserBox(displayUser: User, buttons: (arg0: User) => JSX.Element) {
         <img src={imgPath} width="100" height="100"></img>
       </div>
       <div className="bigContent">
-        <h3>
-          {" "}
-          {displayUser.profile.firstName} {displayUser.profile.lastName}{" "}
-        </h3>
-        <p>{interests}</p>
-        {/* {CurrentSong(displayUser, true)} */}
+        <Stack alignItems="left" spacing={2} style={{ lineHeight: "0px" }}>
+          <h3>
+            {displayUser.profile.firstName} {displayUser.profile.lastName}
+          </h3>
+          <p>{interests}</p>
+          <div>
+            {friends ? (
+              <CurrentSong user={displayUser} small={true} />
+            ) : (
+              <div></div>
+            )}
+          </div>
+        </Stack>
       </div>
       <div className="smallContent">
         <h3>

@@ -2,16 +2,16 @@ import React, { useState } from "react";
 import User, { userConverter } from "../../data/User";
 import "../../styles/friendpage.css";
 import { db } from "../../firebase/config";
-import {
-  doc,
-  getDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import SpotifyLogin from "../SpotifyIntegration/SpotifyLogin";
-import CurrentSong, { RecentSongs, TopSongs } from "./SpotifyComponents";
+import CurrentSong, {
+  CurrentSongFunc,
+  RecentSongs,
+  TopSongs,
+} from "./SpotifyComponents";
 import { CircularProgress } from "@mui/material";
 
-// use: concurrently "npm run dev" "npm run start"    
+// use: concurrently "npm run dev" "npm run start"
 // to run server and vite at the same time
 
 const currUser = "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1";
@@ -32,27 +32,27 @@ function SpotifyPage() {
     callDB(setUser);
   }
   return (
-    <div style={{display:"flex", justifyContent:"space-evenly"}}>
+    <div style={{ display: "flex", justifyContent: "space-evenly" }}>
       <div>
         <h1>Authorize Spotify</h1>
         {SpotifyLogin(user)}
       </div>
       <div>
         <h1>Current Song</h1>
-        {CurrentSong(user, false)}
+        <CurrentSong user={user} small={false} />
       </div>
       <div>
         <h1>Top Songs</h1>
-        {TopSongs(user, 10)}
+        {/* {TopSongs(user, 10)} */}
+        <TopSongs user={user} small={true} limit={10} />
       </div>
       <div>
         <h1>Recent Songs</h1>
-        {RecentSongs(user, 10)}
+        <RecentSongs user={user} small={true} limit={10} />
       </div>
     </div>
   );
 }
-
 
 /**
  * Function used to query FireBase for the friends list.

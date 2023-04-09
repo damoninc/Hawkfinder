@@ -35,3 +35,9 @@
 .loadFriend {
   padding: 10px;
 }
+
+.friendDrawer {
+  justify-content: space-evenly;
+  width: 50vh;
+  padding: 20px;
+}

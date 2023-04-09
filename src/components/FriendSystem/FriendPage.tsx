@@ -3,8 +3,14 @@ import User, { userConverter } from "../../data/User";
 import "../../styles/friendpage.css";
 import FriendBox from "./FriendBox";
 import FriendSearch from "./FriendSearch";
-import SearchForm from "./SearchForm";
-import { CircularProgress } from "@mui/material";
+import {
+  Badge,
+  Button,
+  CircularProgress,
+  Drawer,
+  Grid,
+  Stack,
+} from "@mui/material";
 import { db } from "../../firebase/config";
 import {
   doc,
@@ -16,6 +22,11 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import FriendRequests from "./FriendRequests";
+import CurrentSong, {
+  RecentSongs,
+  TopSongs,
+} from "../SpotifyIntegration/SpotifyComponents";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 export let user: User;
 
@@ -30,27 +41,72 @@ let dbPulled = false;
  */
 function FriendPage() {
   const [dbCall, setFriends] = useState(null);
+  const [pageSwitch, setSwitch] = useState(0);
+
   if (!dbPulled || dbCall == null) {
     callDB("sq0kklKJQLYTuFQ6IQf6fzxi4Iu1", setFriends);
   }
+
+  const friendList = (
+    <div className="friends-list">
+      <h1>Friends List</h1>
+      {checkNullList(dbCall)}
+    </div>
+  );
+
+  const friendRequests = FriendRequests(user);
+
+  const search = <FriendSearch />;
+
   return (
     <div>
-      <div className="friends-list">
-        <h1>Friends List</h1>
-        <SearchForm
-          outsideSubmit={addFriend}
-          title={"Username: "}
-          buttonName={"Add"}
-        />
-        {checkNullList(dbCall)}
+      <div>
+        <Grid
+          container
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Button
+            variant="contained"
+            onClick={() => setSwitch(0)}
+            style={{ margin: "15px" }}
+          >
+            Friends
+          </Button>
+          <Badge
+            badgeContent={user !== undefined ? user.incomingRequests.length : 0}
+            color="success"
+          >
+            <Button variant="contained" onClick={() => setSwitch(1)}>
+              Requests
+            </Button>
+          </Badge>
+          <Button
+            variant="contained"
+            onClick={() => setSwitch(2)}
+            style={{ margin: "15px" }}
+          >
+            Search
+          </Button>
+        </Grid>
       </div>
-      <FriendSearch />
-      {FriendRequests(user)}
+      {pageSwitch == 0 ? friendList : pageSwitch == 1 ? friendRequests : search}
     </div>
   );
 }
 
 function checkNullList(friends: User[] | null) {
+  const [open, setOpen] = React.useState(false);
+
+  function handleOpen() {
+    setOpen(!open);
+  }
+
+  function handleClose() {
+    setOpen(false);
+  }
+
   // Returns a list of FriendBox if the user's friends list is not empty
   if (friends == null) {
     return (
@@ -69,11 +125,60 @@ function checkNullList(friends: User[] | null) {
   } else {
     return (
       <div className="friendBlock">
-        {friends.map((friend) => (
-          <div className="friend" key={friend.username}>
-            {FriendBox(user, friend)}
-          </div>
-        ))}
+        {friends.map((friend) => {
+          return (
+            <div className="friend" key={friend.username}>
+              <div style={{ display: "flex" }}>
+                <Button onClick={handleOpen}>
+                  <FriendBox friend={friend} />
+                </Button>
+              </div>
+              <Drawer anchor={"right"} open={open} onClose={handleClose}>
+                <Button onClick={handleClose} variant="contained" style={{marginTop:"30px", marginLeft:"20px", marginRight:"20px"}}>
+                  <ArrowBackIcon />
+                </Button>
+                <div
+                  style={{
+                    minWidth: "25vw",
+                    maxWidth: "50vw",
+                    paddingLeft: "20px",
+                    paddingRight: "20px",
+                    justifyContent: "space-evenly",
+                  }}
+                >
+                  <Stack
+                    justifyContent="flex-start"
+                    alignItems="flex-start"
+                    spacing={2}
+                  >
+                    <h1>
+                      {user.profile.firstName} {user.profile.lastName}
+                    </h1>
+                    <h3>Bio</h3>
+                    <p>{user.profile.bio}</p>
+                    <CurrentSong user={user} small={false} />
+                    <h3>Interests</h3>
+                    <ul>
+                      {user.profile.interests.map((interest) => (
+                        <li key={interest}>{interest}</li>
+                      ))}
+                    </ul>
+                    <Stack
+                      direction="row"
+                      justifyContent="center"
+                      alignItems="left"
+                      spacing={2}
+                      style={{ paddingLeft: "15px" }}
+                    >
+                      <TopSongs user={user} small={true} limit={10} />
+                      <RecentSongs user={user} small={true} limit={10} />
+                    </Stack>
+                  </Stack>
+                </div>
+              </Drawer>
+            </div>
+          );
+        })}
       </div>
     );
   }
@@ -177,11 +282,6 @@ export async function removeFriend(friend: User) {
   }
 }
 
-export function goToMessages(friend: User) {
-  // Dummy function for navigating to messages
-  alert("Cannot go to " + friend.username + "'s Messages");
-}
-
 export function goToProfile(friend: User) {
   // Dummy function for navigating to profile
   alert("Cannot go to " + friend.username + "'s Profile");
@@ -198,7 +298,7 @@ async function callDB(signedUser: string, setFriends: any) {
   const querySnapshot = await getDoc(
     doc(db, "Users", signedUser).withConverter(userConverter)
   );
-  console.log("DB Call");
+  console.log("Grabbing User Object");
   const dbUser = querySnapshot.data();
   if (dbUser !== undefined) {
     user = dbUser;
@@ -211,15 +311,13 @@ async function callDB(signedUser: string, setFriends: any) {
       query(collection(db, "Users"), where("userid", "in", user.friendsList))
     ).then((friendList) => {
       friendList.forEach((user) => {
+        console.log("Getting Friends");
         const data: User | undefined = userConverter.fromFirestore(user);
         if (data !== undefined) {
           friends.push(data);
         }
       });
-      console.log("DB Call");
-
       dbPulled = true;
-      console.log("db?");
       setFriends(friends);
     });
   } else {
