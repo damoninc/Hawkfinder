@@ -10,8 +10,7 @@ const api_uri = "https://api.spotify.com/v1";
 const spotifyLogo =
   "https://firebasestorage.googleapis.com/v0/b/csc-450-project.appspot.com/o/HAWKFINDER%2Ffile-spotify-logo-png-4.png?alt=media&token=4ffa3420-edf1-4f8e-8ee4-8b1b7fc19093";
 
-const spotifyPulled: boolean[] = [false, false, false];
-
+const spotifyPulled: boolean[] = [false, true, true];
 
 function DisplaySong(
   song: {
@@ -22,7 +21,16 @@ function DisplaySong(
   times?: number[]
 ) {
   return (
-    <div style={{ display: "block" }}>
+    <div
+      style={{
+        display: "block",
+        border: "1px solid black",
+        maxWidth: "400px",
+        minWidth: "350px",
+        padding: "10px",
+        borderRadius: "25px",
+      }}
+    >
       <div className="songBox">
         <div style={{}}>
           <img
@@ -33,14 +41,20 @@ function DisplaySong(
           />
         </div>
         <div className="songText">
-          <h3 style={{ marginTop: "0px", lineHeight: "0px" }}>{song.name}</h3>
-          <p style={{ paddingLeft: "15px", lineHeight: "0px" }}>
+          <p style={{ marginTop: "0px", lineHeight: "0px", fontSize: "20px" }}>
+            <b>{song.name}</b>
+          </p>
+          <p
+            style={{ paddingLeft: "15px", lineHeight: "0px", fontSize: "16px" }}
+          >
             by{" "}
             {song.artists.length == 1
               ? song.artists[0].name
               : song.artists[0].name + " and others"}
           </p>
-          <p style={{ paddingLeft: "15px", lineHeight: "0px" }}>
+          <p
+            style={{ paddingLeft: "15px", lineHeight: "0px", fontSize: "16px" }}
+          >
             on {song.album.name}
           </p>
         </div>
@@ -71,7 +85,7 @@ function DisplaySong(
               width: "100%",
               marginRight: "8px",
               marginLeft: "8px",
-              marginTop: "17px",
+              marginTop: "8px",
               paddingTop: "10px",
             }}
           />
@@ -157,7 +171,6 @@ class spotifyComponent extends React.Component<IProps, IState> {
         .then((response) => {
           if (response.data != "" && !spotifyPulled[boolIndex]) {
             spotifyPulled[boolIndex] = true;
-            console.log(response.data);
           }
           this.setState({ result: response.data });
         })
@@ -169,7 +182,7 @@ class spotifyComponent extends React.Component<IProps, IState> {
             console.log(error.response.status);
             console.log(error.response.headers);
             if (error.response.status === 401) {
-              this.refreshToken();
+              this.refreshToken(boolIndex);
             }
           } else if (error.request) {
             // The request was made but no response was received
@@ -184,7 +197,7 @@ class spotifyComponent extends React.Component<IProps, IState> {
         });
     }
   }
-  async refreshToken() {
+  async refreshToken(boolIndex: number) {
     console.log("bad access token, refreshing");
     await axios
       .get("/api/spotify/refresh_token", {
@@ -212,6 +225,8 @@ class spotifyComponent extends React.Component<IProps, IState> {
         }
         console.log("db refresh update");
         this.setState({ result: null });
+        spotifyPulled[boolIndex] = false;
+        window.location.reload;
       });
   }
 }
@@ -222,8 +237,8 @@ export default class CurrentSong extends spotifyComponent {
   }
 
   componentDidMount() {
-    console.log("current song mounted");
     this.setState({ time: new Date() });
+    spotifyPulled[0] = false;
     setInterval(
       () => {
         this.setState({ time: new Date() });
@@ -270,8 +285,12 @@ export class TopSongs extends spotifyComponent {
   }
 
   componentDidMount() {
-    console.log("top songs mounted");
     this.setState({ time: new Date() });
+    spotifyPulled[1] = false;
+    setInterval(() => {
+      this.setState({ time: new Date() });
+      spotifyPulled[1] = false;
+    }, 60000);
   }
 
   render() {
@@ -323,8 +342,12 @@ export class RecentSongs extends spotifyComponent {
   }
 
   componentDidMount() {
-    console.log("recent songs mounted");
     this.setState({ time: new Date() });
+    spotifyPulled[2] = false;
+    setInterval(() => {
+      this.setState({ time: new Date() });
+      spotifyPulled[2] = false;
+    }, 60000);
   }
 
   render() {
@@ -363,15 +386,17 @@ export class RecentSongs extends spotifyComponent {
         return (
           <div>
             <h3>Recent Songs</h3>
-            {this.state.result.items.slice(-this.props.limit!).map((song : any) => (
-              <div
-                key={
-                  song.track.id + Math.floor(Math.random() * 3000).toString()
-                }
-              >
-                {DisplaySong(song.track)}
-              </div>
-            ))}
+            {this.state.result.items
+              .slice(-this.props.limit!)
+              .map((song: any) => (
+                <div
+                  key={
+                    song.track.id + Math.floor(Math.random() * 3000).toString()
+                  }
+                >
+                  {DisplaySong(song.track)}
+                </div>
+              ))}
           </div>
         );
       }

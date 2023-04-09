@@ -12,7 +12,6 @@ h3 {
     justify-content: space-evenly;
     width: auto;
     margin: auto;
-    border: 1px solid black;
     height: 100px;
     max-height: 100px;
     min-width: 200px;
@@ -31,4 +30,6 @@ h3 {
 
 .currSong {
     display: flex;
+    line-height: 0;
+    margin-top: 5px
 }
