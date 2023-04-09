@@ -5,6 +5,7 @@ import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
 import { IconButton } from "@mui/material";
 import { storage } from "../../firebase/config";
 import { getDownloadURL, ref } from "firebase/storage";
+import "../../styles/forumpost.css";
 
 function PostView(props: any) {
   // Creates a pointer reference to the image of the post
@@ -94,7 +95,7 @@ function PostView(props: any) {
          * on the state of upvoted and downvoted
          */}
 
-        <div className="rating-button">
+        <div className="rating-button-container">
           {!upvoted ? (
             <IconButton className="rating-button" onClick={upvote}>
               <ArrowCircleUpIcon
@@ -105,18 +106,14 @@ function PostView(props: any) {
             </IconButton>
           ) : (
             <IconButton className="rating-button" onClick={upvote}>
-              <ArrowCircleUpIcon
-                fontSize="large"
-                color="primary"
-                style={{ fill: "blue" }}
-              />
+              <ArrowCircleUpIcon fontSize="large" color="primary" />
             </IconButton>
           )}
         </div>
 
         <span className="rating">{ratings}</span>
 
-        <div className="rating-button">
+        <div className="rating-button-container">
           {!downvoted ? (
             <IconButton className="rating-button" onClick={downvote}>
               <ArrowCircleDownIcon
@@ -127,16 +124,13 @@ function PostView(props: any) {
             </IconButton>
           ) : (
             <IconButton className="rating-button" onClick={downvote}>
-              <ArrowCircleDownIcon
-                fontSize="large"
-                color="primary"
-                style={{ fill: "blue" }}
-              />
+              <ArrowCircleDownIcon fontSize="large" color="primary" />
             </IconButton>
           )}
         </div>
       </div>
       <span className="post-interest">{props.interest}</span>
+      <span className="post-date">{props.postDate.toDateString()}</span>
     </div>
   );
 }

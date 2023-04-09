@@ -1,26 +1,17 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { storage } from "../../firebase/config";
+import { db, storage } from "../../firebase/config";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
 import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
 import { IconButton } from "@mui/material";
 import "../../styles/forumpost.css";
 import { getDownloadURL, ref } from "firebase/storage";
+import { doc, getDoc } from "@firebase/firestore";
 
 function ForumPost(props: any) {
   // Creates a pointer reference to the image of the post
   const imageRef = ref(storage, "Posts/" + props.id + ".jpg");
-
-  // HOOKS ----------------------------------------------------------------
-  // Hook for the ratings of each post
-  const [ratings, setRatings] = useState(props.rating);
-  // Determines whether the user has upvoted
-  const [upvoted, setUpvoted] = useState(false);
-  // Determines whether the user has downvoted
-  const [downvoted, setDownvoted] = useState(false);
-  // The image of the post
-  const [image, setImage] = useState("");
 
   /**
    * Grabs the appropriate image URL for the
@@ -36,7 +27,28 @@ function ForumPost(props: any) {
           console.log("Error fetching image");
         });
     }
+    const docRef = doc(db, "Posts", props.id);
+    const docSnap = getDoc(docRef);
   }, []);
+
+  /**
+   * TODO: Pass user to the forum to use for this function
+   *       Will make use of the docSnap variable from useEffect
+   * Determines if the signed in user has upvoted the post
+   */
+  // const userRating = () => {
+
+  // }
+
+  // HOOKS ----------------------------------------------------------------
+  // Hook for the ratings of each post
+  const [ratings, setRatings] = useState(props.rating);
+  // Determines whether the user has upvoted
+  const [upvoted, setUpvoted] = useState(false);
+  // Determines whether the user has downvoted
+  const [downvoted, setDownvoted] = useState(false);
+  // The image of the post
+  const [image, setImage] = useState("");
 
   /**
    * Handles the logic for upvoting
@@ -45,7 +57,7 @@ function ForumPost(props: any) {
   const upvote = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     /**
      * stopPropgation prevents events from bubbling and only runs
-     * this function (instead of this function AND the modal)
+     * this function (instead of this function AND showing the modal)
      */
     e.stopPropagation();
     if (!upvoted && !downvoted) {
@@ -85,12 +97,12 @@ function ForumPost(props: any) {
 
   return (
     // Data passed in from props
-    /* {props.postID}
-        {props.postDate.toString}
-        {props.description}
-        {props.interest}
-        {props.imageURL}
-        {props.ratings} */
+    // {props.postID}
+    // {props.postDate.toString}
+    // {props.description}
+    // {props.interest}
+    // {props.imageURL}
+    // {props.ratings}
     <div className="post-container">
       <div className="pic-crop">
         <img className="profile-pic" src="\src\assets\images\profileimg.jpg" />
@@ -106,12 +118,12 @@ function ForumPost(props: any) {
       <div className="ratings">
         {/**
          * The upvote and downvote buttons that are rendered will depend
-         * on the state of upvoted and downvoted
+         * on the state of upvoted and downvoted, and eventually, what
+         * the user had upvoted/downvoted previously
          */}
 
         <div className="rating-button-container">
           {!upvoted ? (
-            // <FaRegArrowAltCircleUp onClick={upvote} size={25} />
             <IconButton className="rating-button" onClick={(e) => upvote(e)}>
               <ArrowCircleUpIcon
                 fontSize="large"
@@ -121,11 +133,7 @@ function ForumPost(props: any) {
             </IconButton>
           ) : (
             <IconButton className="rating-button" onClick={(e) => upvote(e)}>
-              <ArrowCircleUpIcon
-                fontSize="large"
-                color="primary"
-                style={{ fill: "blue" }}
-              />
+              <ArrowCircleUpIcon fontSize="large" color="primary" />
             </IconButton>
           )}
         </div>
@@ -143,17 +151,14 @@ function ForumPost(props: any) {
             </IconButton>
           ) : (
             <IconButton className="rating-button" onClick={(e) => downvote(e)}>
-              <ArrowCircleDownIcon
-                fontSize="large"
-                color="primary"
-                style={{ fill: "blue" }}
-              />
+              <ArrowCircleDownIcon fontSize="large" color="primary" />
             </IconButton>
           )}
         </div>
       </div>
       <span className="post-interest">{props.interest}</span>
-      {/* <span>{props.postDate}</span> */}
+      {/* TODO: Consider changing the format of post date to something else */}
+      <span className="post-date">{props.postDate.toDateString()}</span>
     </div>
   );
 }

@@ -48,6 +48,9 @@ function Forum() {
     setLoading(false);
   }, []);
 
+  /**
+   * Forcefully reloads the forum by reloading the page
+   */
   const reloadForum = () => {
     console.log("Reloading forum...");
     // This is not the most efficient way to reload the forum, but I've

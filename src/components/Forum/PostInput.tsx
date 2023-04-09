@@ -19,7 +19,6 @@ import {
 import { ref, uploadBytes } from "firebase/storage";
 import "../../styles/postinput.css";
 
-// const PostInput = ({ reloadPosts }: { reloadPosts: () => void }) => {
 const PostInput = ({ reloadForum }: any) => {
   // HOOKS ----------------------------------------------------------------
   // These hooks keep track of user input
@@ -89,7 +88,6 @@ const PostInput = ({ reloadForum }: any) => {
       setInterest("");
       setPostText("");
       reloadForum();
-      // reloadPosts();
     } else {
       console.log(
         "Post not sent, you must select an interest and enter text input!"
@@ -116,9 +114,6 @@ const PostInput = ({ reloadForum }: any) => {
             src={URL.createObjectURL(selectedImage)}
           />
           <br />
-          {/* <button className="remove-img" onClick={() => setSelectedImage(null)}>
-            <HighlightOffIcon />
-          </button> */}
           <HighlightOffIcon
             className="remove-img"
             style={{ fill: "rgb(15, 15, 15)" }}
