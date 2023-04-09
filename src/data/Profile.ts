@@ -8,8 +8,8 @@ class Profile {
   private _userName: string;
   private _bio = "";
   private _interests: string[] = [];
-  private _profilePicture = "defprofileimg.jpg";
-  private _coverPhoto = "";
+  private _profilePicture = "HAWKFINDER/defaultpp.png";
+  private _coverPhoto = "HAWKFINDER/defaultcp.jpg";
   private _birthDate: Date = new Date(0, 0, 0);
 
   constructor(firstName: string, lastName: string, userName: string) {

@@ -12,8 +12,9 @@ import { Container } from "@mui/system";
 import { useNavigate, Link } from "react-router-dom";
 
 /**
- * Sign up has fields which are used to create a User object
- * @returns The sign up screen component
+ * The Sign Up page, which allows users to sign up and creates a new account for them
+ * Has various fields a user must fill out to proceed.
+ * @returns SignUp Component
  */
 function SignUpScreen() {
   const navigate = useNavigate();
@@ -109,7 +110,6 @@ function SignUpScreen() {
       firstnameInput,
       lastnameInput
     );
-
     createUserWithEmailAndPassword(auth, emailInput, passwordInput)
       .then((cred) => {
         setDoc(doc(db, "Users", cred.user.uid), {
@@ -130,9 +130,7 @@ function SignUpScreen() {
           },
         });
         alert(`New account created with email ${emailInput}!`);
-        localStorage.setItem("token", cred?.user.uid);
-        navigate("/components/Login");
-        window.location.reload();  // TODO: Will want to reconsider, it doesn't navigate to where you want after reloading.
+        navigate("/components/Forum");
       })
       .catch((error: FirebaseError) => {
         switch (error.code) {
@@ -248,7 +246,7 @@ function SignUpScreen() {
               <Grid item>
                 <h2 style={{ fontSize: "15px" }}>Already have an account?</h2>
                 <Link
-                  to="/components/Login"
+                  to="/"
                   style={{ color: "#1ed5db", fontSize: "20px" }}
                 >
                   Login here!
