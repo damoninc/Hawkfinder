@@ -19,9 +19,9 @@ import {
   getDoc,
   updateDoc,
 } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { db, storage } from "../../firebase/config";
-import { getDownloadURL, listAll, ref } from "firebase/storage";
+import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
 const interestRef = doc(db, "Interests", "Interests");
 const interestSnap = await getDoc(interestRef);
 const baseInterests = interestSnap.data();
@@ -38,15 +38,17 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  // PHOTO MODAL HANDLERS
+  // PHOTO MODAL HOOKS
   const [profilePhotoModal, setProfilePhotoModal] = useState(false);
   const [coverPhotoModal, setCoverPhotoModal] = useState(false);
   const [photosLoaded, setPhotosLoaded] = useState("");
-  const [images, setImages] = useState<string[]>([]);
+  const [imageURLs, setImageURLs] = useState<string[]>([]);
   const [rawImages, setRawImages] = useState<string[]>([]);
   const [profilePicture, setProfilePicture] = useState("");
   const [coverPhoto, setCoverPhoto] = useState("");
   const [innerOpen, setInnerOpen] = React.useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectUploadPhoto, setSelectUploadPhoto] = useState<File>();
 
   // COVER PHOTO BUTTON
   const handleInnerOpenCover = () => {
@@ -61,15 +63,17 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
     setPhotosLoaded(user?.userid + "/Profile Pictures");
   };
 
+  // CLOSES INNER MODAL (PROF OR COVER)
   const handleInnerClose = () => {
     setProfilePhotoModal(false);
     setCoverPhotoModal(false);
     setInnerOpen(false);
     setPhotosLoaded("");
-    setImages([]);
+    setImageURLs([]);
     setRawImages([]);
   };
 
+  // SETS BASED ON WHICH MODAL IS OPEN
   function handleInnerSelectPhoto(index: any) {
     if (profilePhotoModal) {
       setProfilePicture(rawImages[index]);
@@ -79,6 +83,88 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
     }
   }
 
+  const handleFileInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (profilePhotoModal && fileInputRef.current) {
+      console.log(file?.name);
+      setSelectUploadPhoto(file);
+    }
+    if (coverPhotoModal && fileInputRef.current) {
+      console.log(file?.name);
+      setSelectUploadPhoto(file);
+    }
+  };
+
+  const handleUploadPhoto = () => {
+    if (fileInputRef.current) {
+      console.log("Open!");
+      fileInputRef.current.click();
+    }
+  };
+
+  useEffect(() => {
+    if (selectUploadPhoto && profilePhotoModal) {
+      console.log("Huh!?!?!?!");
+      uploadBytes(
+        ref(
+          storage,
+          user?.userid + "/Profile Pictures/" + selectUploadPhoto.name
+        ),
+        selectUploadPhoto
+      ).then(() => {
+        console.log("Uploaded!");
+        handleInnerClose();
+        setTimeout(() => {
+          handleInnerOpenProfile();
+        }, 0.1);
+      });
+    }
+    if (selectUploadPhoto && coverPhotoModal) {
+      uploadBytes(
+        ref(storage, user?.userid + "/Cover Photos/" + selectUploadPhoto.name),
+        selectUploadPhoto
+      )
+        .then(() => {
+          console.log("Uploaded!");
+          handleInnerClose();
+          setTimeout(() => {
+            handleInnerOpenCover();
+          }, 0.1);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [selectUploadPhoto]);
+
+  // THIS LOADS PHOTOS INTO THE PHOTO MODAL
+  useEffect(() => {
+    if (photosLoaded) {
+      // Retrieve a list of image references from Firebase Storage
+      const listRef = ref(storage, photosLoaded);
+      listAll(listRef)
+        .then((res) => {
+          const urls = res.items.map((itemRef) =>
+            getDownloadURL(itemRef).then((url) => url)
+          );
+          Promise.all(urls).then((urls) => {
+            setImageURLs(urls);
+          });
+
+          const images = res.items.map((itemRef) => itemRef.fullPath);
+          Promise.all(images).then((images) => {
+            setRawImages(images);
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [photosLoaded]);
+
+  // First Modal Info
   const [firstName, setfirstname] = React.useState(user?.profile.firstname);
   const [lastName, setlastName] = React.useState(user?.profile.lastname);
   const [bio, setbio] = useState(user?.profile.bio);
@@ -123,30 +209,6 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
     updateDoc(docRef, dataToUpdate);
     handleClose();
   };
-  // THIS LOADS PHOTOS INTO THE PHOTO MODAL
-  useEffect(() => {
-    if (photosLoaded) {
-      // Retrieve a list of image references from Firebase Storage
-      const listRef = ref(storage, photosLoaded);
-      listAll(listRef)
-        .then((res) => {
-          const urls = res.items.map((itemRef) =>
-            getDownloadURL(itemRef).then((url) => url)
-          );
-          Promise.all(urls).then((urls) => {
-            setImages(urls);
-          });
-
-          const images = res.items.map((itemRef) => itemRef.fullPath);
-          Promise.all(images).then((images) => {
-            setRawImages(images);
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  }, [photosLoaded]);
 
   /**
    * This function sends back the interest field that is used in the edit page modal.
@@ -177,6 +239,53 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
       </Stack>
     );
   };
+
+  function ImageLoader() {
+    return (
+      <>
+        <ImageList sx={{ width: 1000, height: 450 }} cols={6} rowHeight={164}>
+          {imageURLs.map((item, index) => (
+            <ImageListItem
+              sx={{
+                width: "164px",
+                height: "164px",
+              }}
+              key={item}
+            >
+              <Button
+                component="a"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  padding: 0,
+                }}
+                onClick={() => handleInnerSelectPhoto(index)}
+              >
+                <img
+                  src={`${item}?w=164&h=164&fit=cover&auto=format`}
+                  srcSet={`${item}?w=164&h=164&fit=cover&auto=format&dpr=2 2x`}
+                  loading="lazy"
+                  style={{
+                    objectFit: "cover",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.filter = "brightness(0.8)";
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.filter = "none";
+                  }}
+                />
+              </Button>
+            </ImageListItem>
+          ))}
+        </ImageList>
+      </>
+    );
+  }
 
   if (owner) {
     return (
@@ -285,50 +394,7 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
                     p: 4,
                   }}
                 >
-                  <ImageList
-                    sx={{ width: 1000, height: 450 }}
-                    cols={6}
-                    rowHeight={164}
-                  >
-                    {images.map((item, index) => (
-                      <ImageListItem
-                        sx={{
-                          width: "164px",
-                          height: "164px",
-                        }}
-                        key={item}
-                      >
-                        <Button
-                          component="a"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            padding: 0,
-                          }}
-                          onClick={() => handleInnerSelectPhoto(index)}
-                        >
-                          <img
-                            src={`${item}?w=164&h=164&fit=cover&auto=format`}
-                            srcSet={`${item}?w=164&h=164&fit=cover&auto=format&dpr=2 2x`}
-                            loading="lazy"
-                            style={{
-                              objectFit: "cover",
-                              width: "100%",
-                              height: "100%",
-                            }}
-                            onMouseOver={(e) => {
-                              e.currentTarget.style.filter = "brightness(0.8)";
-                            }}
-                            onMouseOut={(e) => {
-                              e.currentTarget.style.filter = "none";
-                            }}
-                          />
-                        </Button>
-                      </ImageListItem>
-                    ))}
-                  </ImageList>
+                  {ImageLoader()}
                   <Button color="warning" onClick={handleInnerClose}>
                     Back
                   </Button>
@@ -336,8 +402,16 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
                     color="primary"
                     variant="contained"
                     sx={{ ml: 44, mr: 44 }}
+                    onClick={handleUploadPhoto}
                   >
-                    Add Photo
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      style={{ display: "none" }}
+                      onChange={handleFileInputChange}
+                      accept="image/jpeg, image/png"
+                    />
+                    Upload Photo
                   </Button>
                   <Button
                     color="primary"
