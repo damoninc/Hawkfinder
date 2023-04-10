@@ -1,19 +1,24 @@
 import React from "react";
 import "../../styles/userbox.css";
 import User from "../../data/User";
-import CurrentSong from "../SpotifyIntegration/SpotifyComponents";
+import { Stack } from "@mui/material";
 
 /**
  * Generates a HTML block that displays a user based on their Profile information
  *      Currently displays the name and interests as well as having buttons to go to
  *      their profile, messages, and removing them.
  * @param {User} displayUser - The user to display
- * @return {*} - FriendBox HTML
+ * @param {(arg0: User) => JSX.Element)} buttons - the buttons to display on side of the user box
+ * @return {*} - UserBox HTML
  */
-function UserBox(displayUser: User, buttons: (arg0: User) => JSX.Element) {
+export default function UserBox(
+  displayUser: User,
+  buttons: (arg0: User) => JSX.Element
+) {
   if (displayUser === undefined) {
     return <div></div>;
   }
+  // need to update to get actual profile image
   const imgPath: string =
     "/src/assets/images/" + displayUser.profile.profilePicture; // database call to grab image
 
@@ -33,12 +38,12 @@ function UserBox(displayUser: User, buttons: (arg0: User) => JSX.Element) {
         <img src={imgPath} width="100" height="100"></img>
       </div>
       <div className="bigContent">
-        <h3>
-          {" "}
-          {displayUser.profile.firstName} {displayUser.profile.lastName}{" "}
-        </h3>
-        <p>{interests}</p>
-        {/* {CurrentSong(displayUser, true)} */}
+        <Stack alignItems="left" spacing={1} style={{ lineHeight: "12px" }}>
+          <h3>
+            {displayUser.profile.firstName} {displayUser.profile.lastName}
+          </h3>
+          <p>{interests}</p>
+        </Stack>
       </div>
       <div className="smallContent">
         <h3>
@@ -49,5 +54,3 @@ function UserBox(displayUser: User, buttons: (arg0: User) => JSX.Element) {
     </div>
   );
 }
-
-export default UserBox;
