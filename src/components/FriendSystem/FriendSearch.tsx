@@ -14,7 +14,7 @@ import UserBox from "./UserBox";
  *
  * @return {*} - FriendSearch HTML
  */
-function FriendSearch() {
+export default function FriendSearch() {
   const [dbCall, setUsers] = useState(null);
   const [input, setInput] = useState("");
   return (
@@ -62,7 +62,7 @@ function checkNullList(users: User[] | null) {
       <div className="userBlock">
         {users.map((user) => (
           <div className="user" key={user.username}>
-            {UserBox(user, buttons, false, false)}
+            {UserBox(user, buttons)}
           </div>
         ))}
       </div>
@@ -121,5 +121,3 @@ async function callDB(setUsers: any, msg: string) {
     console.log("db call");
   });
 }
-
-export default FriendSearch;

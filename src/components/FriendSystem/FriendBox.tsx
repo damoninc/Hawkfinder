@@ -1,12 +1,18 @@
 import React from "react";
 import "../../styles/userbox.css";
 import User from "../../data/User";
-import UserBox from "./UserBox";
-import * as fp from "./FriendPage";
 import CurrentSong from "../SpotifyIntegration/SpotifyComponents";
 import { Stack, Box } from "@mui/material";
 import { storage } from "../../firebase/config";
 import { getDownloadURL, ref } from "firebase/storage";
+
+interface IProps {
+  friend: User;
+}
+
+interface IState {
+  pfpUrl: string;
+}
 
 /**
  * Generates a HTML block that displays a user based on their Profile information
@@ -15,13 +21,7 @@ import { getDownloadURL, ref } from "firebase/storage";
  * @param {User} friend - The user to display
  * @return {*} - FriendBox HTML
  */
-interface IProps {
-  friend: User;
-}
-interface IState {
-  pfpUrl: string;
-}
-class FriendBox extends React.Component<IProps, IState> {
+export default class FriendBox extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = { pfpUrl: "" };
@@ -70,5 +70,3 @@ class FriendBox extends React.Component<IProps, IState> {
     );
   }
 }
-
-export default FriendBox;

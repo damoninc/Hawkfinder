@@ -40,7 +40,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     min-width: 100px;
-    line-height: 0px;
   }
   
   /* Container holding buttons */

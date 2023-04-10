@@ -12,14 +12,7 @@ const spotifyLogo =
 
 const spotifyPulled: boolean[] = [false, true, true];
 
-function DisplaySong(
-  song: {
-    album: { images: { url: string | null }[]; name: string | null };
-    name: string | null;
-    artists: string | any[];
-  },
-  times?: number[]
-) {
+function DisplaySong(song: Song, times?: number[]) {
   return (
     <div
       style={{
@@ -100,15 +93,7 @@ function DisplaySong(
   );
 }
 
-function DisplaySongSmall(
-  song: {
-    album: { images: { url: string | null }[]; name: string | null };
-    name: string | null;
-    artists: string | any[];
-  },
-  scrolling: boolean,
-  times?: number[]
-) {
+function DisplaySongSmall(song: Song, scrolling: boolean) {
   if (scrolling) {
     return (
       <marquee style={{ color: "black", fontSize: "1em" }}>
@@ -143,6 +128,19 @@ function DisplaySongSmall(
   }
 }
 
+// type for song recieved from spotify api call
+interface Song {
+  album: {
+    images: { url: string | null }[];
+    name: string | null;
+  };
+  name: string | null;
+  artists: { name: string }[];
+  external_urls: { spotify: string };
+  duration_ms: number;
+  id: string;
+}
+
 interface IProps {
   user: User;
   small: boolean;
@@ -150,7 +148,7 @@ interface IProps {
 }
 
 interface IState {
-  result?: null;
+  result?: { item: Song; progress_ms: number; items: { track: Song }[] } | null;
   time: Date;
 }
 
@@ -232,6 +230,15 @@ class spotifyComponent extends React.Component<IProps, IState> {
   }
 }
 
+/**
+ * Returns component that displays the song on spotify that the given user is currently listening to
+ *
+ * @param user : User - the user to get currently listening to
+ * @param small : boolean - whether the component should display in small mode (true if yes, false if no)
+ * @export
+ * @class CurrentSong
+ * @extends {spotifyComponent}
+ */
 export default class CurrentSong extends spotifyComponent {
   constructor(props: IProps) {
     super(props);
@@ -239,7 +246,7 @@ export default class CurrentSong extends spotifyComponent {
 
   componentDidMount() {
     this.setState({ time: new Date() });
-    spotifyPulled[0] = false;
+    this.pulled = false;
     setInterval(
       () => {
         this.setState({ time: new Date() });
@@ -273,7 +280,7 @@ export default class CurrentSong extends spotifyComponent {
               {DisplaySong(this.state.result.item, times)}
             </div>
           ) : (
-            DisplaySongSmall(this.state.result.item, true, times)
+            DisplaySongSmall(this.state.result.item, true)
           )}
         </div>
       );
@@ -281,6 +288,16 @@ export default class CurrentSong extends spotifyComponent {
   }
 }
 
+/**
+ * Returns component that displays a list of top songs the user listens to on spotify
+ *
+ * @param user : User - the user to get top songs for
+ * @param small : boolean - whether the component should display in small mode (true if yes, false if no)
+ * @param limit : number - the number of top songs to display (max of 20)
+ * @export
+ * @class TopSongs
+ * @extends {spotifyComponent}
+ */
 export class TopSongs extends spotifyComponent {
   constructor(props: IProps) {
     super(props);
@@ -316,7 +333,7 @@ export class TopSongs extends spotifyComponent {
           <h3>Top Songs</h3>
           <ul style={{ paddingLeft: "5%" }}>
             {this.state.result.items
-              .slice(-this.props.limit!)
+              .slice(this.props.limit === undefined ? 15 : -this.props.limit)
               .map((song: any) => (
                 <li key={song.id}>{DisplaySongSmall(song, false)}</li>
               ))}
@@ -328,7 +345,7 @@ export class TopSongs extends spotifyComponent {
         <div>
           <h3>Top Songs</h3>
           {this.state.result.items
-            .slice(-this.props.limit!)
+            .slice(this.props.limit === undefined ? 15 : -this.props.limit)
             .map((song: any) => (
               <div key={song.id}>{DisplaySong(song)}</div>
             ))}
@@ -338,6 +355,16 @@ export class TopSongs extends spotifyComponent {
   }
 }
 
+/**
+ * Returns component that displays a list of recent songs the user listens to on spotify
+ *
+ * @param user : User - the user to get recent songs for
+ * @param small : boolean - whether the component should display in small mode (true if yes, false if no)
+ * @param limit : number - the number of top songs to display (max of 20)
+ * @export
+ * @class RecentSongs
+ * @extends {spotifyComponent}
+ */
 export class RecentSongs extends spotifyComponent {
   constructor(props: IProps) {
     super(props);
@@ -359,7 +386,7 @@ export class RecentSongs extends spotifyComponent {
       this.props.user !== undefined
     ) {
       this.pulled = true;
-      this.makeRequest(this.props.user, "/me/player/recently-played", 2);
+      this.makeRequest(this.props.user, "/me/player/recently-played");
     }
     if (this.state.result == null) {
       return <div></div>;
@@ -372,15 +399,18 @@ export class RecentSongs extends spotifyComponent {
           <div>
             <h3>Recent Songs</h3>
             <ul style={{ paddingLeft: "5%" }}>
-              {this.state.result.items.slice(-this.props.limit!).map((song) => (
-                <li
-                  key={
-                    song.track.id + Math.floor(Math.random() * 3000).toString()
-                  }
-                >
-                  {DisplaySongSmall(song.track, false)}
-                </li>
-              ))}
+              {this.state.result.items
+                .slice(this.props.limit === undefined ? 15 : -this.props.limit)
+                .map((song) => (
+                  <li
+                    key={
+                      song.track.id +
+                      Math.floor(Math.random() * 3000).toString()
+                    }
+                  >
+                    {DisplaySongSmall(song.track, false)}
+                  </li>
+                ))}
             </ul>
           </div>
         );
@@ -389,7 +419,7 @@ export class RecentSongs extends spotifyComponent {
           <div>
             <h3>Recent Songs</h3>
             {this.state.result.items
-              .slice(-this.props.limit!)
+              .slice(this.props.limit === undefined ? 15 : -this.props.limit)
               .map((song: any) => (
                 <div
                   key={

@@ -39,7 +39,7 @@ let dbPulled = false;
  * @param signedUser : string
  * @return {*} - FriendPage HTML
  */
-function FriendPage() {
+export default function FriendPage() {
   const [dbCall, setFriends] = useState(null);
   const [pageSwitch, setSwitch] = useState(0);
 
@@ -298,17 +298,17 @@ export async function removeFriend(friend: User) {
   }
 }
 
+/**
+ * When called and sent a user object, the page will redirect to that user's profile
+ *
+ * @export
+ * @param {User} friend - friend whose profile you want to navigate
+ */
 export function goToProfile(friend: User) {
-  // Dummy function for navigating to profile
+  // Dummy function for navigating to user's profile
   alert("Cannot go to " + friend.username + "'s Profile");
 }
 
-/**
- * Function used to query FireBase for the friends list.
- * Sets friends Hook in FriendPage after database call finished
- *
- * @param {*} setFriends - Hook to set friends list
- */
 async function callDB(signedUser: string, setFriends: any) {
   // Query Firestore for information from currently logged in user
   const querySnapshot = await getDoc(
@@ -342,5 +342,3 @@ async function callDB(signedUser: string, setFriends: any) {
     dbPulled = true;
   }
 }
-
-export default FriendPage;
