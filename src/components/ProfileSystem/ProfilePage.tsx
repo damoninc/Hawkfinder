@@ -24,8 +24,7 @@ import EditPage from "./EditPage";
  * @returns the webpage
  */
 function ProfilePage(passedUser: any) {
-  const passedUserObj = "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1"; //Feel free to change this to the passed in object for testing. Make sure its of type string.
-
+  const passedUserObj = passedUser.uCreds.uid; //Feel free to change this to the passed in object for testing. Make sure its of type string.
   const [userPage, setUserPage] = useState<any>();
   const [userProfPic, setUserProfPic] = useState("");
   const [userCoverPic, setUserCoverPic] = useState("");
@@ -59,10 +58,9 @@ function ProfilePage(passedUser: any) {
   }, []);
 
   if (!userPage || !userProfPic || !userCoverPic) {
-    return <div hidden>{EditPage(userPage, docRef)}</div>;
+    return <div hidden>{EditPage(userPage, docRef, passedUserObj)}</div>;
   }
 
-  const owner = userPage?.userid === window.localStorage.getItem("token");
   console.log(userPage.profile.firstName);
   console.log(userProfPic);
   return (
@@ -86,7 +84,7 @@ function ProfilePage(passedUser: any) {
           loading="lazy"
           className="profile-photo"
         />
-        {EditPage(userPage, docRef)}
+        {EditPage(userPage, docRef, passedUserObj)}
       </Box>
       <Box className="about">
         <Box className="about-title">
