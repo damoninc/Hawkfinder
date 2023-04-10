@@ -13,6 +13,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from "./firebase/config";
 import isUserLoggin from "./components/Authentication/TestAuth";
 import AccountSettingsPage from "./components/ProfileSystem/AccountSettingsPage";
+import ReAuth from "./components/Authentication/Reauth";
 
 /**
  * The top level of our App. Our routes are declared here, and use these routes
@@ -73,6 +74,7 @@ function App() {
           <Route path="/components/Interceptor" element={<InterceptorScreen />} />
           <Route path="/components/SignedIn" element={ isUserLoggin(user) ? <SignedIn uCreds={user} /> : <Navigate to="/components/Interceptor" />} />
           <Route path="/components/AccountSettings" element={ isUserLoggin(user) ? <AccountSettingsPage uCreds={user} /> : <Navigate to="/components/Interceptor" />} />
+          <Route path="/components/Reauth" element={<ReAuth /> }/>
         </Routes>
       </Router>
     </div>

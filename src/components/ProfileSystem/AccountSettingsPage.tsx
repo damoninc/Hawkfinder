@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import User from "../../data/User";
 import { updateEmail, updatePassword } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/config";
 import {
   Button,
@@ -17,6 +17,7 @@ import {
   Typography,
 } from "@mui/material";
 import Navbar from "../Navbar/Navbar";
+import { useNavigate } from "react-router-dom";
 
 /**
  * Allows a user ot change their important credentials such as their Email and their Password.
@@ -24,6 +25,7 @@ import Navbar from "../Navbar/Navbar";
  * @returns The Account Settings Page component
  */
 function AccountSettingsPage(passedUser: any) {
+  const navigate = useNavigate();
   const [signupMessage, setSignupMessage] = useState("");
   const [userData, setUserData] = useState<any>();
   const [selectItem, setSelectedItem] = useState("");
@@ -41,20 +43,23 @@ function AccountSettingsPage(passedUser: any) {
   }, []);
 
   function changeUserEmail(emailInput: string) {
-    //TODO make sure to change email in document reference as well. i.e Firestore
-    //TODO 2: make sure that find a way to reauthenticate a user, as that's a common error
     updateEmail(passedUser.uCreds, emailInput)
       .then(() => {
+        updateDoc(docRef, { email: emailInput });
         alert("Email Successfully changed!");
-
       })
       .catch((error: FirebaseError) => {
-        alert("Error! " + error)
+        alert("Error! " + error);
         switch (error.code) {
           case "auth/email-already-in-use":
             setSignupMessage(
               "Sorry bub! Looks like that email is already in use."
             );
+            break;
+          case "auth/requires-recent-login":
+            alert("You need to sign in again to do this change!");
+            navigate("/components/Reauth");
+
             break;
           default:
             setSignupMessage(
@@ -67,15 +72,30 @@ function AccountSettingsPage(passedUser: any) {
 
   //TODO 2: Again, make sure to find a way to reauthenticate a user, we need it otherwise they can't change it
   function changeUserPassword(passwordInput: string) {
-    console.log("You're in the function!")
-    updatePassword(passedUser.uCreds, passwordInput).then(() => {
-      alert("Password Changed");
-    }).catch((error)=> alert("Did not work!" + error));
+    console.log("You're in the function!");
+    updatePassword(passedUser.uCreds, passwordInput)
+      .then(() => {
+        alert("Password Changed");
+      })
+      .catch((error: FirebaseError) => {
+        alert("Error! " + error);
+        switch (error.code) {
+          case "auth/requires-recent-login":
+            alert("You need to sign in again to do this change!");
+            navigate("/components/Reauth");
+            break;
+          default:
+            setSignupMessage(
+              `Man, I don't even know what happened... ${error.code}`
+            );
+            break;
+        }
+      });
   }
 
   function displayItem() {
     if (selectItem == "1") {
-      return <h1>Holy Chungus, that's one!</h1>;
+      return <h1>Holy Chungus, welcome to account settings!</h1>;
     } else if (selectItem == "2") {
       return <ChangeEmailComponent />;
     } else if (selectItem == "3") {
@@ -206,7 +226,7 @@ function AccountSettingsPage(passedUser: any) {
         changeUserPassword(values.password);
       },
     });
-    
+
     return (
       <fieldset className="loginSquare">
         <h1>Change Password</h1>
