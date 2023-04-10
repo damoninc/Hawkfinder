@@ -118,7 +118,7 @@ function SignUpScreen() {
           friendsList: [],
           incomingRequests: [],
           outgoingRequests: [],
-          spotifyTokens: {},
+          spotifyTokens: madeUser.spotify,
           profile: {
             firstName: firstnameInput,
             lastName: lastnameInput,
