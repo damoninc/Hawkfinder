@@ -10,6 +10,9 @@ import {
   Container,
   Grid,
   Link,
+  List,
+  ListItem,
+  ListItemButton,
   TextField,
   Typography,
 } from "@mui/material";
@@ -23,6 +26,7 @@ import Navbar from "../Navbar/Navbar";
 function AccountSettingsPage(passedUser: any) {
   const [signupMessage, setSignupMessage] = useState("");
   const [userData, setUserData] = useState<any>();
+  const [selectItem, setSelectedItem] = useState("");
 
   const docRef = doc(db, "Users", passedUser.uCreds.uid);
   useEffect(() => {
@@ -39,11 +43,6 @@ function AccountSettingsPage(passedUser: any) {
   interface changeFieldsEmail {
     email?: string;
     confirmEmail?: string;
-  }
-
-  interface changeFieldsPassword {
-    password?: string;
-    confirmPassword?: string;
   }
 
   const formikEmail = useFormik({
@@ -66,6 +65,10 @@ function AccountSettingsPage(passedUser: any) {
       changeUserEmail(values.email);
     },
   });
+  interface changeFieldsPassword {
+    password?: string;
+    confirmPassword?: string;
+  }
 
   const formikPassword = useFormik({
     initialValues: {
@@ -122,15 +125,23 @@ function AccountSettingsPage(passedUser: any) {
       alert("Password Changed");
     });
   }
-  return (
-    <div>
-      <Navbar />
-      <Typography fontSize={30}>
-        Hi, {userData?.profile.firstName + " " + userData?.profile.lastName}!
-      </Typography>
-      <Typography>Welcome to Account Settings!</Typography>
+
+  function displayItem() {
+    if (selectItem == "1") {
+      return <h1>Holy Chungus, that's one!</h1>;
+    } else if (selectItem == "2") {
+      return <ChangeEmailComponent />;
+    } else if (selectItem == "3") {
+      return <ChangePasswordComponent />;
+    } else {
+      return null;
+    }
+  }
+
+  function ChangeEmailComponent() {
+    return (
       <fieldset className="loginSquare">
-        <h1>Change Account Information</h1>
+        <h1>Change Email</h1>
         <form onSubmit={formikEmail.handleSubmit}>
           <Container className="formGaps">
             <Grid>
@@ -172,6 +183,27 @@ function AccountSettingsPage(passedUser: any) {
               </Container>
               <Container>
                 <Grid item>
+                  <Button variant="outlined" type="submit">
+                    Change Email
+                  </Button>
+                </Grid>
+              </Container>
+            </Grid>
+          </Container>
+        </form>
+      </fieldset>
+    );
+  }
+
+  function ChangePasswordComponent() {
+    return (
+      <fieldset className="loginSquare">
+        <h1>Change Password</h1>
+        <form onSubmit={formikPassword.handleSubmit}>
+          <Container className="formGaps">
+            <Grid>
+              <Container>
+                <Grid item>
                   <TextField
                     label="Password"
                     id="password"
@@ -211,9 +243,6 @@ function AccountSettingsPage(passedUser: any) {
               <Container>
                 <Grid item>
                   <Button variant="outlined" type="submit">
-                    Change Email
-                  </Button>
-                  <Button variant="outlined" type="submit">
                     Change Password
                   </Button>
                 </Grid>
@@ -222,6 +251,37 @@ function AccountSettingsPage(passedUser: any) {
           </Container>
         </form>
       </fieldset>
+    );
+  }
+
+  return (
+    <div>
+      <Navbar />
+      <Typography fontSize={30}>
+        Hi, {userData?.profile.firstName + " " + userData?.profile.lastName}!
+      </Typography>
+      <Typography>Welcome to Account Settings!</Typography>
+      <List>
+        <ListItemButton
+          selected={selectItem == "1"}
+          onClick={() => setSelectedItem("1")}
+        >
+          <ListItem>Info</ListItem>
+        </ListItemButton>
+        <ListItemButton
+          selected={selectItem == "2"}
+          onClick={() => setSelectedItem("2")}
+        >
+          <ListItem>Change Email</ListItem>
+        </ListItemButton>
+        <ListItemButton
+          selected={selectItem == "3"}
+          onClick={() => setSelectedItem("3")}
+        >
+          <ListItem>Change Password</ListItem>
+        </ListItemButton>
+      </List>
+      <Container>{displayItem()}</Container>
     </div>
   );
 }
