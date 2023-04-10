@@ -195,15 +195,23 @@ function EditPage(
   };
 
   const handleInterests = (event: any, newValue: string[]) => {
+    console.log(newValue);
     setinterests(newValue);
   };
 
   const handleCustomInterests = (newValue: string[]) => {
-    setCustomInterests(newValue);
+    if (newValue[newValue.length - 1] === filter.clean(newValue[newValue.length -1])){
+      setCustomInterests(newValue);
+    }
+    if (newValue.length < customInterests.length){
+      setCustomInterests(newValue);
+    }
   };
+
 
   const handleSave = () => {
     const dataToUpdate: any = {};
+    const baseInterestDataToUpdate: any = {};
     if (firstName) {
       dataToUpdate["profile.firstName"] = firstName;
     }
@@ -222,7 +230,20 @@ function EditPage(
     if (coverPhoto) {
       dataToUpdate["profile.coverPhoto"] = coverPhoto;
     }
+    if (customInterests){
+      const updateInterests = user?.profile.interests;
+      updateInterests?.push.apply(updateInterests, customInterests);
+      console.log("Interests: ", updateInterests)
+      dataToUpdate["profile.interests"] = updateInterests;
+
+      const newBaseInterests: string[] = baseInterests?.Interests;
+      newBaseInterests?.push.apply(newBaseInterests, customInterests);
+      newBaseInterests.sort();
+      console.log("Base Interests: ", newBaseInterests)
+      baseInterestDataToUpdate["Interests"] = newBaseInterests;
+    }
     updateDoc(docRef, dataToUpdate);
+    updateDoc(interestRef, baseInterestDataToUpdate);
     handleClose();
   };
 
