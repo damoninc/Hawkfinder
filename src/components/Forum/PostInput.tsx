@@ -7,6 +7,8 @@ import {
   MenuItem,
   Select,
   InputLabel,
+  Popover,
+  Typography,
 } from "@mui/material";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
@@ -22,9 +24,10 @@ import "../../styles/postinput.css";
 const PostInput = ({ reloadForum }: any) => {
   // HOOKS ----------------------------------------------------------------
   // These hooks keep track of user input
-  const [selectedImage, setSelectedImage] = useState<any>(null);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [interest, setInterest] = useState("");
   const [postText, setPostText] = useState("");
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   /**
    * Renames the user's image input filename to the
@@ -33,7 +36,7 @@ const PostInput = ({ reloadForum }: any) => {
    * @param newName
    * @returns updated File object
    */
-  function renameFile(oldFile: File, newName: string, ext: string) {
+  function renameFile(oldFile: File, newName: string) {
     const blob = oldFile.slice(0, oldFile.size, oldFile.type);
     return new File([blob], newName, { type: oldFile.type });
   }
@@ -74,11 +77,11 @@ const PostInput = ({ reloadForum }: any) => {
       // Using the doc.id generated above to use as a unique reference
       // that the post will use to get the image from storage
       if (selectedImage) {
-        const imgID = docRef.id;
+        const imgID: string = docRef.id;
         const imgExt = selectedImage.name.split(".").pop();
         const imgName = imgID + "." + imgExt;
         // UPLOADING IMG TO FIREBASE STORAGE
-        const newFile: File = renameFile(selectedImage, imgName, imgExt);
+        const newFile: File = renameFile(selectedImage, imgName);
         setTimeout(() => {
           // Lets the app upload the file before reloading the page
           // so that the upload does not get interrupted
@@ -99,6 +102,16 @@ const PostInput = ({ reloadForum }: any) => {
       );
     }
   }
+
+  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
 
   return (
     <div className="post-input">
@@ -167,14 +180,38 @@ const PostInput = ({ reloadForum }: any) => {
           Post
         </Button>
       ) : (
-        <Button
-          className="post-button-disabled"
-          type="submit"
-          variant="outlined"
-          disabled
-        >
-          Post
-        </Button>
+        <>
+          <Button
+            className="post-button-disabled"
+            type="submit"
+            variant="outlined"
+            disabled
+            aria-haspopup="true"
+            aria-owns={open ? "mouse-over-popover" : undefined}
+            onMouseEnter={handlePopoverOpen}
+            onMouseLeave={handlePopoverClose}
+          >
+            Post
+          </Button>
+          <Popover
+            open={open}
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+            onClose={handlePopoverClose}
+            disableRestoreFocus
+          >
+            <Typography>
+              You must type some text and select an interest!
+            </Typography>
+          </Popover>
+        </>
       )}
     </div>
   );
