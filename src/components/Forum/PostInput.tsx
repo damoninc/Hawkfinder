@@ -33,17 +33,10 @@ const PostInput = ({ reloadForum }: any) => {
    * @param newName
    * @returns updated File object
    */
-  function renameFile(oldFile: File, newName: string) {
-    return new File([oldFile], newName, {
-      type: "image/jpeg",
-      lastModified: oldFile.lastModified,
-    });
+  function renameFile(oldFile: File, newName: string, ext: string) {
+    const blob = oldFile.slice(0, oldFile.size, oldFile.type);
+    return new File([blob], newName, { type: oldFile.type });
   }
-
-  // Any image uploaded will be turned into a jpg file
-  const metadata = {
-    contentType: "image/jpeg",
-  };
 
   /**
    * Uploads the user's image input to Firebase storage
@@ -51,9 +44,16 @@ const PostInput = ({ reloadForum }: any) => {
    */
   function uploadImage(image: File) {
     const postsRef = ref(storage, "Posts/" + image.name);
-    uploadBytes(postsRef, image, metadata).then(() => {
-      console.log("Uploaded image!");
-    });
+    const metadata = {
+      contentType: image.type,
+    };
+    uploadBytes(postsRef, image, metadata)
+      .then(() => {
+        console.log("Uploaded image! File: " + image);
+      })
+      .catch(() => {
+        console.log("error uploading to firebase");
+      });
   }
 
   /**
@@ -69,16 +69,21 @@ const PostInput = ({ reloadForum }: any) => {
         interest: interest,
         postDate: serverTimestamp(),
         ratings: Object.fromEntries(new Map<string, string>()),
-        userID: "jgj4899fwre8j49",
+        userID: "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1",
       });
       // Using the doc.id generated above to use as a unique reference
       // that the post will use to get the image from storage
       if (selectedImage) {
         const imgID = docRef.id;
-        const imgName = imgID + ".jpg";
+        const imgExt = selectedImage.name.split(".").pop();
+        const imgName = imgID + "." + imgExt;
         // UPLOADING IMG TO FIREBASE STORAGE
-        const newFile: File = renameFile(selectedImage, imgName);
-        uploadImage(newFile);
+        const newFile: File = renameFile(selectedImage, imgName, imgExt);
+        setTimeout(() => {
+          // Lets the app upload the file before reloading the page
+          // so that the upload does not get interrupted
+          uploadImage(newFile);
+        }, 1500);
         // UPDATING POST DOCUMENT WITH POINTER TO FIREBASE STORAGE
         await updateDoc(docRef, {
           imageURL: imgName,
@@ -104,7 +109,11 @@ const PostInput = ({ reloadForum }: any) => {
         variant="outlined"
         multiline
         rows={4}
-        onChange={(e) => setPostText(e.target.value)}
+        onChange={(e) => {
+          if (e.target.value.length < 120) {
+            setPostText(e.target.value);
+          }
+        }}
       />
       {selectedImage && (
         <div className="post-input-img">
@@ -139,7 +148,7 @@ const PostInput = ({ reloadForum }: any) => {
         <FileUploadIcon style={{ fill: "teal" }} />
         <input
           type="file"
-          accept="image/*"
+          accept="image/png, image/gif, image/jpeg, image/webp"
           onChange={(event: React.ChangeEvent<HTMLInputElement> | any) => {
             setSelectedImage(event.target.files[0]);
           }}
@@ -159,7 +168,7 @@ const PostInput = ({ reloadForum }: any) => {
         </Button>
       ) : (
         <Button
-          className="post-button"
+          className="post-button-disabled"
           type="submit"
           variant="outlined"
           disabled
