@@ -155,12 +155,13 @@ interface IState {
 }
 
 class spotifyComponent extends React.Component<IProps, IState> {
+  pulled = false;
   constructor(props: IProps) {
     super(props);
     this.state = { result: null, time: new Date() };
   }
 
-  async makeRequest(user: User, request_uri: string, boolIndex: number) {
+  async makeRequest(user: User, request_uri: string) {
     console.log("making request");
     if (user.spotify.accessToken != "null") {
       await axios
@@ -169,8 +170,8 @@ class spotifyComponent extends React.Component<IProps, IState> {
           headers: { Authorization: `Bearer ${user.spotify.accessToken}` },
         })
         .then((response) => {
-          if (response.data != "" && !spotifyPulled[boolIndex]) {
-            spotifyPulled[boolIndex] = true;
+          if (response.data != "" && !this.pulled) {
+            this.pulled = true;
           }
           this.setState({ result: response.data });
         })
@@ -182,7 +183,7 @@ class spotifyComponent extends React.Component<IProps, IState> {
             console.log(error.response.status);
             console.log(error.response.headers);
             if (error.response.status === 401) {
-              this.refreshToken(boolIndex);
+              this.refreshToken();
             }
           } else if (error.request) {
             // The request was made but no response was received
@@ -197,7 +198,7 @@ class spotifyComponent extends React.Component<IProps, IState> {
         });
     }
   }
-  async refreshToken(boolIndex: number) {
+  async refreshToken() {
     console.log("bad access token, refreshing");
     await axios
       .get("/api/spotify/refresh_token", {
@@ -225,7 +226,7 @@ class spotifyComponent extends React.Component<IProps, IState> {
         }
         console.log("db refresh update");
         this.setState({ result: null });
-        spotifyPulled[boolIndex] = false;
+        this.pulled = false;
         window.location.reload;
       });
   }
@@ -242,16 +243,17 @@ export default class CurrentSong extends spotifyComponent {
     setInterval(
       () => {
         this.setState({ time: new Date() });
-        spotifyPulled[0] = false;
+        this.pulled = false;
       },
       this.props.small ? 60000 : 3000
     );
   }
 
   render() {
-    if (!spotifyPulled[0] && this.props.user !== undefined) {
-      spotifyPulled[0] = true;
-      this.makeRequest(this.props.user, "/me/player/currently-playing", 0);
+    if (!this.pulled && this.props.user !== undefined) {
+      this.pulled = true;
+      console.log("pulling data for " + this.props.user.profile.userName);
+      this.makeRequest(this.props.user, "/me/player/currently-playing");
     }
     if (this.state.result == null) {
       return <div></div>;
@@ -286,20 +288,20 @@ export class TopSongs extends spotifyComponent {
 
   componentDidMount() {
     this.setState({ time: new Date() });
-    spotifyPulled[1] = false;
+    this.pulled = false;
     setInterval(() => {
       this.setState({ time: new Date() });
-      spotifyPulled[1] = false;
+      this.pulled = false;
     }, 60000);
   }
 
   render() {
     if (
-      !spotifyPulled[1] &&
+      !this.pulled &&
       this.state.result == null &&
       this.props.user !== undefined
     ) {
-      this.makeRequest(this.props.user, "/me/top/tracks", 1);
+      this.makeRequest(this.props.user, "/me/top/tracks");
     }
     if (this.state.result == null) {
       return <div></div>;
@@ -343,20 +345,20 @@ export class RecentSongs extends spotifyComponent {
 
   componentDidMount() {
     this.setState({ time: new Date() });
-    spotifyPulled[2] = false;
+    this.pulled = false;
     setInterval(() => {
       this.setState({ time: new Date() });
-      spotifyPulled[2] = false;
+      this.pulled = false;
     }, 60000);
   }
 
   render() {
     if (
-      !spotifyPulled[1] &&
+      !this.pulled &&
       this.state.result == null &&
       this.props.user !== undefined
     ) {
-      spotifyPulled[1] = true;
+      this.pulled = true;
       this.makeRequest(this.props.user, "/me/player/recently-played", 2);
     }
     if (this.state.result == null) {
