@@ -40,64 +40,6 @@ function AccountSettingsPage(passedUser: any) {
       });
   }, []);
 
-  interface changeFieldsEmail {
-    email?: string;
-    confirmEmail?: string;
-  }
-
-  const formikEmail = useFormik({
-    initialValues: {
-      email: "",
-      confirmEmail: "",
-    },
-    validate(values) {
-      const errors: changeFieldsEmail = {};
-      if (values.email == "") {
-        errors.email = "Must fill out email field.";
-      }
-      if (values.confirmEmail == "") {
-        errors.confirmEmail = "Must fill out email field.";
-      }
-
-      return errors;
-    },
-    onSubmit: (values) => {
-      changeUserEmail(values.email);
-    },
-  });
-  interface changeFieldsPassword {
-    password?: string;
-    confirmPassword?: string;
-  }
-
-  const formikPassword = useFormik({
-    initialValues: {
-      password: "",
-      confirmPassword: "",
-    },
-    validate(values) {
-      const errors: changeFieldsPassword = {};
-      if (values.password == "") {
-        errors.password = "Must fill out password field.";
-      } else if (values.password.length < 8) {
-        errors.password = "Password must be 8 characters long";
-      } else if (values.confirmPassword != values.password) {
-        errors.password = "Password fields do not match!";
-      }
-
-      if (values.confirmPassword == "") {
-        errors.confirmPassword = "Must confirm password.";
-      } else if (values.confirmPassword != values.password) {
-        errors.confirmPassword = "Password fields do not match!";
-      }
-
-      return errors;
-    },
-    onSubmit: (values) => {
-      changeUserPassword(values.password);
-    },
-  });
-
   function changeUserEmail(emailInput: string) {
     //TODO make sure to change email in document reference as well. i.e Firestore
     updateEmail(passedUser, emailInput)
@@ -139,6 +81,36 @@ function AccountSettingsPage(passedUser: any) {
   }
 
   function ChangeEmailComponent() {
+    interface changeFieldsEmail {
+      email?: string;
+      confirmEmail?: string;
+    }
+
+    const formikEmail = useFormik({
+      initialValues: {
+        email: "",
+        confirmEmail: "",
+      },
+      validate(values) {
+        const errors: changeFieldsEmail = {};
+        if (values.email == "") {
+          errors.email = "Must fill out email field.";
+        } else if (values.email != values.confirmEmail) {
+          errors.email = "Email fields must match.";
+        }
+
+        if (values.confirmEmail == "") {
+          errors.confirmEmail = "Must fill out confirm email field.";
+        } else if (values.email != values.confirmEmail) {
+          errors.email = "Email fields must match.";
+        }
+
+        return errors;
+      },
+      onSubmit: (values) => {
+        changeUserEmail(values.email);
+      },
+    });
     return (
       <fieldset className="loginSquare">
         <h1>Change Email</h1>
@@ -170,13 +142,14 @@ function AccountSettingsPage(passedUser: any) {
                     id="confirmEmail"
                     type="text"
                     onChange={formikEmail.handleChange}
-                    value={formikEmail.values.email}
+                    value={formikEmail.values.confirmEmail}
                     error={
-                      formikEmail.touched.email &&
-                      Boolean(formikEmail.errors.email)
+                      formikEmail.touched.confirmEmail &&
+                      Boolean(formikEmail.errors.confirmEmail)
                     }
                     helperText={
-                      formikEmail.touched.email && formikEmail.errors.email
+                      formikEmail.touched.confirmEmail &&
+                      formikEmail.errors.confirmEmail
                     }
                   />
                 </Grid>
@@ -196,6 +169,39 @@ function AccountSettingsPage(passedUser: any) {
   }
 
   function ChangePasswordComponent() {
+    interface changeFieldsPassword {
+      password?: string;
+      confirmPassword?: string;
+    }
+
+    const formikPassword = useFormik({
+      initialValues: {
+        password: "",
+        confirmPassword: "",
+      },
+      validate(values) {
+        const errors: changeFieldsPassword = {};
+        if (values.password == "") {
+          errors.password = "Must fill out password field.";
+        } else if (values.password.length < 8) {
+          errors.password = "Password must be 8 characters long";
+        } else if (values.confirmPassword != values.password) {
+          errors.password = "Password fields do not match!";
+        }
+
+        if (values.confirmPassword == "") {
+          errors.confirmPassword = "Must confirm password.";
+        } else if (values.confirmPassword != values.password) {
+          errors.confirmPassword = "Password fields do not match!";
+        }
+
+        return errors;
+      },
+      onSubmit: (values) => {
+        changeUserPassword(values.password);
+      },
+    });
+    
     return (
       <fieldset className="loginSquare">
         <h1>Change Password</h1>
