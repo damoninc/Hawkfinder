@@ -200,7 +200,7 @@ function EditPage(
   };
 
   const handleCustomInterests = (newValue: string[]) => {
-    if (newValue[newValue.length - 1] === filter.clean(newValue[newValue.length -1])){
+    if (newValue[newValue.length - 1] === filter.clean(newValue[newValue.length -1]) && !baseInterests?.Interests.includes(newValue[newValue.length - 1]) ){
       setCustomInterests(newValue);
     }
     if (newValue.length < customInterests.length){
@@ -230,7 +230,7 @@ function EditPage(
     if (coverPhoto) {
       dataToUpdate["profile.coverPhoto"] = coverPhoto;
     }
-    if (customInterests){
+    if (customInterests.length > 0){
       const updateInterests = user?.profile.interests;
       updateInterests?.push.apply(updateInterests, customInterests);
       console.log("Interests: ", updateInterests)
