@@ -39,7 +39,7 @@ let dbPulled = false;
  * @param signedUser : string
  * @return {*} - FriendPage HTML
  */
-function FriendPage() {
+export default function FriendPage() {
   const [dbCall, setFriends] = useState(null);
   const [pageSwitch, setSwitch] = useState(0);
 
@@ -97,14 +97,14 @@ function FriendPage() {
 }
 
 function checkNullList(friends: User[] | null) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState("");
 
-  function handleOpen() {
-    setOpen(!open);
+  function handleOpen(userid: string) {
+    setOpen(userid);
   }
 
   function handleClose() {
-    setOpen(false);
+    setOpen("");
   }
 
   // Returns a list of FriendBox if the user's friends list is not empty
@@ -129,12 +129,28 @@ function checkNullList(friends: User[] | null) {
           return (
             <div className="friend" key={friend.username}>
               <div style={{ display: "flex" }}>
-                <Button onClick={handleOpen}>
+                <Button
+                  onClick={() => {
+                    handleOpen(friend.userid);
+                  }}
+                >
                   <FriendBox friend={friend} />
                 </Button>
               </div>
-              <Drawer anchor={"right"} open={open} onClose={handleClose}>
-                <Button onClick={handleClose} variant="contained" style={{marginTop:"30px", marginLeft:"20px", marginRight:"20px"}}>
+              <Drawer
+                anchor={"right"}
+                open={open == friend.userid}
+                onClose={handleClose}
+              >
+                <Button
+                  onClick={handleClose}
+                  variant="contained"
+                  style={{
+                    marginTop: "30px",
+                    marginLeft: "20px",
+                    marginRight: "20px",
+                  }}
+                >
                   <ArrowBackIcon />
                 </Button>
                 <div
@@ -152,14 +168,14 @@ function checkNullList(friends: User[] | null) {
                     spacing={2}
                   >
                     <h1>
-                      {user.profile.firstName} {user.profile.lastName}
+                      {friend.profile.firstName} {friend.profile.lastName}
                     </h1>
                     <h3>Bio</h3>
-                    <p>{user.profile.bio}</p>
-                    <CurrentSong user={user} small={false} />
+                    <p>{friend.profile.bio}</p>
+                    <CurrentSong user={friend} small={false} />
                     <h3>Interests</h3>
                     <ul>
-                      {user.profile.interests.map((interest) => (
+                      {friend.profile.interests.map((interest) => (
                         <li key={interest}>{interest}</li>
                       ))}
                     </ul>
@@ -170,8 +186,8 @@ function checkNullList(friends: User[] | null) {
                       spacing={2}
                       style={{ paddingLeft: "15px" }}
                     >
-                      <TopSongs user={user} small={true} limit={10} />
-                      <RecentSongs user={user} small={true} limit={10} />
+                      <TopSongs user={friend} small={true} limit={10} />
+                      <RecentSongs user={friend} small={true} limit={10} />
                     </Stack>
                   </Stack>
                 </div>
@@ -282,17 +298,17 @@ export async function removeFriend(friend: User) {
   }
 }
 
+/**
+ * When called and sent a user object, the page will redirect to that user's profile
+ *
+ * @export
+ * @param {User} friend - friend whose profile you want to navigate
+ */
 export function goToProfile(friend: User) {
-  // Dummy function for navigating to profile
+  // Dummy function for navigating to user's profile
   alert("Cannot go to " + friend.username + "'s Profile");
 }
 
-/**
- * Function used to query FireBase for the friends list.
- * Sets friends Hook in FriendPage after database call finished
- *
- * @param {*} setFriends - Hook to set friends list
- */
 async function callDB(signedUser: string, setFriends: any) {
   // Query Firestore for information from currently logged in user
   const querySnapshot = await getDoc(
@@ -326,5 +342,3 @@ async function callDB(signedUser: string, setFriends: any) {
     dbPulled = true;
   }
 }
-
-export default FriendPage;
