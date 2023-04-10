@@ -42,11 +42,14 @@ function AccountSettingsPage(passedUser: any) {
 
   function changeUserEmail(emailInput: string) {
     //TODO make sure to change email in document reference as well. i.e Firestore
-    updateEmail(passedUser, emailInput)
+    //TODO 2: make sure that find a way to reauthenticate a user, as that's a common error
+    updateEmail(passedUser.uCreds, emailInput)
       .then(() => {
         alert("Email Successfully changed!");
+
       })
       .catch((error: FirebaseError) => {
+        alert("Error! " + error)
         switch (error.code) {
           case "auth/email-already-in-use":
             setSignupMessage(
@@ -62,10 +65,12 @@ function AccountSettingsPage(passedUser: any) {
       });
   }
 
+  //TODO 2: Again, make sure to find a way to reauthenticate a user, we need it otherwise they can't change it
   function changeUserPassword(passwordInput: string) {
-    updatePassword(passedUser, passwordInput).then(() => {
+    console.log("You're in the function!")
+    updatePassword(passedUser.uCreds, passwordInput).then(() => {
       alert("Password Changed");
-    });
+    }).catch((error)=> alert("Did not work!" + error));
   }
 
   function displayItem() {
