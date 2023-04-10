@@ -1,16 +1,31 @@
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import React, { useState, useEffect } from "react";
+import { doc, updateDoc } from "firebase/firestore";
+import React from "react";
 import User from "../../data/User";
 import { db } from "../../firebase/config";
-import axios from "axios";
 import { Button } from "@mui/material";
-import { ref } from "firebase/storage";
 
 const spotifyLogo =
   "https://firebasestorage.googleapis.com/v0/b/csc-450-project.appspot.com/o/HAWKFINDER%2Fspotify-logo-7839B39C1B-seeklogo.com.png?alt=media&token=d84fdd6d-08da-4dcd-a9f5-99beba187849";
 
-export default function SpotifyLogin(user: User) {
-  const [data, setData] = useState("");
+/**
+ * Returns a component that allows a user to authorize or de-authorize Hawkfinder's access to their spotify profile.
+ *
+ * @export
+ * @param {User} user - user to link to spotify
+ * @return {*}
+ */
+export default function SpotifyAuthDeauth(user: User) {
+  if (user === undefined) {
+    return <div></div>;
+  }
+  if (user.spotify.refreshToken == "null") {
+    return SpotifyLogin(user);
+  } else {
+    return SpotifyLogout(user);
+  }
+}
+
+function SpotifyLogin(user: User) {
   if (user === undefined) {
     return <div></div>;
   }
@@ -39,29 +54,25 @@ export default function SpotifyLogin(user: User) {
     }
   }
 
-  if (data != null) {
-    return (
-      <div>
-        <a
-          href="/api/spotify"
-          style={{ display: "flex", justifyContent: "space-evenly" }}
-        >
-          <Button variant="contained" color="primary">
-            <img
-              src={spotifyLogo}
-              style={{ height: "60px", width: "60px", paddingRight: "10px" }}
-            ></img>
-            <h3>Authorize</h3>
-          </Button>
-        </a>
-      </div>
-    );
-  } else {
-    return <div></div>;
-  }
+  return (
+    <div>
+      <a
+        href="/api/spotify"
+        style={{ display: "flex", justifyContent: "space-evenly" }}
+      >
+        <Button variant="contained" color="primary">
+          <img
+            src={spotifyLogo}
+            style={{ height: "60px", width: "60px", paddingRight: "10px" }}
+          ></img>
+          <h3>Authorize</h3>
+        </Button>
+      </a>
+    </div>
+  );
 }
 
-export function SpotifyLogout(user: User) {
+function SpotifyLogout(user: User) {
   if (user === undefined) {
     return <div></div>;
   }

@@ -12,14 +12,7 @@ const spotifyLogo =
 
 const spotifyPulled: boolean[] = [false, true, true];
 
-function DisplaySong(
-  song: {
-    album: { images: { url: string | null }[]; name: string | null };
-    name: string | null;
-    artists: string | any[];
-  },
-  times?: number[]
-) {
+function DisplaySong(song: Song, times?: number[]) {
   return (
     <div
       style={{
@@ -100,15 +93,7 @@ function DisplaySong(
   );
 }
 
-function DisplaySongSmall(
-  song: {
-    album: { images: { url: string | null }[]; name: string | null };
-    name: string | null;
-    artists: string | any[];
-  },
-  scrolling: boolean,
-  times?: number[]
-) {
+function DisplaySongSmall(song: Song, scrolling: boolean) {
   if (scrolling) {
     return (
       <marquee style={{ color: "black", fontSize: "1em" }}>
@@ -143,6 +128,19 @@ function DisplaySongSmall(
   }
 }
 
+// type for song recieved from spotify api call
+interface Song {
+  album: {
+    images: { url: string | null }[];
+    name: string | null;
+  };
+  name: string | null;
+  artists: { name: string }[];
+  external_urls: { spotify: string };
+  duration_ms: number;
+  id: string;
+}
+
 interface IProps {
   user: User;
   small: boolean;
@@ -150,17 +148,18 @@ interface IProps {
 }
 
 interface IState {
-  result?: null;
+  result?: { item: Song; progress_ms: number; items: { track: Song }[] } | null;
   time: Date;
 }
 
 class spotifyComponent extends React.Component<IProps, IState> {
+  pulled = false;
   constructor(props: IProps) {
     super(props);
     this.state = { result: null, time: new Date() };
   }
 
-  async makeRequest(user: User, request_uri: string, boolIndex: number) {
+  async makeRequest(user: User, request_uri: string) {
     console.log("making request");
     if (user.spotify.accessToken != "null") {
       await axios
@@ -169,8 +168,8 @@ class spotifyComponent extends React.Component<IProps, IState> {
           headers: { Authorization: `Bearer ${user.spotify.accessToken}` },
         })
         .then((response) => {
-          if (response.data != "" && !spotifyPulled[boolIndex]) {
-            spotifyPulled[boolIndex] = true;
+          if (response.data != "" && !this.pulled) {
+            this.pulled = true;
           }
           this.setState({ result: response.data });
         })
@@ -182,7 +181,7 @@ class spotifyComponent extends React.Component<IProps, IState> {
             console.log(error.response.status);
             console.log(error.response.headers);
             if (error.response.status === 401) {
-              this.refreshToken(boolIndex);
+              this.refreshToken();
             }
           } else if (error.request) {
             // The request was made but no response was received
@@ -197,7 +196,7 @@ class spotifyComponent extends React.Component<IProps, IState> {
         });
     }
   }
-  async refreshToken(boolIndex: number) {
+  async refreshToken() {
     console.log("bad access token, refreshing");
     await axios
       .get("/api/spotify/refresh_token", {
@@ -225,12 +224,21 @@ class spotifyComponent extends React.Component<IProps, IState> {
         }
         console.log("db refresh update");
         this.setState({ result: null });
-        spotifyPulled[boolIndex] = false;
+        this.pulled = false;
         window.location.reload;
       });
   }
 }
 
+/**
+ * Returns component that displays the song on spotify that the given user is currently listening to
+ *
+ * @param user : User - the user to get currently listening to
+ * @param small : boolean - whether the component should display in small mode (true if yes, false if no)
+ * @export
+ * @class CurrentSong
+ * @extends {spotifyComponent}
+ */
 export default class CurrentSong extends spotifyComponent {
   constructor(props: IProps) {
     super(props);
@@ -238,20 +246,21 @@ export default class CurrentSong extends spotifyComponent {
 
   componentDidMount() {
     this.setState({ time: new Date() });
-    spotifyPulled[0] = false;
+    this.pulled = false;
     setInterval(
       () => {
         this.setState({ time: new Date() });
-        spotifyPulled[0] = false;
+        this.pulled = false;
       },
       this.props.small ? 60000 : 3000
     );
   }
 
   render() {
-    if (!spotifyPulled[0] && this.props.user !== undefined) {
-      spotifyPulled[0] = true;
-      this.makeRequest(this.props.user, "/me/player/currently-playing", 0);
+    if (!this.pulled && this.props.user !== undefined) {
+      this.pulled = true;
+      console.log("pulling data for " + this.props.user.profile.userName);
+      this.makeRequest(this.props.user, "/me/player/currently-playing");
     }
     if (this.state.result == null) {
       return <div></div>;
@@ -271,7 +280,7 @@ export default class CurrentSong extends spotifyComponent {
               {DisplaySong(this.state.result.item, times)}
             </div>
           ) : (
-            DisplaySongSmall(this.state.result.item, true, times)
+            DisplaySongSmall(this.state.result.item, true)
           )}
         </div>
       );
@@ -279,6 +288,16 @@ export default class CurrentSong extends spotifyComponent {
   }
 }
 
+/**
+ * Returns component that displays a list of top songs the user listens to on spotify
+ *
+ * @param user : User - the user to get top songs for
+ * @param small : boolean - whether the component should display in small mode (true if yes, false if no)
+ * @param limit : number - the number of top songs to display (max of 20)
+ * @export
+ * @class TopSongs
+ * @extends {spotifyComponent}
+ */
 export class TopSongs extends spotifyComponent {
   constructor(props: IProps) {
     super(props);
@@ -286,20 +305,20 @@ export class TopSongs extends spotifyComponent {
 
   componentDidMount() {
     this.setState({ time: new Date() });
-    spotifyPulled[1] = false;
+    this.pulled = false;
     setInterval(() => {
       this.setState({ time: new Date() });
-      spotifyPulled[1] = false;
+      this.pulled = false;
     }, 60000);
   }
 
   render() {
     if (
-      !spotifyPulled[1] &&
+      !this.pulled &&
       this.state.result == null &&
       this.props.user !== undefined
     ) {
-      this.makeRequest(this.props.user, "/me/top/tracks", 1);
+      this.makeRequest(this.props.user, "/me/top/tracks");
     }
     if (this.state.result == null) {
       return <div></div>;
@@ -314,7 +333,7 @@ export class TopSongs extends spotifyComponent {
           <h3>Top Songs</h3>
           <ul style={{ paddingLeft: "5%" }}>
             {this.state.result.items
-              .slice(-this.props.limit!)
+              .slice(this.props.limit === undefined ? 15 : -this.props.limit)
               .map((song: any) => (
                 <li key={song.id}>{DisplaySongSmall(song, false)}</li>
               ))}
@@ -326,7 +345,7 @@ export class TopSongs extends spotifyComponent {
         <div>
           <h3>Top Songs</h3>
           {this.state.result.items
-            .slice(-this.props.limit!)
+            .slice(this.props.limit === undefined ? 15 : -this.props.limit)
             .map((song: any) => (
               <div key={song.id}>{DisplaySong(song)}</div>
             ))}
@@ -336,6 +355,16 @@ export class TopSongs extends spotifyComponent {
   }
 }
 
+/**
+ * Returns component that displays a list of recent songs the user listens to on spotify
+ *
+ * @param user : User - the user to get recent songs for
+ * @param small : boolean - whether the component should display in small mode (true if yes, false if no)
+ * @param limit : number - the number of top songs to display (max of 20)
+ * @export
+ * @class RecentSongs
+ * @extends {spotifyComponent}
+ */
 export class RecentSongs extends spotifyComponent {
   constructor(props: IProps) {
     super(props);
@@ -343,21 +372,21 @@ export class RecentSongs extends spotifyComponent {
 
   componentDidMount() {
     this.setState({ time: new Date() });
-    spotifyPulled[2] = false;
+    this.pulled = false;
     setInterval(() => {
       this.setState({ time: new Date() });
-      spotifyPulled[2] = false;
+      this.pulled = false;
     }, 60000);
   }
 
   render() {
     if (
-      !spotifyPulled[1] &&
+      !this.pulled &&
       this.state.result == null &&
       this.props.user !== undefined
     ) {
-      spotifyPulled[1] = true;
-      this.makeRequest(this.props.user, "/me/player/recently-played", 2);
+      this.pulled = true;
+      this.makeRequest(this.props.user, "/me/player/recently-played");
     }
     if (this.state.result == null) {
       return <div></div>;
@@ -370,15 +399,18 @@ export class RecentSongs extends spotifyComponent {
           <div>
             <h3>Recent Songs</h3>
             <ul style={{ paddingLeft: "5%" }}>
-              {this.state.result.items.slice(-this.props.limit!).map((song) => (
-                <li
-                  key={
-                    song.track.id + Math.floor(Math.random() * 3000).toString()
-                  }
-                >
-                  {DisplaySongSmall(song.track, false)}
-                </li>
-              ))}
+              {this.state.result.items
+                .slice(this.props.limit === undefined ? 15 : -this.props.limit)
+                .map((song) => (
+                  <li
+                    key={
+                      song.track.id +
+                      Math.floor(Math.random() * 3000).toString()
+                    }
+                  >
+                    {DisplaySongSmall(song.track, false)}
+                  </li>
+                ))}
             </ul>
           </div>
         );
@@ -387,7 +419,7 @@ export class RecentSongs extends spotifyComponent {
           <div>
             <h3>Recent Songs</h3>
             {this.state.result.items
-              .slice(-this.props.limit!)
+              .slice(this.props.limit === undefined ? 15 : -this.props.limit)
               .map((song: any) => (
                 <div
                   key={
