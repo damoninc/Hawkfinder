@@ -1,5 +1,50 @@
 .post-input {
-  /* display: flex;
-  justify-content: center;
-  align-items: center; */
+  display: grid;
+  height: 14em;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  width: 104.5%;
+  margin: 0 0 0.4em 0;
+}
+
+.text-input {
+  grid-area: 1 / 1 / 2 / 4;
+}
+
+.interest-input {
+  height: 50px;
+  grid-area: 2 / 1 / 3 / 2;
+}
+
+.upload-image {
+  height: 55px;
+  grid-area: 2 / 2 / 3 / 3;
+}
+
+.post-input-img {
+  position: relative;
+  height: 55px;
+  grid-area: 2 / 3 / 3 / 4;
+}
+
+.remove-img {
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-radius: 50%;
+}
+
+.remove-img:hover {
+  transition: 200ms;
+  cursor: pointer;
+  background-color: rgb(141, 141, 141);
+}
+
+.post-button {
+  height: 50px;
+  width: 25%;
+  justify-self: center;
+  grid-area: 3 / 1 / 4 / 4;
 }

@@ -1,14 +1,46 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
 import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
 import { IconButton } from "@mui/material";
+import { storage } from "../../firebase/config";
+import { getDownloadURL, ref } from "firebase/storage";
+import "../../styles/forumpost.css";
 
 function PostView(props: any) {
-  const [ratings, setRatings] = useState(props.rating);
-  const [upvoted, setUpvoted] = useState(false);
-  const [downvoted, setDownvoted] = useState(false);
+  // Creates a pointer reference to the image of the post
+  const imageRef = ref(storage, "Posts/" + props.id + ".jpg");
 
+  // HOOKS ----------------------------------------------------------------
+  // Hook for the ratings of each post
+  const [ratings, setRatings] = useState(props.rating);
+  // Determines whether the user has upvoted
+  const [upvoted, setUpvoted] = useState(false);
+  // Determines whether the user has downvoted
+  const [downvoted, setDownvoted] = useState(false);
+  // The image of the post
+  const [image, setImage] = useState("");
+
+  /**
+   * Grabs the appropriate image URL for the
+   * specific post that is rendered
+   */
+  useEffect(() => {
+    if (props.imageURL != "") {
+      getDownloadURL(imageRef)
+        .then((url) => {
+          setImage(url);
+        })
+        .catch((err) => {
+          console.log("Error fetching image");
+        });
+    }
+  }, []);
+
+  /**
+   * Handles the logic for upvoting
+   * @param e: MouseEvent
+   */
   const upvote = () => {
     if (!upvoted && !downvoted) {
       setRatings(ratings + 1);
@@ -23,6 +55,10 @@ function PostView(props: any) {
     }
   };
 
+  /**
+   * Handles the logic for downvoting
+   * @param e: MouseEvent
+   */
   const downvote = () => {
     if (!downvoted && !upvoted) {
       // Case where downvote and upvote are not set
@@ -40,8 +76,6 @@ function PostView(props: any) {
     }
   };
 
-  const postImgPath = `/src/assets/images/${props.imageURL}`;
-
   return (
     <div className="post-container">
       <div className="pic-crop">
@@ -49,7 +83,7 @@ function PostView(props: any) {
       </div>
       <div className="post-img-container">
         {props.imageURL !== "" ? (
-          <img className="post-img" src={postImgPath} />
+          <img className="post-img" src={image} />
         ) : (
           <></>
         )}
@@ -61,7 +95,7 @@ function PostView(props: any) {
          * on the state of upvoted and downvoted
          */}
 
-        <div className="rating-button">
+        <div className="rating-button-container">
           {!upvoted ? (
             <IconButton className="rating-button" onClick={upvote}>
               <ArrowCircleUpIcon
@@ -72,18 +106,14 @@ function PostView(props: any) {
             </IconButton>
           ) : (
             <IconButton className="rating-button" onClick={upvote}>
-              <ArrowCircleUpIcon
-                fontSize="large"
-                color="primary"
-                style={{ fill: "blue" }}
-              />
+              <ArrowCircleUpIcon fontSize="large" color="primary" />
             </IconButton>
           )}
         </div>
 
         <span className="rating">{ratings}</span>
 
-        <div className="rating-button">
+        <div className="rating-button-container">
           {!downvoted ? (
             <IconButton className="rating-button" onClick={downvote}>
               <ArrowCircleDownIcon
@@ -94,16 +124,13 @@ function PostView(props: any) {
             </IconButton>
           ) : (
             <IconButton className="rating-button" onClick={downvote}>
-              <ArrowCircleDownIcon
-                fontSize="large"
-                color="primary"
-                style={{ fill: "blue" }}
-              />
+              <ArrowCircleDownIcon fontSize="large" color="primary" />
             </IconButton>
           )}
         </div>
       </div>
       <span className="post-interest">{props.interest}</span>
+      <span className="post-date">{props.postDate.toDateString()}</span>
     </div>
   );
 }
