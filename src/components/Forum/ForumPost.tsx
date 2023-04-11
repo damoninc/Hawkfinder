@@ -10,8 +10,6 @@ import { getDownloadURL, ref } from "firebase/storage";
 import { doc, getDoc } from "@firebase/firestore";
 
 function ForumPost(props: any) {
-  // Creates a pointer reference to the image of the post
-  const imageRef = ref(storage, "Posts/" + props.imageURL);
   const [profilePic, setProfilePic] = useState("");
 
   /**
@@ -19,6 +17,8 @@ function ForumPost(props: any) {
    * specific post that is rendered
    */
   useEffect(() => {
+    // Creates a pointer reference to the image of the post
+    const imageRef = ref(storage, "Posts/" + props.imageURL);
     if (props.imageURL != "") {
       getDownloadURL(imageRef)
         .then((url) => {
@@ -28,29 +28,49 @@ function ForumPost(props: any) {
           console.log("Error fetching image...");
         });
     }
+
+    // Grab the document snapshot
     const docRef = doc(db, "Users", props.userID);
     const docSnap = getDoc(docRef);
 
+    /**
+     * This block is responsible for getting
+     * the profile picture for the post
+     */
     docSnap.then((doc) => {
       if (doc.exists()) {
         const profilePicPath: string = doc.data().profile.profilePicture;
-        setProfilePic(profilePicPath);
+        const profileImageRef = ref(storage, profilePicPath);
+        if (profilePicPath != "") {
+          console.log("getting image: ", profilePicPath);
+          getDownloadURL(profileImageRef)
+            .then((url) => {
+              console.log(
+                `ProfileURL: ${url} | Description: ${props.description}`
+              );
+              setProfilePic(url);
+            })
+            .catch(() => {
+              console.log("Error fetching image...");
+            });
+        }
       } else {
         console.log("Error getting document...");
       }
     });
 
-    const profileImageRef = ref(storage, profilePic);
-    if (profilePic != "") {
-      console.log("getting image: ", profilePic);
-      getDownloadURL(profileImageRef)
-        .then((url) => {
-          setProfilePic(url);
-        })
-        .catch(() => {
-          console.log("Error fetching image...");
-        });
-    }
+    // const profileImageRef = ref(storage, profilePic);
+    // if (profilePic != "") {
+    //   console.log("getting image: ", profilePic);
+    //   getDownloadURL(profileImageRef)
+    //     .then((url) => {
+    //       console.log(`ProfileURL: ${url} | Description: ${props.description}`);
+    //       setProfilePic(url);
+    //     })
+    //     .catch(() => {
+    //       console.log("Error fetching image...");
+    //     });
+    // }
   }, []);
 
   /**
