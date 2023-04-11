@@ -57,7 +57,7 @@ function Forum() {
     // been banging my head against the wall for 5 hours trying to find
     // a better way so this will have to suffice for now
     // If we still have time to figure this out,
-    // I try to do this more efficiently
+    // I will try to do this more efficiently
     window.location.reload();
   };
 

@@ -9,7 +9,7 @@ import "../../styles/forumpost.css";
 
 function PostView(props: any) {
   // Creates a pointer reference to the image of the post
-  const imageRef = ref(storage, "Posts/" + props.id + ".jpg");
+  const imageRef = ref(storage, "Posts/" + props.imageURL);
 
   // HOOKS ----------------------------------------------------------------
   // Hook for the ratings of each post
