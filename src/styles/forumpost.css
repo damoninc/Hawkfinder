@@ -31,10 +31,12 @@
 
 .post-img {
   height: 140px;
+  max-width: 250px;
   border-radius: 5px;
 }
 
 .post-description {
+  word-wrap: break-word;
   width: 150px;
 }
 
@@ -54,7 +56,8 @@
 
 .post-interest {
   position: absolute;
-  top: 2%;
+  font-weight: bold;
+  top: 1%;
   right: 1%;
 }
 
@@ -69,22 +72,17 @@
   font-weight: bold;
 }
 
-.rating-button:hover,
-.rating-button-selected:hover {
-  background-color: rgb(56, 56, 56);
+.rating-button-container:hover,
+.rating-button-container-selected:hover {
+  background-color: rgb(153, 152, 152);
+  border-radius: 50%;
   transition: 200ms;
 }
 
-.expand-post-icon {
+.post-date {
   position: absolute;
-  border-radius: 3px;
-  width: 24px;
-  height: 24px;
-  bottom: 2%;
+  font-size: 0.85em;
+  font-weight: bold;
+  bottom: 1%;
   right: 1%;
-}
-
-.expand-post-icon:hover {
-  background-color: gray;
-  transition: 200ms;
 }

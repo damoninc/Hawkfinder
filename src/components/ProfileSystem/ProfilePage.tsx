@@ -1,39 +1,45 @@
 import React, { useEffect, useState } from "react";
-import User from "../../data/User";
+import User, { userConverter } from "../../data/User";
 import "../../styles/Profile.css";
 import {
-  collection,
-  query,
-  where,
-  getDocs,
   getDoc,
   doc,
-  updateDoc,
-  onSnapshot,
-  DocumentData,
-  DocumentSnapshot,
 } from "firebase/firestore";
 import { auth, db, storage } from "../../firebase/config";
 import { ref, getDownloadURL } from "firebase/storage";
 import Navbar from "../Navbar/Navbar";
 import { Box, Typography } from "@mui/material";
 import EditPage from "./EditPage";
+import CurrentSong from "../SpotifyIntegration/SpotifyComponents";
 
 /**
  * This is the main profile page that displays a users profile
+ * @param passedUser the user that is authenticated.
  * @returns the webpage
  */
 function ProfilePage(passedUser: any) {
-  const passedUserObj = "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1"; //Feel free to change this to the passed in object for testing. Make sure its of type string.
+  const hashParams = window.location.hash.split("#")[1];
+  const urlParams = new URLSearchParams(hashParams);
+  let uid = urlParams.get("userid");
 
+  console.log(urlParams);
+  console.log(uid);
+  const passedUserObj = passedUser.uCreds; //Feel free to change this to the passed in object for testing. Make sure its of type string.
   const [userPage, setUserPage] = useState<any>();
   const [userProfPic, setUserProfPic] = useState("");
   const [userCoverPic, setUserCoverPic] = useState("");
+  const [spotifyUser, setSpotifyUser] = useState<User | undefined>(undefined);
 
-  const docRef = doc(db, "Users", passedUserObj);
+  if(uid == null){
+    uid = passedUserObj;
+  }
+  const docRef = doc(db, "Users", uid!);
   useEffect(() => {
     getDoc(docRef)
       .then((docSnap) => {
+        const userToSpotify: User | undefined =
+          userConverter.fromFirestore(docSnap);
+        setSpotifyUser(userToSpotify);
         const userPageData = docSnap.data();
         setUserPage(userPageData);
         const userProfPicRef = ref(
@@ -59,10 +65,9 @@ function ProfilePage(passedUser: any) {
   }, []);
 
   if (!userPage || !userProfPic || !userCoverPic) {
-    return <div hidden>{EditPage(userPage, docRef)}</div>;
+    return <div hidden>{EditPage(userPage, docRef, passedUserObj)}</div>;
   }
 
-  const owner = userPage?.userid === window.localStorage.getItem("token");
   console.log(userPage.profile.firstName);
   console.log(userProfPic);
   return (
@@ -86,7 +91,7 @@ function ProfilePage(passedUser: any) {
           loading="lazy"
           className="profile-photo"
         />
-        {EditPage(userPage, docRef)}
+        {EditPage(userPage, docRef, passedUserObj)}
       </Box>
       <Box className="about">
         <Box className="about-title">
@@ -106,6 +111,11 @@ function ProfilePage(passedUser: any) {
           ))}
         </ul>
       </Box>
+      {spotifyUser !== undefined ? (
+        <CurrentSong user={spotifyUser} small={false} />
+      ) : (
+        <div></div>
+      )}
     </>
   );
 }

@@ -6,6 +6,7 @@ import * as fp from "./FriendPage";
 import { db } from "../../firebase/config";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { Button, TextField } from "@mui/material";
+import UserBox from "./UserBox";
 
 /**
  * Generates a HTML block that displays a list of Users based
@@ -13,7 +14,7 @@ import { Button, TextField } from "@mui/material";
  *
  * @return {*} - FriendSearch HTML
  */
-function FriendSearch() {
+export default function FriendSearch() {
   const [dbCall, setUsers] = useState(null);
   const [input, setInput] = useState("");
   return (
@@ -41,16 +42,16 @@ function FriendSearch() {
   );
 }
 
-function checkNullList(friends: User[] | null) {
+function checkNullList(users: User[] | null) {
   // Returns a list of FriendBox if the user's friends list is not empty
-  if (friends == null) {
+  if (users == null) {
     return (
       <div className="loadUsers">
         <h2>...</h2>
       </div>
     );
   }
-  if (friends.length == 0) {
+  if (users.length == 0) {
     return (
       <div>
         <h2>This user does not exist :(</h2>
@@ -59,14 +60,38 @@ function checkNullList(friends: User[] | null) {
   } else {
     return (
       <div className="userBlock">
-        {friends.map((friend) => (
-          <div className="user" key={friend.username}>
-            {FriendBox(fp.user, friend)}
+        {users.map((user) => (
+          <div className="user" key={user.username}>
+            {UserBox(user, buttons)}
           </div>
         ))}
       </div>
     );
   }
+}
+
+function buttons(user: User) {
+  return (
+    <div className="buttons">
+      <button
+        className="button"
+        onClick={() => {
+          fp.goToProfile(user);
+        }}
+      >
+        Profile
+      </button>
+      <button
+        className="button"
+        type="button"
+        onClick={() => {
+          fp.addFriend(user.profile.userName);
+        }}
+      >
+        Add
+      </button>
+    </div>
+  );
 }
 
 /**
@@ -96,5 +121,3 @@ async function callDB(setUsers: any, msg: string) {
     console.log("db call");
   });
 }
-
-export default FriendSearch;

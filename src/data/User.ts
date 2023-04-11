@@ -37,8 +37,8 @@ class User {
     this._outgoingRequests = new Array<string>();
     this._userid = '';
     this._spotify = {
-        accessToken: "",
-        refreshToken: ""
+        accessToken: "null",
+        refreshToken: "null"
       };
 
     if (profile != null) {

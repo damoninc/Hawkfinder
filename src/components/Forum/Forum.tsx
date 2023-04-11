@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../../firebase/config";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import Post from "../../data/Post";
 import PostView from "../Post/PostView";
 import ForumPost from "./ForumPost";
 import PostInput from "./PostInput";
-import { Modal, Box } from "@mui/material";
-import { CircularProgress } from "@mui/material";
+import { Modal, Box, CircularProgress } from "@mui/material";
 import "../../styles/forum.css";
 
 function Forum() {
+  // HOOKS ----------------------------------------------------------------
   // State for posts must be set with any so the modal knows
   // which component to render without having to use .map()
   const [posts, setPosts] = useState<Post[]>([]);
@@ -23,11 +23,15 @@ function Forum() {
   /**
    * Makes a call to the db, grabbing every document
    * in the Posts collection
+   * onSnapshot will add a listener to the Posts collection
+   * so that the forum will reload when a new post is made
    */
-  const fetchPosts = async () => {
+  useEffect(() => {
     setLoading(true);
-    await getDocs(collection(db, "Posts")).then((querySnapshot) => {
-      const tempPosts: any = querySnapshot.docs.map((doc) => {
+
+    const q = query(collection(db, "Posts"), orderBy("postDate", "desc"));
+    getDocs(q).then((querySnapshot) => {
+      const tempPosts: Post[] = querySnapshot.docs.map((doc) => {
         console.log("DB CALL");
         return new Post(
           doc.id,
@@ -39,17 +43,23 @@ function Forum() {
         );
       });
       setPosts(tempPosts);
-      setLoading(false);
     });
-  };
+
+    setLoading(false);
+  }, []);
 
   /**
-   * Makes sure fetchPosts() only runs once with
-   * a dependance on nothing
+   * Forcefully reloads the forum by reloading the page
    */
-  useEffect(() => {
-    fetchPosts();
-  }, []);
+  const reloadForum = () => {
+    console.log("Reloading forum...");
+    // This is not the most efficient way to reload the forum, but I've
+    // been banging my head against the wall for 5 hours trying to find
+    // a better way so this will have to suffice for now
+    // If we still have time to figure this out,
+    // I will try to do this more efficiently
+    window.location.reload();
+  };
 
   /**
    * Determines the post that was clicked on
@@ -64,11 +74,11 @@ function Forum() {
 
   return (
     <div className="forum-container">
-      <PostInput />
+      {/* <PostInput reloadPosts={reloadPosts} /> */}
+      <PostInput reloadForum={reloadForum} />
       {!loading ? (
         <>
           {posts.map((post: Post, index) => {
-            console.log("NEW POST COMPONENT RETURNED");
             return (
               <div
                 key={index}
@@ -76,7 +86,7 @@ function Forum() {
                 className="post-handler"
               >
                 <ForumPost
-                  // key={post.postID}
+                  id={post.postID}
                   postDate={post.postDate}
                   description={post.description}
                   interest={post.interest}
@@ -107,6 +117,7 @@ function Forum() {
               {posts.length > 0 ? (
                 <PostView
                   key={postIndex}
+                  id={posts[postIndex].postID}
                   postDate={posts[postIndex].postDate}
                   description={posts[postIndex].description}
                   interest={posts[postIndex].interest}
