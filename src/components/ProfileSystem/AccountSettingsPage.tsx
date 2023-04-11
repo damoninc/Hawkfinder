@@ -42,6 +42,11 @@ function AccountSettingsPage(passedUser: any) {
       });
   }, []);
 
+  /**
+   * Uses the firebase updateEmail function to change a user's email for
+   * account and firestore. Will redirect if needed to reauth.
+   * @param emailInput : string - The select email that will replace their old email
+   */
   function changeUserEmail(emailInput: string) {
     updateEmail(passedUser.uCreds, emailInput)
       .then(() => {
@@ -70,7 +75,12 @@ function AccountSettingsPage(passedUser: any) {
       });
   }
 
-  //TODO 2: Again, make sure to find a way to reauthenticate a user, we need it otherwise they can't change it
+  /**
+   * Uses FireBase changeUserPassword function to change the current password.
+   * If the user needs to reauth, will redirect to another page.
+   * @param passwordInput : string - The user inputed password they want to change
+  */
+  //TODO:
   function changeUserPassword(passwordInput: string) {
     console.log("You're in the function!");
     updatePassword(passedUser.uCreds, passwordInput)
@@ -93,6 +103,11 @@ function AccountSettingsPage(passedUser: any) {
       });
   }
 
+  /**
+   * Will change what is shown based on useState
+   * @returns A component or null
+   */
+  //TODO: Maybe add reauthentication to this page.
   function displayItem() {
     if (selectItem == "1") {
       return <h1>Holy Chungus, welcome to account settings!</h1>;
@@ -105,6 +120,14 @@ function AccountSettingsPage(passedUser: any) {
     }
   }
 
+  /**
+   * Allows a user to change their email. If their credentials have expired,
+   * it will navigate them to another page.
+   * @returns The Email Change Component
+   */
+  //TODO: Run a check against old email.
+  //TODO: Have better user messages displayed.
+  //TODO: Change how UI looks.
   function ChangeEmailComponent() {
     interface changeFieldsEmail {
       email?: string;
@@ -193,6 +216,13 @@ function AccountSettingsPage(passedUser: any) {
     );
   }
 
+  /**
+   * Component that allows a user to change their password.
+   * @returns The Change Password Component
+   */
+  //TODO: Run a check against old password
+  //TODO: Have better user messages displayed
+  //TODO: Change how UI looks
   function ChangePasswordComponent() {
     interface changeFieldsPassword {
       password?: string;

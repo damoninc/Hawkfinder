@@ -1,96 +1,72 @@
 import React from "react";
 import "../../styles/userbox.css";
 import User from "../../data/User";
-import UserBox from "./UserBox";
-import * as fp from "./FriendPage";
+import CurrentSong from "../SpotifyIntegration/SpotifyComponents";
+import { Stack, Box } from "@mui/material";
+import { storage } from "../../firebase/config";
+import { getDownloadURL, ref } from "firebase/storage";
+
+interface IProps {
+  friend: User;
+}
+
+interface IState {
+  pfpUrl: string;
+}
+
 /**
  * Generates a HTML block that displays a user based on their Profile information
  *      Currently displays the name and interests as well as having buttons to go to
  *      their profile, messages, and removing them.
- * @param {User} currUser - The currently logged in user
  * @param {User} friend - The user to display
  * @return {*} - FriendBox HTML
  */
-function FriendBox(currUser: User, friend: User) {
-  if (currUser === undefined || friend === undefined) {
-    return <div></div>;
+export default class FriendBox extends React.Component<IProps, IState> {
+  constructor(props: IProps) {
+    super(props);
+    this.state = { pfpUrl: "" };
   }
-  const buttons = currUser.friendsList.includes(friend.userid)
-    ? currentFriendButtons
-    : nonFriendButtons;
 
-  return <div>{UserBox(friend, buttons)}</div>;
+  componentDidMount() {
+    this.getUrl();
+  }
+  async getUrl() {
+    await getDownloadURL(
+      ref(storage, this.props.friend.profile.profilePicture)
+    ).then((storageUrl) => {
+      this.setState({ pfpUrl: storageUrl });
+    });
+  }
+  render() {
+    if (this.props.friend === undefined) {
+      return <div></div>;
+    }
+    return (
+      <Box
+        sx={{
+          width: 150,
+          height: 200,
+          border: "2px solid black",
+          borderRadius: "25px",
+        }}
+      >
+        <Stack justifyContent="center" alignItems="center" spacing={0.5}>
+          <img
+            src={`${this.state.pfpUrl}`}
+            style={{
+              height: "100px",
+              width: "100px",
+              borderRadius: "50px",
+              marginTop: "10px",
+            }}
+          />
+          <h3 style={{ lineHeight: "16px" }}>
+            {this.props.friend.profile.firstName}{" "}
+            {this.props.friend.profile.lastName}
+          </h3>
+          <CurrentSong user={this.props.friend} small={true} />
+        </Stack>
+      </Box>
+    );
+  }
 }
-
-/**
- * Creates a set of HTML buttons to display in friend boxes when
- * the user to display is currently a friend of the logged in user
- *
- * @param {User} friend
- * @return {*} list of HTML buttons
- */
-function currentFriendButtons(friend: User) {
-  return (
-    <div className="buttons">
-      <button
-        className="button"
-        onClick={() => {
-          fp.goToMessages(friend);
-        }}
-      >
-        Messages
-      </button>
-      <button
-        className="button"
-        onClick={() => {
-          fp.goToProfile(friend);
-        }}
-      >
-        Profile
-      </button>
-      <button
-        className="button"
-        type="button"
-        onClick={() => {
-          fp.removeFriend(friend);
-        }}
-      >
-        Remove
-      </button>
-    </div>
-  );
-}
-
-/**
- * Creates a set of HTML buttons to display in friend boxes when
- * the user to display is not a friend of the logged in user
- *
- * @param {User} friend
- * @return {*} list of HTML buttons
- */
-function nonFriendButtons(user: User) {
-  console.log(user);
-  return (
-    <div className="buttons">
-      <button
-        className="button"
-        onClick={() => {
-          fp.goToProfile(user);
-        }}
-      >
-        Profile
-      </button>
-      <button
-        className="button"
-        type="button"
-        onClick={() => {
-          fp.addFriend(user.profile.userName);
-        }}
-      >
-        Add
-      </button>
-    </div>
-  );
-}
-
-export default FriendBox;
