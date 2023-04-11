@@ -27,6 +27,7 @@ import CurrentSong, {
   TopSongs,
 } from "../SpotifyIntegration/SpotifyComponents";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import SpotifyAuthDeauth from "../SpotifyIntegration/SpotifyLogin";
 
 export let user: User;
 

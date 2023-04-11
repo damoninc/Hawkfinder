@@ -95,7 +95,7 @@ function App() {
             path="/components/Spotify"
             element={
               isUserLoggin(user) ? (
-                <SpotifyPage />
+                <SpotifyPage uCreds={user.uid} />
               ) : (
                 <Navigate to="/components/Interceptor" />
               )
