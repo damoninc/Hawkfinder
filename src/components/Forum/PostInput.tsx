@@ -21,7 +21,7 @@ import {
 import { ref, uploadBytes } from "firebase/storage";
 import "../../styles/postinput.css";
 
-const PostInput = ({ reloadForum }: any) => {
+const PostInput = (props: any) => {
   // HOOKS ----------------------------------------------------------------
   // These hooks keep track of user input
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -73,7 +73,7 @@ const PostInput = ({ reloadForum }: any) => {
         interest: interest,
         postDate: serverTimestamp(),
         ratings: Object.fromEntries(new Map<string, string>()),
-        userID: "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1",
+        userID: props.userID,
       });
       // Using the doc.id generated above to use as a unique reference
       // that the post will use to get the image from storage
@@ -96,7 +96,7 @@ const PostInput = ({ reloadForum }: any) => {
       setSelectedImage(null);
       setInterest("");
       setPostText("");
-      reloadForum();
+      props.reloadForum();
     } else {
       console.log(
         "Post not sent, you must select an interest and enter text input!"

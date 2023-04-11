@@ -8,7 +8,7 @@ import PostInput from "./PostInput";
 import { Modal, Box, CircularProgress } from "@mui/material";
 import "../../styles/forum.css";
 
-function Forum() {
+function Forum(props: any) {
   // HOOKS ----------------------------------------------------------------
   // State for posts must be set with any so the modal knows
   // which component to render without having to use .map()
@@ -20,6 +20,8 @@ function Forum() {
   // Shows loading while fetchPosts() is running
   const [loading, setLoading] = useState(false);
 
+  const userID = props.uCreds.uid;
+
   /**
    * Makes a call to the db, grabbing every document
    * in the Posts collection
@@ -28,7 +30,7 @@ function Forum() {
    */
   useEffect(() => {
     setLoading(true);
-
+    console.log(props.uCreds);
     const q = query(collection(db, "Posts"), orderBy("postDate", "desc"));
     getDocs(q).then((querySnapshot) => {
       const tempPosts: Post[] = querySnapshot.docs.map((doc) => {
@@ -75,7 +77,7 @@ function Forum() {
   return (
     <div className="forum-container">
       {/* <PostInput reloadPosts={reloadPosts} /> */}
-      <PostInput reloadForum={reloadForum} />
+      <PostInput userID={userID} reloadForum={reloadForum} />
       {!loading ? (
         <>
           {posts.map((post: Post, index) => {

@@ -75,7 +75,7 @@ function App() {
             path="/components/Forum"
             element={
               isUserLoggin(user) ? (
-                <Forum />
+                <Forum uCreds={user} />
               ) : (
                 <Navigate to="/components/Interceptor" />
               )
