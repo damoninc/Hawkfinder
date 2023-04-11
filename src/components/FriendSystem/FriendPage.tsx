@@ -221,7 +221,7 @@ class RemoveButton extends React.Component<IProps, IState> {
     if (this.state.profileClicked) {
       return (
         <Navigate
-          to={`/components/Profile?username=${this.props.user.userid}`}
+          to={`/components/Profile#userid=${this.props.user.userid}`}
         />
       );
     }
@@ -299,7 +299,8 @@ class RemoveButton extends React.Component<IProps, IState> {
                 marginLeft: "2px",
               }}
               onClick={() => {
-                this.setState({ clicked: false });
+                // this.setState({ clicked: false });
+                console.log("changed for linting")
               }}
             >
               Cancel

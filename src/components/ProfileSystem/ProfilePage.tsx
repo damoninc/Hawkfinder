@@ -14,13 +14,13 @@ import CurrentSong from "../SpotifyIntegration/SpotifyComponents";
 
 /**
  * This is the main profile page that displays a users profile
- * @param passedUser the user that is trying to be seen
+ * @param passedUser the user that is authenticated.
  * @returns the webpage
  */
 function ProfilePage(passedUser: any) {
   const hashParams = window.location.hash.split("#")[1];
   const urlParams = new URLSearchParams(hashParams);
-  const uid = urlParams.get("userid");
+  let uid = urlParams.get("userid");
 
   console.log(urlParams);
   console.log(uid);
@@ -30,7 +30,10 @@ function ProfilePage(passedUser: any) {
   const [userCoverPic, setUserCoverPic] = useState("");
   const [spotifyUser, setSpotifyUser] = useState<User | undefined>(undefined);
 
-  const docRef = doc(db, "Users", passedUserObj);
+  if(uid == null){
+    uid = passedUserObj;
+  }
+  const docRef = doc(db, "Users", uid!);
   useEffect(() => {
     getDoc(docRef)
       .then((docSnap) => {
