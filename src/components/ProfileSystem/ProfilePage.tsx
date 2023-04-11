@@ -2,16 +2,8 @@ import React, { useEffect, useState } from "react";
 import User, { userConverter } from "../../data/User";
 import "../../styles/Profile.css";
 import {
-  collection,
-  query,
-  where,
-  getDocs,
   getDoc,
   doc,
-  updateDoc,
-  onSnapshot,
-  DocumentData,
-  DocumentSnapshot,
 } from "firebase/firestore";
 import { auth, db, storage } from "../../firebase/config";
 import { ref, getDownloadURL } from "firebase/storage";
@@ -22,16 +14,26 @@ import CurrentSong from "../SpotifyIntegration/SpotifyComponents";
 
 /**
  * This is the main profile page that displays a users profile
+ * @param passedUser the user that is authenticated.
  * @returns the webpage
  */
 function ProfilePage(passedUser: any) {
+  const hashParams = window.location.hash.split("#")[1];
+  const urlParams = new URLSearchParams(hashParams);
+  let uid = urlParams.get("userid");
+
+  console.log(urlParams);
+  console.log(uid);
   const passedUserObj = passedUser.uCreds; //Feel free to change this to the passed in object for testing. Make sure its of type string.
   const [userPage, setUserPage] = useState<any>();
   const [userProfPic, setUserProfPic] = useState("");
   const [userCoverPic, setUserCoverPic] = useState("");
   const [spotifyUser, setSpotifyUser] = useState<User | undefined>(undefined);
 
-  const docRef = doc(db, "Users", passedUserObj);
+  if(uid == null){
+    uid = passedUserObj;
+  }
+  const docRef = doc(db, "Users", uid!);
   useEffect(() => {
     getDoc(docRef)
       .then((docSnap) => {

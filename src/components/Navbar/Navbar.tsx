@@ -15,7 +15,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { Button } from "@mui/material";
 import { auth } from "../../firebase/config";
@@ -75,7 +75,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
  * @returns Navigation bar
  */
 export default function Navbar() {
-  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -136,22 +135,23 @@ export default function Navbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem
+      <a href='/components/Profile' style={{ textDecoration: 'none', color: 'inherit' }}> <MenuItem
         onClick={() => {
           handleMenuClose;
-          navigate("/components/Profile");
         }}
       >
         Profile
       </MenuItem>
+      </a>
+      <a href='/components/AccountSettings' style={{ textDecoration: 'none', color: 'inherit' }}>
       <MenuItem
         onClick={() => {
           handleMenuClose;
-          navigate("/components/AccountSettings");
         }}
       >
         My account
       </MenuItem>
+      </a>
       <MenuItem>
         <Button variant="contained" onClick={() => signOut(auth)}>
           Sign out

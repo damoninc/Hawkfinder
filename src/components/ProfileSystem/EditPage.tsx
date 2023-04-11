@@ -41,7 +41,7 @@ const baseInterests = interestSnap.data();
 function EditPage(
   user: DocumentData | undefined,
   docRef: DocumentReference,
-  passedUserObj: string
+  passedUserObj: string,
 ) {
   const owner = user?.userid === passedUserObj;
   // MAIN EDIT PAGE MODAL HANDLERS
