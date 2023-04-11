@@ -48,3 +48,10 @@
   justify-self: center;
   grid-area: 3 / 1 / 4 / 4;
 }
+
+.post-button-disabled {
+  height: 50px;
+  width: 25%;
+  justify-self: center;
+  grid-area: 3 / 1 / 4 / 4;
+}

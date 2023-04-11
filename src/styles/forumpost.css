@@ -31,10 +31,12 @@
 
 .post-img {
   height: 140px;
+  max-width: 250px;
   border-radius: 5px;
 }
 
 .post-description {
+  word-wrap: break-word;
   width: 150px;
 }
 

@@ -7,6 +7,8 @@ import {
   MenuItem,
   Select,
   InputLabel,
+  Popover,
+  Typography,
 } from "@mui/material";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
@@ -22,9 +24,11 @@ import "../../styles/postinput.css";
 const PostInput = ({ reloadForum }: any) => {
   // HOOKS ----------------------------------------------------------------
   // These hooks keep track of user input
-  const [selectedImage, setSelectedImage] = useState<any>(null);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [interest, setInterest] = useState("");
   const [postText, setPostText] = useState("");
+  // This hook will be used for the popover
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   /**
    * Renames the user's image input filename to the
@@ -34,16 +38,9 @@ const PostInput = ({ reloadForum }: any) => {
    * @returns updated File object
    */
   function renameFile(oldFile: File, newName: string) {
-    return new File([oldFile], newName, {
-      type: "image/jpeg",
-      lastModified: oldFile.lastModified,
-    });
+    const blob = oldFile.slice(0, oldFile.size, oldFile.type);
+    return new File([blob], newName, { type: oldFile.type });
   }
-
-  // Any image uploaded will be turned into a jpg file
-  const metadata = {
-    contentType: "image/jpeg",
-  };
 
   /**
    * Uploads the user's image input to Firebase storage
@@ -51,9 +48,16 @@ const PostInput = ({ reloadForum }: any) => {
    */
   function uploadImage(image: File) {
     const postsRef = ref(storage, "Posts/" + image.name);
-    uploadBytes(postsRef, image, metadata).then(() => {
-      console.log("Uploaded image!");
-    });
+    const metadata = {
+      contentType: image.type,
+    };
+    uploadBytes(postsRef, image, metadata)
+      .then(() => {
+        console.log("Uploaded image! File: " + image);
+      })
+      .catch(() => {
+        console.log("error uploading to firebase");
+      });
   }
 
   /**
@@ -69,16 +73,21 @@ const PostInput = ({ reloadForum }: any) => {
         interest: interest,
         postDate: serverTimestamp(),
         ratings: Object.fromEntries(new Map<string, string>()),
-        userID: "jgj4899fwre8j49",
+        userID: "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1",
       });
       // Using the doc.id generated above to use as a unique reference
       // that the post will use to get the image from storage
       if (selectedImage) {
-        const imgID = docRef.id;
-        const imgName = imgID + ".jpg";
+        const imgID: string = docRef.id;
+        const imgExt = selectedImage.name.split(".").pop();
+        const imgName = imgID + "." + imgExt;
         // UPLOADING IMG TO FIREBASE STORAGE
         const newFile: File = renameFile(selectedImage, imgName);
-        uploadImage(newFile);
+        setTimeout(() => {
+          // Lets the app upload the file before reloading the page
+          // so that the upload does not get interrupted
+          uploadImage(newFile);
+        }, 1500);
         // UPDATING POST DOCUMENT WITH POINTER TO FIREBASE STORAGE
         await updateDoc(docRef, {
           imageURL: imgName,
@@ -95,6 +104,21 @@ const PostInput = ({ reloadForum }: any) => {
     }
   }
 
+  /**
+   * The following three codeblocks will be used for the Popover MUI
+   * component that is not yet implemented, will be during Sprint#4
+   * @param event
+   */
+  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+
   return (
     <div className="post-input">
       <TextField
@@ -104,7 +128,11 @@ const PostInput = ({ reloadForum }: any) => {
         variant="outlined"
         multiline
         rows={4}
-        onChange={(e) => setPostText(e.target.value)}
+        onChange={(e) => {
+          if (e.target.value.length < 120) {
+            setPostText(e.target.value);
+          }
+        }}
       />
       {selectedImage && (
         <div className="post-input-img">
@@ -139,7 +167,7 @@ const PostInput = ({ reloadForum }: any) => {
         <FileUploadIcon style={{ fill: "teal" }} />
         <input
           type="file"
-          accept="image/*"
+          accept="image/png, image/gif, image/jpeg, image/webp"
           onChange={(event: React.ChangeEvent<HTMLInputElement> | any) => {
             setSelectedImage(event.target.files[0]);
           }}
@@ -158,14 +186,38 @@ const PostInput = ({ reloadForum }: any) => {
           Post
         </Button>
       ) : (
-        <Button
-          className="post-button"
-          type="submit"
-          variant="outlined"
-          disabled
-        >
-          Post
-        </Button>
+        <>
+          <Button
+            className="post-button-disabled"
+            type="submit"
+            variant="outlined"
+            disabled
+            aria-haspopup="true"
+            aria-owns={open ? "mouse-over-popover" : undefined}
+            onMouseEnter={handlePopoverOpen}
+            onMouseLeave={handlePopoverClose}
+          >
+            Post
+          </Button>
+          <Popover
+            open={open}
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+            onClose={handlePopoverClose}
+            disableRestoreFocus
+          >
+            <Typography>
+              You must type some text and select an interest!
+            </Typography>
+          </Popover>
+        </>
       )}
     </div>
   );
