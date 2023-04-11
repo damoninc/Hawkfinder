@@ -12,6 +12,7 @@ import { doc, getDoc } from "@firebase/firestore";
 function ForumPost(props: any) {
   // Creates a pointer reference to the image of the post
   const imageRef = ref(storage, "Posts/" + props.imageURL);
+  const [profilePic, setProfilePic] = useState("");
 
   /**
    * Grabs the appropriate image URL for the
@@ -27,8 +28,29 @@ function ForumPost(props: any) {
           console.log("Error fetching image...");
         });
     }
-    const docRef = doc(db, "Posts", props.id);
+    const docRef = doc(db, "Users", props.userID);
     const docSnap = getDoc(docRef);
+
+    docSnap.then((doc) => {
+      if (doc.exists()) {
+        const profilePicPath: string = doc.data().profile.profilePicture;
+        setProfilePic(profilePicPath);
+      } else {
+        console.log("Error getting document...");
+      }
+    });
+
+    const profileImageRef = ref(storage, profilePic);
+    if (profilePic != "") {
+      console.log("getting image: ", profilePic);
+      getDownloadURL(profileImageRef)
+        .then((url) => {
+          setProfilePic(url);
+        })
+        .catch(() => {
+          console.log("Error fetching image...");
+        });
+    }
   }, []);
 
   /**
@@ -105,7 +127,7 @@ function ForumPost(props: any) {
     // {props.ratings}
     <div className="post-container">
       <div className="pic-crop">
-        <img className="profile-pic" src="\src\assets\images\profileimg.jpg" />
+        <img className="profile-pic" src={profilePic} />
       </div>
       <div className="post-img-container">
         {props.imageURL !== "" ? (

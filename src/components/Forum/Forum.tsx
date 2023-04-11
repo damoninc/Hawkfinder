@@ -38,6 +38,7 @@ function Forum(props: any) {
         return new Post(
           doc.id,
           doc.data().postDate.toDate(),
+          doc.data().userID,
           doc.data().description,
           doc.data().interest,
           doc.data().imageURL,
@@ -89,6 +90,7 @@ function Forum(props: any) {
               >
                 <ForumPost
                   id={post.postID}
+                  userID={post.userID}
                   postDate={post.postDate}
                   description={post.description}
                   interest={post.interest}
