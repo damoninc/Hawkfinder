@@ -58,19 +58,6 @@ function ForumPost(props: any) {
         console.log("Error getting document...");
       }
     });
-
-    // const profileImageRef = ref(storage, profilePic);
-    // if (profilePic != "") {
-    //   console.log("getting image: ", profilePic);
-    //   getDownloadURL(profileImageRef)
-    //     .then((url) => {
-    //       console.log(`ProfileURL: ${url} | Description: ${props.description}`);
-    //       setProfilePic(url);
-    //     })
-    //     .catch(() => {
-    //       console.log("Error fetching image...");
-    //     });
-    // }
   }, []);
 
   /**

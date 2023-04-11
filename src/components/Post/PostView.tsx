@@ -3,14 +3,12 @@ import { useState, useEffect } from "react";
 import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
 import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
 import { IconButton } from "@mui/material";
-import { storage } from "../../firebase/config";
+import { db, storage } from "../../firebase/config";
 import { getDownloadURL, ref } from "firebase/storage";
 import "../../styles/forumpost.css";
+import { doc, getDoc } from "firebase/firestore";
 
 function PostView(props: any) {
-  // Creates a pointer reference to the image of the post
-  const imageRef = ref(storage, "Posts/" + props.imageURL);
-
   // HOOKS ----------------------------------------------------------------
   // Hook for the ratings of each post
   const [ratings, setRatings] = useState(props.rating);
@@ -20,21 +18,56 @@ function PostView(props: any) {
   const [downvoted, setDownvoted] = useState(false);
   // The image of the post
   const [image, setImage] = useState("");
+  // The profile pic of the user that created the post
+  const [profilePic, setProfilePic] = useState("");
 
   /**
    * Grabs the appropriate image URL for the
    * specific post that is rendered
    */
   useEffect(() => {
+    // Creates a pointer reference to the image of the post
+    const imageRef = ref(storage, "Posts/" + props.imageURL);
+
     if (props.imageURL != "") {
       getDownloadURL(imageRef)
         .then((url) => {
           setImage(url);
         })
-        .catch((err) => {
+        .catch(() => {
           console.log("Error fetching image");
         });
     }
+
+    // Grab the document snapshot
+    const docRef = doc(db, "Users", props.userID);
+    const docSnap = getDoc(docRef);
+
+    /**
+     * This block is responsible for getting
+     * the profile picture for the post
+     */
+    docSnap.then((doc) => {
+      if (doc.exists()) {
+        const profilePicPath: string = doc.data().profile.profilePicture;
+        const profileImageRef = ref(storage, profilePicPath);
+        if (profilePicPath != "") {
+          console.log("getting image: ", profilePicPath);
+          getDownloadURL(profileImageRef)
+            .then((url) => {
+              console.log(
+                `ProfileURL: ${url} | Description: ${props.description}`
+              );
+              setProfilePic(url);
+            })
+            .catch(() => {
+              console.log("Error fetching image...");
+            });
+        }
+      } else {
+        console.log("Error getting document...");
+      }
+    });
   }, []);
 
   /**
@@ -79,7 +112,7 @@ function PostView(props: any) {
   return (
     <div className="post-container">
       <div className="pic-crop">
-        <img className="profile-pic" src="\src\assets\images\profileimg.jpg" />
+        <img className="profile-pic" src={profilePic} />
       </div>
       <div className="post-img-container">
         {props.imageURL !== "" ? (

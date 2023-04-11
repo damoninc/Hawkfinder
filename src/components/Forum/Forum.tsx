@@ -122,6 +122,7 @@ function Forum(props: any) {
                 <PostView
                   key={postIndex}
                   id={posts[postIndex].postID}
+                  userID={posts[postIndex].userID}
                   postDate={posts[postIndex].postDate}
                   description={posts[postIndex].description}
                   interest={posts[postIndex].interest}
