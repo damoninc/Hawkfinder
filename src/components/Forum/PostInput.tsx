@@ -27,6 +27,7 @@ const PostInput = ({ reloadForum }: any) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [interest, setInterest] = useState("");
   const [postText, setPostText] = useState("");
+  // This hook will be used for the popover
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   /**
@@ -103,6 +104,11 @@ const PostInput = ({ reloadForum }: any) => {
     }
   }
 
+  /**
+   * The following three codeblocks will be used for the Popover MUI
+   * component that is not yet implemented, will be during Sprint#4
+   * @param event
+   */
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
