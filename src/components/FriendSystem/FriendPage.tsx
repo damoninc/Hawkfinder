@@ -27,6 +27,8 @@ import CurrentSong, {
   TopSongs,
 } from "../SpotifyIntegration/SpotifyComponents";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import SpotifyAuthDeauth from "../SpotifyIntegration/SpotifyLogin";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export let user: User;
 
@@ -39,12 +41,13 @@ let dbPulled = false;
  * @param signedUser : string
  * @return {*} - FriendPage HTML
  */
-export default function FriendPage() {
+export default function FriendPage(currUser: { uCreds: string }) {
   const [dbCall, setFriends] = useState(null);
   const [pageSwitch, setSwitch] = useState(0);
+  const navigate = useNavigate();
 
   if (!dbPulled || dbCall == null) {
-    callDB("sq0kklKJQLYTuFQ6IQf6fzxi4Iu1", setFriends);
+    callDB(currUser.uCreds, setFriends);
   }
 
   const friendList = (
@@ -170,6 +173,7 @@ function checkNullList(friends: User[] | null) {
                     <h1>
                       {friend.profile.firstName} {friend.profile.lastName}
                     </h1>
+                    <RemoveButton user={friend} />
                     <h3>Bio</h3>
                     <p>{friend.profile.bio}</p>
                     <CurrentSong user={friend} small={false} />
@@ -196,6 +200,113 @@ function checkNullList(friends: User[] | null) {
           );
         })}
       </div>
+    );
+  }
+}
+
+interface IProps {
+  user: User;
+}
+interface IState {
+  removeClicked: boolean;
+  profileClicked: boolean;
+}
+class RemoveButton extends React.Component<IProps, IState> {
+  constructor(props: IProps) {
+    super(props);
+    this.state = { removeClicked: false, profileClicked: false };
+  }
+
+  render() {
+    if (this.state.profileClicked) {
+      return (
+        <Navigate
+          to={`/components/Profile?username=${this.props.user.userid}`}
+        />
+      );
+    }
+    return (
+      <Stack
+        direction="row"
+        justifyContent="center"
+        alignItems="left"
+        spacing={2}
+        style={{ paddingLeft: "15px", width: "100%" }}
+      >
+        <Button
+          variant="contained"
+          style={{
+            marginRight: "10px",
+            width: "100%",
+            textTransform: "none",
+          }}
+          onClick={() => {
+            this.setState({ profileClicked: true });
+          }}
+        >
+          Profile
+        </Button>
+        {!this.state.removeClicked ? (
+          <Button
+            variant="contained"
+            style={{
+              marginLeft: "10px",
+              marginRight: "5px",
+              width: "100%",
+              textTransform: "none",
+            }}
+            onClick={() => {
+              this.setState({ removeClicked: true });
+            }}
+          >
+            Remove
+          </Button>
+        ) : (
+          <Stack
+            direction="row"
+            justifyContent="flex-start"
+            alignItems="center"
+            spacing={0}
+            style={{
+              marginLeft: "5px",
+              marginRight: "5px",
+              width: "100%",
+              textTransform: "none",
+            }}
+          >
+            <Button
+              style={{
+                width: "50%",
+                marginRight: "2px",
+                marginLeft: "2px",
+                textTransform: "none",
+              }}
+              variant="contained"
+              color="success"
+              onClick={() => {
+                removeFriend(this.props.user);
+              }}
+            >
+              Confirm
+            </Button>
+            <Button
+              color="error"
+              variant="contained"
+              style={{
+                width: "50%",
+                marginRight: "2px",
+                textTransform: "none",
+                marginLeft: "2px",
+              }}
+              onClick={() => {
+                this.setState({ clicked: false });
+              }}
+            >
+              Cancel
+            </Button>
+          </Stack>
+        )}
+      </Stack>
     );
   }
 }
@@ -315,9 +426,11 @@ async function callDB(signedUser: string, setFriends: any) {
     doc(db, "Users", signedUser).withConverter(userConverter)
   );
   console.log("Grabbing User Object");
+
   const dbUser = querySnapshot.data();
   if (dbUser !== undefined) {
     user = dbUser;
+    console.log(user);
   }
 
   const friends = new Array<User>();

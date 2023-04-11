@@ -3,17 +3,21 @@ import React, { useEffect, useState } from "react";
 import User from "../../data/User";
 import { updateEmail, updatePassword } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/config";
 import {
   Button,
   Container,
   Grid,
   Link,
+  List,
+  ListItem,
+  ListItemButton,
   TextField,
   Typography,
 } from "@mui/material";
 import Navbar from "../Navbar/Navbar";
+import { useNavigate } from "react-router-dom";
 
 /**
  * Allows a user ot change their important credentials such as their Email and their Password.
@@ -21,8 +25,10 @@ import Navbar from "../Navbar/Navbar";
  * @returns The Account Settings Page component
  */
 function AccountSettingsPage(passedUser: any) {
+  const navigate = useNavigate();
   const [signupMessage, setSignupMessage] = useState("");
   const [userData, setUserData] = useState<any>();
+  const [selectItem, setSelectedItem] = useState("");
 
   const docRef = doc(db, "Users", passedUser.uCreds.uid);
   useEffect(() => {
@@ -36,77 +42,29 @@ function AccountSettingsPage(passedUser: any) {
       });
   }, []);
 
-  interface changeFieldsEmail {
-    email?: string;
-    confirmEmail?: string;
-  }
-
-  interface changeFieldsPassword {
-    password?: string;
-    confirmPassword?: string;
-  }
-
-  const formikEmail = useFormik({
-    initialValues: {
-      email: "",
-      confirmEmail: "",
-    },
-    validate(values) {
-      const errors: changeFieldsEmail = {};
-      if (values.email == "") {
-        errors.email = "Must fill out email field.";
-      }
-      if (values.confirmEmail == "") {
-        errors.confirmEmail = "Must fill out email field.";
-      }
-
-      return errors;
-    },
-    onSubmit: (values) => {
-      changeUserEmail(values.email);
-    },
-  });
-
-  const formikPassword = useFormik({
-    initialValues: {
-      password: "",
-      confirmPassword: "",
-    },
-    validate(values) {
-      const errors: changeFieldsPassword = {};
-      if (values.password == "") {
-        errors.password = "Must fill out password field.";
-      } else if (values.password.length < 8) {
-        errors.password = "Password must be 8 characters long";
-      } else if (values.confirmPassword != values.password) {
-        errors.password = "Password fields do not match!";
-      }
-
-      if (values.confirmPassword == "") {
-        errors.confirmPassword = "Must confirm password.";
-      } else if (values.confirmPassword != values.password) {
-        errors.confirmPassword = "Password fields do not match!";
-      }
-
-      return errors;
-    },
-    onSubmit: (values) => {
-      changeUserPassword(values.password);
-    },
-  });
-
+  /**
+   * Uses the firebase updateEmail function to change a user's email for
+   * account and firestore. Will redirect if needed to reauth.
+   * @param emailInput : string - The select email that will replace their old email
+   */
   function changeUserEmail(emailInput: string) {
-    //TODO make sure to change email in document reference as well. i.e Firestore
-    updateEmail(passedUser, emailInput)
+    updateEmail(passedUser.uCreds, emailInput)
       .then(() => {
+        updateDoc(docRef, { email: emailInput });
         alert("Email Successfully changed!");
       })
       .catch((error: FirebaseError) => {
+        alert("Error! " + error);
         switch (error.code) {
           case "auth/email-already-in-use":
             setSignupMessage(
               "Sorry bub! Looks like that email is already in use."
             );
+            break;
+          case "auth/requires-recent-login":
+            alert("You need to sign in again to do this change!");
+            navigate("/components/Reauth");
+
             break;
           default:
             setSignupMessage(
@@ -117,20 +75,93 @@ function AccountSettingsPage(passedUser: any) {
       });
   }
 
+  /**
+   * Uses FireBase changeUserPassword function to change the current password.
+   * If the user needs to reauth, will redirect to another page.
+   * @param passwordInput : string - The user inputed password they want to change
+  */
+  //TODO:
   function changeUserPassword(passwordInput: string) {
-    updatePassword(passedUser, passwordInput).then(() => {
-      alert("Password Changed");
-    });
+    console.log("You're in the function!");
+    updatePassword(passedUser.uCreds, passwordInput)
+      .then(() => {
+        alert("Password Changed");
+      })
+      .catch((error: FirebaseError) => {
+        alert("Error! " + error);
+        switch (error.code) {
+          case "auth/requires-recent-login":
+            alert("You need to sign in again to do this change!");
+            navigate("/components/Reauth");
+            break;
+          default:
+            setSignupMessage(
+              `Man, I don't even know what happened... ${error.code}`
+            );
+            break;
+        }
+      });
   }
-  return (
-    <div>
-      <Navbar />
-      <Typography fontSize={30}>
-        Hi, {userData?.profile.firstName + " " + userData?.profile.lastName}!
-      </Typography>
-      <Typography>Welcome to Account Settings!</Typography>
+
+  /**
+   * Will change what is shown based on useState
+   * @returns A component or null
+   */
+  //TODO: Maybe add reauthentication to this page.
+  function displayItem() {
+    if (selectItem == "1") {
+      return <h1>Holy Chungus, welcome to account settings!</h1>;
+    } else if (selectItem == "2") {
+      return <ChangeEmailComponent />;
+    } else if (selectItem == "3") {
+      return <ChangePasswordComponent />;
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * Allows a user to change their email. If their credentials have expired,
+   * it will navigate them to another page.
+   * @returns The Email Change Component
+   */
+  //TODO: Run a check against old email.
+  //TODO: Have better user messages displayed.
+  //TODO: Change how UI looks.
+  function ChangeEmailComponent() {
+    interface changeFieldsEmail {
+      email?: string;
+      confirmEmail?: string;
+    }
+
+    const formikEmail = useFormik({
+      initialValues: {
+        email: "",
+        confirmEmail: "",
+      },
+      validate(values) {
+        const errors: changeFieldsEmail = {};
+        if (values.email == "") {
+          errors.email = "Must fill out email field.";
+        } else if (values.email != values.confirmEmail) {
+          errors.email = "Email fields must match.";
+        }
+
+        if (values.confirmEmail == "") {
+          errors.confirmEmail = "Must fill out confirm email field.";
+        } else if (values.email != values.confirmEmail) {
+          errors.email = "Email fields must match.";
+        }
+
+        return errors;
+      },
+      onSubmit: (values) => {
+        changeUserEmail(values.email);
+      },
+    });
+    return (
       <fieldset className="loginSquare">
-        <h1>Change Account Information</h1>
+        <h1>Change Email</h1>
         <form onSubmit={formikEmail.handleSubmit}>
           <Container className="formGaps">
             <Grid>
@@ -159,17 +190,79 @@ function AccountSettingsPage(passedUser: any) {
                     id="confirmEmail"
                     type="text"
                     onChange={formikEmail.handleChange}
-                    value={formikEmail.values.email}
+                    value={formikEmail.values.confirmEmail}
                     error={
-                      formikEmail.touched.email &&
-                      Boolean(formikEmail.errors.email)
+                      formikEmail.touched.confirmEmail &&
+                      Boolean(formikEmail.errors.confirmEmail)
                     }
                     helperText={
-                      formikEmail.touched.email && formikEmail.errors.email
+                      formikEmail.touched.confirmEmail &&
+                      formikEmail.errors.confirmEmail
                     }
                   />
                 </Grid>
               </Container>
+              <Container>
+                <Grid item>
+                  <Button variant="outlined" type="submit">
+                    Change Email
+                  </Button>
+                </Grid>
+              </Container>
+            </Grid>
+          </Container>
+        </form>
+      </fieldset>
+    );
+  }
+
+  /**
+   * Component that allows a user to change their password.
+   * @returns The Change Password Component
+   */
+  //TODO: Run a check against old password
+  //TODO: Have better user messages displayed
+  //TODO: Change how UI looks
+  function ChangePasswordComponent() {
+    interface changeFieldsPassword {
+      password?: string;
+      confirmPassword?: string;
+    }
+
+    const formikPassword = useFormik({
+      initialValues: {
+        password: "",
+        confirmPassword: "",
+      },
+      validate(values) {
+        const errors: changeFieldsPassword = {};
+        if (values.password == "") {
+          errors.password = "Must fill out password field.";
+        } else if (values.password.length < 8) {
+          errors.password = "Password must be 8 characters long";
+        } else if (values.confirmPassword != values.password) {
+          errors.password = "Password fields do not match!";
+        }
+
+        if (values.confirmPassword == "") {
+          errors.confirmPassword = "Must confirm password.";
+        } else if (values.confirmPassword != values.password) {
+          errors.confirmPassword = "Password fields do not match!";
+        }
+
+        return errors;
+      },
+      onSubmit: (values) => {
+        changeUserPassword(values.password);
+      },
+    });
+
+    return (
+      <fieldset className="loginSquare">
+        <h1>Change Password</h1>
+        <form onSubmit={formikPassword.handleSubmit}>
+          <Container className="formGaps">
+            <Grid>
               <Container>
                 <Grid item>
                   <TextField
@@ -211,9 +304,6 @@ function AccountSettingsPage(passedUser: any) {
               <Container>
                 <Grid item>
                   <Button variant="outlined" type="submit">
-                    Change Email
-                  </Button>
-                  <Button variant="outlined" type="submit">
                     Change Password
                   </Button>
                 </Grid>
@@ -222,6 +312,37 @@ function AccountSettingsPage(passedUser: any) {
           </Container>
         </form>
       </fieldset>
+    );
+  }
+
+  return (
+    <div>
+      <Navbar />
+      <Typography fontSize={30}>
+        Hi, {userData?.profile.firstName + " " + userData?.profile.lastName}!
+      </Typography>
+      <Typography>Welcome to Account Settings!</Typography>
+      <List>
+        <ListItemButton
+          selected={selectItem == "1"}
+          onClick={() => setSelectedItem("1")}
+        >
+          <ListItem>Info</ListItem>
+        </ListItemButton>
+        <ListItemButton
+          selected={selectItem == "2"}
+          onClick={() => setSelectedItem("2")}
+        >
+          <ListItem>Change Email</ListItem>
+        </ListItemButton>
+        <ListItemButton
+          selected={selectItem == "3"}
+          onClick={() => setSelectedItem("3")}
+        >
+          <ListItem>Change Password</ListItem>
+        </ListItemButton>
+      </List>
+      <Container>{displayItem()}</Container>
     </div>
   );
 }

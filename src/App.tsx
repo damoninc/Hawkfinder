@@ -19,6 +19,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase/config";
 import isUserLoggin from "./components/Authentication/TestAuth";
 import AccountSettingsPage from "./components/ProfileSystem/AccountSettingsPage";
+import ReAuth from "./components/Authentication/Reauth";
 
 /**
  * The top level of our App. Our routes are declared here, and use these routes
@@ -85,7 +86,7 @@ function App() {
             path="/components/Friends"
             element={
               isUserLoggin(user) ? (
-                <FriendPage />
+                <FriendPage uCreds={user.uid} />
               ) : (
                 <Navigate to="/components/Interceptor" />
               )
@@ -95,7 +96,7 @@ function App() {
             path="/components/Spotify"
             element={
               isUserLoggin(user) ? (
-                <SpotifyPage />
+                <SpotifyPage uCreds={user.uid} />
               ) : (
                 <Navigate to="/components/Interceptor" />
               )
@@ -155,6 +156,7 @@ function App() {
               )
             }
           />
+          <Route path="/components/Reauth" element={<ReAuth />} />
         </Routes>
       </Router>
     </div>

@@ -11,7 +11,7 @@ import { doc, getDoc } from "@firebase/firestore";
 
 function ForumPost(props: any) {
   // Creates a pointer reference to the image of the post
-  const imageRef = ref(storage, "Posts/" + props.id + ".jpg");
+  const imageRef = ref(storage, "Posts/" + props.imageURL);
 
   /**
    * Grabs the appropriate image URL for the
@@ -24,7 +24,7 @@ function ForumPost(props: any) {
           setImage(url);
         })
         .catch(() => {
-          console.log("Error fetching image");
+          console.log("Error fetching image...");
         });
     }
     const docRef = doc(db, "Posts", props.id);

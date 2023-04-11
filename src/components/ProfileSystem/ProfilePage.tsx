@@ -34,7 +34,8 @@ function ProfilePage(passedUser: any) {
   useEffect(() => {
     getDoc(docRef)
       .then((docSnap) => {
-        const userToSpotify: User | undefined = userConverter.fromFirestore(docSnap)
+        const userToSpotify: User | undefined =
+          userConverter.fromFirestore(docSnap);
         setSpotifyUser(userToSpotify);
         const userPageData = docSnap.data();
         setUserPage(userPageData);
@@ -107,7 +108,11 @@ function ProfilePage(passedUser: any) {
           ))}
         </ul>
       </Box>
-      {spotifyUser!==undefined ? <CurrentSong user={spotifyUser} small={false}/> : <div></div>}
+      {spotifyUser !== undefined ? (
+        <CurrentSong user={spotifyUser} small={false} />
+      ) : (
+        <div></div>
+      )}
     </>
   );
 }
