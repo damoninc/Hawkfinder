@@ -125,7 +125,7 @@ function App() {
             path="/components/Profile"
             element={
               isUserLoggin(user) ? (
-                <ProfilePage uCreds={user} />
+                <ProfilePage uCreds={user?.uid} />
               ) : (
                 <Navigate to="/components/Interceptor" />
               )
