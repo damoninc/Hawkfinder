@@ -1,0 +1,358 @@
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>csc450-sp23-project-team1</title><meta name="description" content="Documentation for csc450-sp23-project-team1"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/search.js" id="search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container">
+<div class="table-cell" id="tsd-search" data-base=".">
+<div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
+<div class="field">
+<div id="tsd-toolbar-links"></div></div>
+<ul class="results">
+<li class="state loading">Preparing search index...</li>
+<li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">csc450-sp23-project-team1</a></div>
+<div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
+<div class="container container-main">
+<div class="col-content">
+<div class="tsd-page-title">
+<h2>csc450-sp23-project-team1</h2></div>
+<div class="tsd-panel tsd-typography"><a id="$csc450-sp23-project-team1" class="tsd-anchor"></a><h1><a href="#$csc450-sp23-project-team1" style="color:inherit;text-decoration:none">csc450-sp23-project-team1</a></h1><a id="$installation" class="tsd-anchor"></a><h2><a href="#$installation" style="color:inherit;text-decoration:none">Installation</a></h2><ol>
+<li>Install node.js - <a href="https://nodejs.org/en/download/">https://nodejs.org/en/download/</a><ul>
+<li>Type npm -v to verify installation</li>
+</ul>
+</li>
+<li>Go to the directory where you wish to clone</li>
+<li>Type the following command in the terminal: &quot;git clone <a href="https://github.com/UNCW-CSC-450/csc450-sp23-project-team1.git">https://github.com/UNCW-CSC-450/csc450-sp23-project-team1.git</a>&quot;</li>
+<li>Type &quot;npm i&quot; to install required dependencies</li>
+<li>Install firebase dependencies with the following commands:</li>
+</ol>
+<ul>
+<li>&quot;npm install firebase&quot;</li>
+<li>&quot;npm install -g firebase-tools&quot;</li>
+</ul>
+<ol start="7">
+<li>Type &quot;npm run dev&quot; to run the application</li>
+<li>Open &quot;<a href="http://localhost:5173/">http://localhost:5173/</a>&quot; in browser of your choice</li>
+<li>Ctrl+C or &quot;q&quot; to close the local server</li>
+</ol>
+<hr>
+<a id="$running-ts-files" class="tsd-anchor"></a><h2><a href="#$running-ts-files" style="color:inherit;text-decoration:none">Running .ts Files</a></h2><p>TypeScript files are generally never run by themselves as they are used with React + Vite to build the project. However, if there&#39;s ever an occasion where you need to run one, refer to this guide. Unfortunately, .ts files cannot be run by themselves. You must run the TypeScript compiler to convert them into .js files and then run them through Node.js.</p>
+<ol>
+<li>Type &quot;npm install -g typescript&quot; if the TypeScript compiler is not installed.<ul>
+<li>Test your installation by typing &quot;tsc --version&quot;.<ul>
+<li>If you get an error stating &quot;running scripts is disabled on this system&quot;, refer to the thread below.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Navigate to the .ts file directory.</li>
+<li>Type &quot;tsc [your_ts_file_here].ts&quot;. This will convert the .ts file to a .js one with the same name.<ul>
+<li>You may recieve a &quot;Accessors are only available when targeting ECMAScript 5 and higher&quot; error. <ul>
+<li>If that happens, instead type &quot;tsc -t es5 [your_ts_file_here].ts&quot;.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Type &quot;node [your_js_file_here].js&quot;.<ul>
+<li>The script may not run and tell you to change the file extension from .js to .cjs. Preferably, you can change the package.json &quot;type&quot; field from &quot;module&quot; to &quot;commonjs&quot;, so you don&#39;t have to keep changing file extension for every script you run. Either method will work, but if you change package.json, don&#39;t forget to change it back.</li>
+</ul>
+</li>
+<li>Profit.<ul>
+<li>You could optionally combine steps 3 and 4 by stringing the commands together using a semicolon.<ul>
+<li>Ex: &quot;tsc test_data.ts; node test_data.js&quot; or &quot;tsc -t es5 User.ts; node User.js&quot;.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<a id="$help-i-get-an-error-about-running-scripts-being-disabled" class="tsd-anchor"></a><h3><a href="#$help-i-get-an-error-about-running-scripts-being-disabled" style="color:inherit;text-decoration:none">HELP! I get an error about running scripts being disabled!</a></h3><p>By default, most machines have their execution policy set to &quot;Restricted&quot; to protect from malicious scripts. For Windows, you can check your execution policy by running &quot;Get-ExecutionPolicy&quot; in the Powershell. In order to run the .ts files, you&#39;d need to change your execution policy to &quot;RemoteSigned&quot;. This should allow scripts to run so long as you trust this project on your machine.</p>
+<a id="$on-windows-this-is-done-by-1-running-quotwindows-powershellquot-as-an-adminstrator-2-type-quotset-executionpolicy-remotesignedquot-3-type-quotaquot-to-agree-to-all-4-profit-------unfortunately-i-don39t-know-how-this-works-for-mac-luckily-most-of-the-devs-here-use-windows-sorry-damon-------you-may-want-to-consider-switching-your-execution-policy-back-to-quotrestrictedquot-after-you-have-finished-running-your-scripts" class="tsd-anchor"></a><h2><a href="#$on-windows-this-is-done-by-1-running-quotwindows-powershellquot-as-an-adminstrator-2-type-quotset-executionpolicy-remotesignedquot-3-type-quotaquot-to-agree-to-all-4-profit-------unfortunately-i-don39t-know-how-this-works-for-mac-luckily-most-of-the-devs-here-use-windows-sorry-damon-------you-may-want-to-consider-switching-your-execution-policy-back-to-quotrestrictedquot-after-you-have-finished-running-your-scripts" style="color:inherit;text-decoration:none">On Windows, this is done by:
+1) Running &quot;Windows Powershell&quot; as an adminstrator.
+2) Type &quot;Set-ExecutionPolicy RemoteSigned&quot;.
+3) Type &quot;a&quot; to agree to all.
+4) Profit.
+    - Unfortunately, I don&#39;t know how this works for Mac. Luckily, most of the Devs here use Windows (Sorry Damon!).
+    - You may want to consider switching your execution policy back to &quot;Restricted&quot; after you have finished running your scripts.</a></h2><a id="$developer-guide" class="tsd-anchor"></a><h2><a href="#$developer-guide" style="color:inherit;text-decoration:none">Developer Guide</a></h2><a id="$preferred-ide---vscode-code-standards---follow-the-official-ts-guide-created-by-google-httpsgooglegithubiostyleguidetsguidehtml-linters---eslint-------quotnpm-install--g-eslintquot-to-install-eslint-globally-on-your-machine-------the-linter-is-already-a-dependency-in-our-project-so-it-will-find-any-lint-errors-automatically-pretty-formatting---install-the-prettier-extension-------httpsmarketplacevisualstudiocomitemsitemnameesbenpprettier-vscode---to-format-your-code-right-click-your-workspace-click-quotformat-document-withquot-and-choose-quotprettier---code-formatterquot---a-better-option-would-be-to-go-into-your-vscode-settings-and-enable-quoteditor-format-on-savequot-------this-will-auto-format-your-code-every-time-the-file-is-saved" class="tsd-anchor"></a><h2><a href="#$preferred-ide---vscode-code-standards---follow-the-official-ts-guide-created-by-google-httpsgooglegithubiostyleguidetsguidehtml-linters---eslint-------quotnpm-install--g-eslintquot-to-install-eslint-globally-on-your-machine-------the-linter-is-already-a-dependency-in-our-project-so-it-will-find-any-lint-errors-automatically-pretty-formatting---install-the-prettier-extension-------httpsmarketplacevisualstudiocomitemsitemnameesbenpprettier-vscode---to-format-your-code-right-click-your-workspace-click-quotformat-document-withquot-and-choose-quotprettier---code-formatterquot---a-better-option-would-be-to-go-into-your-vscode-settings-and-enable-quoteditor-format-on-savequot-------this-will-auto-format-your-code-every-time-the-file-is-saved" style="color:inherit;text-decoration:none">Preferred IDE
+- VSCode
+Code Standards
+- Follow the official TS guide created by Google: <a href="https://google.github.io/styleguide/tsguide.html">https://google.github.io/styleguide/tsguide.html</a>
+Linters
+- ESLint
+    - &quot;npm install -g eslint&quot; to install eslint globally on your machine
+    - The linter is already a dependency in our project, so it will find any lint errors automatically
+Pretty Formatting
+- Install the Prettier extension
+    - <a href="https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode">https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode</a>
+- To format your code, right-click your workspace, click &quot;Format Document With...&quot;, and choose &quot;Prettier - Code Formatter&quot;
+- A better option would be to go into your VSCode settings and enable &quot;Editor: Format On Save&quot;
+    - This will auto-format your code every time the file is saved</a></h2><a id="$about" class="tsd-anchor"></a><h2><a href="#$about" style="color:inherit;text-decoration:none">About</a></h2><p>Hawk Finder is a UNCW social media web app where users can share their interests with others. The app targets UNCW students looking to socialize and meet with other students based on their common interests.</p>
+<p>Project Manager:</p>
+<ul>
+<li>Nicholas Brunsink</li>
+</ul>
+<p>Lead Developer:</p>
+<ul>
+<li>John Bejar</li>
+</ul>
+<p>Developers:</p>
+<ul>
+<li>Octavio Galindo</li>
+<li>Damon Incorvaia</li>
+</ul>
+<hr>
+<a id="$components" class="tsd-anchor"></a><h2><a href="#$components" style="color:inherit;text-decoration:none">Components</a></h2><p>Posts </p>
+<ul>
+<li>Being Implemented by John Bejar</li>
+</ul>
+<p>Main Feed </p>
+<ul>
+<li>Being Implemented by John Bejar</li>
+</ul>
+<p>FireBase</p>
+<ul>
+<li>Being Implemented by Damon Incorvaia</li>
+</ul>
+<p>Authentication</p>
+<ul>
+<li>Being Implemented by Octavio Galindo</li>
+</ul>
+<p>UserManger</p>
+<ul>
+<li>Being Implemented by Octavio Galindo, Damon Incorvaia</li>
+</ul>
+<p>Spotify Integration</p>
+<ul>
+<li>Being implemented by Nicholas Brunsink</li>
+</ul>
+<a id="$friend-system---being-implemented-by-nicholas-brunsink" class="tsd-anchor"></a><h2><a href="#$friend-system---being-implemented-by-nicholas-brunsink" style="color:inherit;text-decoration:none">Friend System
+- Being implemented by Nicholas Brunsink</a></h2><p>This is a react.js project bootstrapped with Vite</p>
+<a id="$links-to-tutorials" class="tsd-anchor"></a><h2><a href="#$links-to-tutorials" style="color:inherit;text-decoration:none">Links to Tutorials</a></h2><ul>
+<li><a href="https://www.youtube.com/watch?v=bMknfKXIFA8">https://www.youtube.com/watch?v=bMknfKXIFA8</a></li>
+<li><a href="https://beta.reactjs.org/">https://beta.reactjs.org/</a></li>
+<li><a href="https://www.youtube.com/watch?v=b0IZo2Aho9Y">https://www.youtube.com/watch?v=b0IZo2Aho9Y</a></li>
+<li><a href="https://www.youtube.com/watch?v=s2skans2dP4">https://www.youtube.com/watch?v=s2skans2dP4</a> ← React Concepts</li>
+</ul>
+</div></div>
+<div class="col-sidebar">
+<div class="page-menu">
+<div class="tsd-navigation settings">
+<details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg>Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility">
+<h4 class="uppercase">Member Visibility</h4><form>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-private" name="private"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Private</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></form></div>
+<div class="tsd-theme-toggle">
+<h4 class="uppercase">Theme</h4><select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<details open class="tsd-index-accordion tsd-page-navigation"><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg>On This Page</h3></summary>
+<div class="tsd-accordion-details">
+<ul>
+<li>
+<ul>
+<li><a href="#$csc450-sp23-project-team1"><span>csc450-<wbr/>sp23-<wbr/>project-<wbr/>team1</span></a></li>
+<li>
+<ul>
+<li><a href="#$installation"><span>Installation</span></a></li>
+<li><a href="#$running-ts-files"><span>Running .ts <wbr/>Files</span></a></li>
+<li>
+<ul>
+<li><a href="#$help-i-get-an-error-about-running-scripts-being-disabled"><span>HELP! <wbr/>I get an error about running scripts being disabled!</span></a></li></ul></li>
+<li><a href="#$on-windows-this-is-done-by-1-running-quotwindows-powershellquot-as-an-adminstrator-2-type-quotset-executionpolicy-remotesignedquot-3-type-quotaquot-to-agree-to-all-4-profit-------unfortunately-i-don39t-know-how-this-works-for-mac-luckily-most-of-the-devs-here-use-windows-sorry-damon-------you-may-want-to-consider-switching-your-execution-policy-back-to-quotrestrictedquot-after-you-have-finished-running-your-scripts"><span>On <wbr/>Windows, this is done by:
+1) <wbr/>Running &amp;quot;<wbr/>Windows <wbr/>Powershell&amp;quot; as an adminstrator.
+2) <wbr/>Type &amp;quot;<wbr/>Set-<wbr/>Execution<wbr/>Policy <wbr/>Remote<wbr/>Signed&amp;quot;.
+3) <wbr/>Type &amp;quot;a&amp;quot; to agree to all.
+4) <wbr/>Profit.
+    -<wbr/> <wbr/>Unfortunately, <wbr/>I don&amp;#39;t know how this works for <wbr/>Mac. <wbr/>Luckily, most of the <wbr/>Devs here use <wbr/>Windows (<wbr/>Sorry <wbr/>Damon!).
+    -<wbr/> <wbr/>You may want to consider switching your execution policy back to &amp;quot;<wbr/>Restricted&amp;quot; after you have finished running your scripts.</span></a></li>
+<li><a href="#$developer-guide"><span>Developer <wbr/>Guide</span></a></li>
+<li><a href="#$preferred-ide---vscode-code-standards---follow-the-official-ts-guide-created-by-google-httpsgooglegithubiostyleguidetsguidehtml-linters---eslint-------quotnpm-install--g-eslintquot-to-install-eslint-globally-on-your-machine-------the-linter-is-already-a-dependency-in-our-project-so-it-will-find-any-lint-errors-automatically-pretty-formatting---install-the-prettier-extension-------httpsmarketplacevisualstudiocomitemsitemnameesbenpprettier-vscode---to-format-your-code-right-click-your-workspace-click-quotformat-document-withquot-and-choose-quotprettier---code-formatterquot---a-better-option-would-be-to-go-into-your-vscode-settings-and-enable-quoteditor-format-on-savequot-------this-will-auto-format-your-code-every-time-the-file-is-saved"><span>Preferred IDE
+-<wbr/> VSCode
+<wbr/>Code <wbr/>Standards
+-<wbr/> <wbr/>Follow the official TS guide created by <wbr/>Google: &lt;a href=&quot;https://google.github.io/styleguide/tsguide.html&quot;&gt;https://google.github.io/styleguide/tsguide.html&lt;/a&gt;
+<wbr/>Linters
+-<wbr/> ESLint
+    -<wbr/> &amp;quot;npm install -<wbr/>g eslint&amp;quot; to install eslint globally on your machine
+    -<wbr/> <wbr/>The linter is already a dependency in our project, so it will find any lint errors automatically
+<wbr/>Pretty <wbr/>Formatting
+-<wbr/> <wbr/>Install the <wbr/>Prettier extension
+    -<wbr/> &lt;a href=&quot;https://marketplace.visualstudio.com/items?item<wbr/>Name=esbenp.prettier-<wbr/>vscode&quot;&gt;https://marketplace.visualstudio.com/items?item<wbr/>Name=esbenp.prettier-<wbr/>vscode&lt;/a&gt;
+-<wbr/> <wbr/>To format your code, right-<wbr/>click your workspace, click &amp;quot;<wbr/>Format <wbr/>Document <wbr/>With...&amp;quot;, and choose &amp;quot;<wbr/>Prettier -<wbr/> <wbr/>Code <wbr/>Formatter&amp;quot;
+-<wbr/> <wbr/>A better option would be to go into your VSCode settings and enable &amp;quot;<wbr/>Editor: <wbr/>Format <wbr/>On <wbr/>Save&amp;quot;
+    -<wbr/> <wbr/>This will auto-<wbr/>format your code every time the file is saved</span></a></li>
+<li><a href="#$about"><span>About</span></a></li>
+<li><a href="#$components"><span>Components</span></a></li>
+<li><a href="#$friend-system---being-implemented-by-nicholas-brunsink"><span>Friend <wbr/>System
+-<wbr/> <wbr/>Being implemented by <wbr/>Nicholas <wbr/>Brunsink</span></a></li>
+<li><a href="#$links-to-tutorials"><span>Links to <wbr/>Tutorials</span></a></li></ul></li></ul></li></ul></div></details></div>
+<div class="site-menu">
+<nav class="tsd-navigation"><a href="index.html" class="current"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-namespace)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4-path"></rect><path d="M9.33 16V7.24H10.77L13.446 14.74C13.43 14.54 13.41 14.296 13.386 14.008C13.37 13.712 13.354 13.404 13.338 13.084C13.33 12.756 13.326 12.448 13.326 12.16V7.24H14.37V16H12.93L10.266 8.5C10.282 8.692 10.298 8.936 10.314 9.232C10.33 9.52 10.342 9.828 10.35 10.156C10.366 10.476 10.374 10.784 10.374 11.08V16H9.33Z" fill="var(--color-text)" id="icon-4-text"></path></svg><span>csc450-<wbr/>sp23-<wbr/>project-<wbr/>team1</span></a>
+<ul class="tsd-small-nested-navigation">
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="App"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/App.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>App</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="functions/App.default.html" class="tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-function)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-64-path"></rect><path d="M9.39 16V7.24H14.55V8.224H10.446V11.128H14.238V12.112H10.47V16H9.39Z" fill="var(--color-text)" id="icon-64-text"></path></svg><span>default</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="components/Authentication/InterceptorScreen"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/components_Authentication_InterceptorScreen.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>components/<wbr/>Authentication/<wbr/>Interceptor<wbr/>Screen</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="functions/components_Authentication_InterceptorScreen.default.html" class="tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>default</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="components/Authentication/LoginScreen"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/components_Authentication_LoginScreen.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>components/<wbr/>Authentication/<wbr/>Login<wbr/>Screen</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="functions/components_Authentication_LoginScreen.default.html" class="tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>default</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="components/Authentication/Reauth"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/components_Authentication_Reauth.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>components/<wbr/>Authentication/<wbr/>Reauth</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="functions/components_Authentication_Reauth.default.html" class="tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>default</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="components/Authentication/SignUpScreen"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/components_Authentication_SignUpScreen.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>components/<wbr/>Authentication/<wbr/>Sign<wbr/>Up<wbr/>Screen</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="functions/components_Authentication_SignUpScreen.default.html" class="tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>default</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="components/Authentication/SignedInScreen"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/components_Authentication_SignedInScreen.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>components/<wbr/>Authentication/<wbr/>Signed<wbr/>In<wbr/>Screen</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="functions/components_Authentication_SignedInScreen.default.html" class="tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>default</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="components/Authentication/TestAuth"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/components_Authentication_TestAuth.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>components/<wbr/>Authentication/<wbr/>Test<wbr/>Auth</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="functions/components_Authentication_TestAuth.default.html" class="tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>default</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="components/Forum/Forum"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/components_Forum_Forum.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>components/<wbr/>Forum/<wbr/>Forum</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="functions/components_Forum_Forum.default.html" class="tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>default</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="components/Forum/ForumPost"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/components_Forum_ForumPost.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>components/<wbr/>Forum/<wbr/>Forum<wbr/>Post</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="functions/components_Forum_ForumPost.default.html" class="tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>default</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="components/Forum/PostInput"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/components_Forum_PostInput.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>components/<wbr/>Forum/<wbr/>Post<wbr/>Input</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="functions/components_Forum_PostInput.default.html" class="tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>default</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="components/FriendSystem/FriendBox"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/components_FriendSystem_FriendBox.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>components/<wbr/>Friend<wbr/>System/<wbr/>Friend<wbr/>Box</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="classes/components_FriendSystem_FriendBox.default.html" class="tsd-kind-class tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-class)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-128-path"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)" id="icon-128-text"></path></svg><span>default</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="components/FriendSystem/FriendPage"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/components_FriendSystem_FriendPage.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>components/<wbr/>Friend<wbr/>System/<wbr/>Friend<wbr/>Page</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="variables/components_FriendSystem_FriendPage.user.html" class="tsd-kind-variable tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-variable)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-32-path"></rect><path d="M11.106 16L8.85 7.24H9.966L11.454 13.192C11.558 13.608 11.646 13.996 11.718 14.356C11.79 14.708 11.842 14.976 11.874 15.16C11.906 14.976 11.954 14.708 12.018 14.356C12.09 13.996 12.178 13.608 12.282 13.192L13.758 7.24H14.85L12.582 16H11.106Z" fill="var(--color-text)" id="icon-32-text"></path></svg><span>user</span></a></li>
+<li><a href="functions/components_FriendSystem_FriendPage.addFriend.html" class="tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>add<wbr/>Friend</span></a></li>
+<li><a href="functions/components_FriendSystem_FriendPage.default.html" class="tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>default</span></a></li>
+<li><a href="functions/components_FriendSystem_FriendPage.goToProfile.html" class="tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>go<wbr/>To<wbr/>Profile</span></a></li>
+<li><a href="functions/components_FriendSystem_FriendPage.removeFriend.html" class="tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>remove<wbr/>Friend</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="components/FriendSystem/FriendRequests"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/components_FriendSystem_FriendRequests.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>components/<wbr/>Friend<wbr/>System/<wbr/>Friend<wbr/>Requests</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="functions/components_FriendSystem_FriendRequests.default.html" class="tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>default</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="components/FriendSystem/FriendSearch"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/components_FriendSystem_FriendSearch.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>components/<wbr/>Friend<wbr/>System/<wbr/>Friend<wbr/>Search</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="functions/components_FriendSystem_FriendSearch.default.html" class="tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>default</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="components/FriendSystem/SearchForm"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/components_FriendSystem_SearchForm.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>components/<wbr/>Friend<wbr/>System/<wbr/>Search<wbr/>Form</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="classes/components_FriendSystem_SearchForm.default.html" class="tsd-kind-class tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg><span>default</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="components/FriendSystem/UserBox"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/components_FriendSystem_UserBox.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>components/<wbr/>Friend<wbr/>System/<wbr/>User<wbr/>Box</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="functions/components_FriendSystem_UserBox.default.html" class="tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>default</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="components/Navbar/Navbar"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/components_Navbar_Navbar.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>components/<wbr/>Navbar/<wbr/>Navbar</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="functions/components_Navbar_Navbar.default.html" class="tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>default</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="components/Post/PostView"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/components_Post_PostView.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>components/<wbr/>Post/<wbr/>Post<wbr/>View</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="functions/components_Post_PostView.default.html" class="tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>default</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="components/ProfileSystem/AccountSettingsPage"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/components_ProfileSystem_AccountSettingsPage.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>components/<wbr/>Profile<wbr/>System/<wbr/>Account<wbr/>Settings<wbr/>Page</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="functions/components_ProfileSystem_AccountSettingsPage.default.html" class="tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>default</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="components/ProfileSystem/EditPage"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/components_ProfileSystem_EditPage.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>components/<wbr/>Profile<wbr/>System/<wbr/>Edit<wbr/>Page</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="functions/components_ProfileSystem_EditPage.default.html" class="tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>default</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="components/ProfileSystem/ProfilePage"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/components_ProfileSystem_ProfilePage.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>components/<wbr/>Profile<wbr/>System/<wbr/>Profile<wbr/>Page</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="functions/components_ProfileSystem_ProfilePage.default.html" class="tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>default</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="components/SpotifyIntegration/SpotifyComponents"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/components_SpotifyIntegration_SpotifyComponents.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>components/<wbr/>Spotify<wbr/>Integration/<wbr/>Spotify<wbr/>Components</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="classes/components_SpotifyIntegration_SpotifyComponents.RecentSongs.html" class="tsd-kind-class tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg><span>Recent<wbr/>Songs</span></a></li>
+<li><a href="classes/components_SpotifyIntegration_SpotifyComponents.TopSongs.html" class="tsd-kind-class tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg><span>Top<wbr/>Songs</span></a></li>
+<li><a href="classes/components_SpotifyIntegration_SpotifyComponents.default.html" class="tsd-kind-class tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg><span>default</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="components/SpotifyIntegration/SpotifyLogin"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/components_SpotifyIntegration_SpotifyLogin.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>components/<wbr/>Spotify<wbr/>Integration/<wbr/>Spotify<wbr/>Login</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="functions/components_SpotifyIntegration_SpotifyLogin.default.html" class="tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>default</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="components/SpotifyIntegration/SpotifyPage"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/components_SpotifyIntegration_SpotifyPage.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>components/<wbr/>Spotify<wbr/>Integration/<wbr/>Spotify<wbr/>Page</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="variables/components_SpotifyIntegration_SpotifyPage.user.html" class="tsd-kind-variable tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-32-path"></use><use href="#icon-32-text"></use></svg><span>user</span></a></li>
+<li><a href="functions/components_SpotifyIntegration_SpotifyPage.default.html" class="tsd-kind-function tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>default</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="data/Comment"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/data_Comment.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>data/<wbr/>Comment</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="classes/data_Comment.default.html" class="tsd-kind-class tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg><span>default</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="data/Message"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/data_Message.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>data/<wbr/>Message</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="classes/data_Message.default.html" class="tsd-kind-class tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg><span>default</span></a></li>
+<li><a href="variables/data_Message.SAMPLE_MESSAGES.html" class="tsd-kind-variable tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-32-path"></use><use href="#icon-32-text"></use></svg><span>SAMPLE_<wbr/>MESSAGES</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="data/Post"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/data_Post.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>data/<wbr/>Post</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="classes/data_Post.default.html" class="tsd-kind-class tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg><span>default</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="data/Profile"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/data_Profile.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>data/<wbr/>Profile</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="classes/data_Profile.default.html" class="tsd-kind-class tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg><span>default</span></a></li>
+<li><a href="variables/data_Profile.sampleProfiles.html" class="tsd-kind-variable tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-32-path"></use><use href="#icon-32-text"></use></svg><span>sample<wbr/>Profiles</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="data/User"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/data_User.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>data/<wbr/>User</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="classes/data_User.default.html" class="tsd-kind-class tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg><span>default</span></a></li>
+<li><a href="variables/data_User.testUsers.html" class="tsd-kind-variable tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-32-path"></use><use href="#icon-32-text"></use></svg><span>test<wbr/>Users</span></a></li>
+<li><a href="variables/data_User.userConverter.html" class="tsd-kind-variable tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-32-path"></use><use href="#icon-32-text"></use></svg><span>user<wbr/>Converter</span></a></li></ul></div></details></li>
+<li>
+<details class="tsd-index-accordion tsd-kind-module" data-key="firebase/config"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="modules/firebase_config.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>firebase/config</span></a></summary>
+<div class="tsd-accordion-details">
+<ul class="tsd-nested-navigation">
+<li><a href="variables/firebase_config.auth.html" class="tsd-kind-variable tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-32-path"></use><use href="#icon-32-text"></use></svg><span>auth</span></a></li>
+<li><a href="variables/firebase_config.db.html" class="tsd-kind-variable tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-32-path"></use><use href="#icon-32-text"></use></svg><span>db</span></a></li>
+<li><a href="variables/firebase_config.storage.html" class="tsd-kind-variable tsd-parent-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-32-path"></use><use href="#icon-32-text"></use></svg><span>storage</span></a></li></ul></div></details></li>
+<li><a href="modules/main.html" class="tsd-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>main</span></a></li>
+<li><a href="modules/vite_env.html" class="tsd-kind-module"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>vite-<wbr/>env</span></a></li></ul></nav></div></div></div>
+<div class="tsd-generator">
+<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
+<div class="overlay"></div></body></html>
