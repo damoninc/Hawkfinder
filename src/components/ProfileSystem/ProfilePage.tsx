@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import User from "../../data/User";
+import User, { userConverter } from "../../data/User";
 import "../../styles/Profile.css";
 import {
   collection,
@@ -18,21 +18,25 @@ import { ref, getDownloadURL } from "firebase/storage";
 import Navbar from "../Navbar/Navbar";
 import { Box, Typography } from "@mui/material";
 import EditPage from "./EditPage";
+import CurrentSong from "../SpotifyIntegration/SpotifyComponents";
 
 /**
  * This is the main profile page that displays a users profile
  * @returns the webpage
  */
 function ProfilePage(passedUser: any) {
-  const passedUserObj = passedUser.uCreds.uid; //Feel free to change this to the passed in object for testing. Make sure its of type string.
+  const passedUserObj = passedUser.uCreds; //Feel free to change this to the passed in object for testing. Make sure its of type string.
   const [userPage, setUserPage] = useState<any>();
   const [userProfPic, setUserProfPic] = useState("");
   const [userCoverPic, setUserCoverPic] = useState("");
+  const [spotifyUser, setSpotifyUser] = useState<User | undefined>(undefined);
 
   const docRef = doc(db, "Users", passedUserObj);
   useEffect(() => {
     getDoc(docRef)
       .then((docSnap) => {
+        const userToSpotify: User | undefined = userConverter.fromFirestore(docSnap)
+        setSpotifyUser(userToSpotify);
         const userPageData = docSnap.data();
         setUserPage(userPageData);
         const userProfPicRef = ref(
@@ -104,6 +108,7 @@ function ProfilePage(passedUser: any) {
           ))}
         </ul>
       </Box>
+      {spotifyUser!==undefined ? <CurrentSong user={spotifyUser} small={false}/> : <div></div>}
     </>
   );
 }
