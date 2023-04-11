@@ -117,4 +117,7 @@ function logOut(user: User) {
       user.spotify.refreshToken
     );
   }
+  setTimeout(() => {
+    window.location.reload();
+  }, 1000);
 }

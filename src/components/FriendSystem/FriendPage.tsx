@@ -39,12 +39,12 @@ let dbPulled = false;
  * @param signedUser : string
  * @return {*} - FriendPage HTML
  */
-export default function FriendPage() {
+export default function FriendPage(currUser: { uCreds: string }) {
   const [dbCall, setFriends] = useState(null);
   const [pageSwitch, setSwitch] = useState(0);
 
   if (!dbPulled || dbCall == null) {
-    callDB("sq0kklKJQLYTuFQ6IQf6fzxi4Iu1", setFriends);
+    callDB(currUser.uCreds, setFriends);
   }
 
   const friendList = (
@@ -200,6 +200,19 @@ function checkNullList(friends: User[] | null) {
   }
 }
 
+interface IProps {
+  user: User;
+}
+interface IState {
+  clicked: boolean;
+}
+class RemoveButton extends React.Component<IProps, IState> {
+  constructor(props: IProps) {
+    super(props);
+    this.state = { clicked: false };
+  }
+}
+
 /**
  * When called, sends a friend request to the given user
  *
@@ -315,9 +328,11 @@ async function callDB(signedUser: string, setFriends: any) {
     doc(db, "Users", signedUser).withConverter(userConverter)
   );
   console.log("Grabbing User Object");
+
   const dbUser = querySnapshot.data();
   if (dbUser !== undefined) {
     user = dbUser;
+    console.log(user);
   }
 
   const friends = new Array<User>();
