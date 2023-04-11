@@ -9,6 +9,8 @@ import {
   IconButton,
   ImageList,
   ImageListItem,
+  Chip,
+  InputAdornment,
 } from "@mui/material";
 import PortraitIcon from "@mui/icons-material/Portrait";
 import PanoramaIcon from "@mui/icons-material/Panorama";
@@ -22,6 +24,8 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { db, storage } from "../../firebase/config";
 import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
+import * as filter from "leo-profanity";
+import { MuiChipsInput } from "mui-chips-input";
 const interestRef = doc(db, "Interests", "Interests");
 const interestSnap = await getDoc(interestRef);
 const baseInterests = interestSnap.data();
@@ -29,10 +33,17 @@ const baseInterests = interestSnap.data();
 /**
  * This is the edit page button. It is only visible if the logged in user matches the user's profile.
  * A user can only see this on their own page.
+ * @param user Data for the user's profile
+ * @param docRef Firebase document reference to the user's document
+ * @param passedUserObj The authenticated user
  * @returns The edit page button/modal combo
  */
-function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
-  const owner = user?.userid === window.localStorage.getItem("token");
+function EditPage(
+  user: DocumentData | undefined,
+  docRef: DocumentReference,
+  passedUserObj: string
+) {
+  const owner = user?.userid === passedUserObj;
   // MAIN EDIT PAGE MODAL HANDLERS
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -169,6 +180,7 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
   const [lastName, setlastName] = React.useState(user?.profile.lastname);
   const [bio, setbio] = useState(user?.profile.bio);
   const [interests, setinterests] = React.useState(user?.profile.interests);
+  const [customInterests, setCustomInterests] = React.useState<string[]>([]);
 
   const handlefirstName = (e: { target: { value: any } }) => {
     setfirstname(e.target.value);
@@ -183,11 +195,23 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
   };
 
   const handleInterests = (event: any, newValue: string[]) => {
+    console.log(newValue);
     setinterests(newValue);
   };
 
+  const handleCustomInterests = (newValue: string[]) => {
+    if (newValue[newValue.length - 1] === filter.clean(newValue[newValue.length -1]) && !baseInterests?.Interests.includes(newValue[newValue.length - 1]) ){
+      setCustomInterests(newValue);
+    }
+    if (newValue.length < customInterests.length){
+      setCustomInterests(newValue);
+    }
+  };
+
+
   const handleSave = () => {
     const dataToUpdate: any = {};
+    const baseInterestDataToUpdate: any = {};
     if (firstName) {
       dataToUpdate["profile.firstName"] = firstName;
     }
@@ -206,7 +230,20 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
     if (coverPhoto) {
       dataToUpdate["profile.coverPhoto"] = coverPhoto;
     }
+    if (customInterests.length > 0){
+      const updateInterests = user?.profile.interests;
+      updateInterests?.push.apply(updateInterests, customInterests);
+      console.log("Interests: ", updateInterests)
+      dataToUpdate["profile.interests"] = updateInterests;
+
+      const newBaseInterests: string[] = baseInterests?.Interests;
+      newBaseInterests?.push.apply(newBaseInterests, customInterests);
+      newBaseInterests.sort();
+      console.log("Base Interests: ", newBaseInterests)
+      baseInterestDataToUpdate["Interests"] = newBaseInterests;
+    }
     updateDoc(docRef, dataToUpdate);
+    updateDoc(interestRef, baseInterestDataToUpdate);
     handleClose();
   };
 
@@ -235,6 +272,12 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
               margin="normal"
             />
           )}
+        />
+        <MuiChipsInput
+          value={customInterests}
+          onChange={handleCustomInterests}
+          label="Don't see any interests?"
+          placeholder="Add your own interests."
         />
       </Stack>
     );
@@ -394,7 +437,7 @@ function EditPage(user: DocumentData | undefined, docRef: DocumentReference) {
                     p: 4,
                   }}
                 >
-                  {ImageLoader()}
+                  <ImageLoader />
                   <Button color="warning" onClick={handleInnerClose}>
                     Back
                   </Button>
