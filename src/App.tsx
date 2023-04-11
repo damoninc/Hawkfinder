@@ -86,7 +86,7 @@ function App() {
             path="/components/Friends"
             element={
               isUserLoggin(user) ? (
-                <FriendPage />
+                <FriendPage uCreds={user.uid} />
               ) : (
                 <Navigate to="/components/Interceptor" />
               )
@@ -96,7 +96,7 @@ function App() {
             path="/components/Spotify"
             element={
               isUserLoggin(user) ? (
-                <SpotifyPage />
+                <SpotifyPage uCreds={user.uid} />
               ) : (
                 <Navigate to="/components/Interceptor" />
               )

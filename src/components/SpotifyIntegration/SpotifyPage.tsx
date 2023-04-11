@@ -9,7 +9,6 @@ import SpotifyAuthDeauth from "../SpotifyIntegration/SpotifyLogin";
 // use: concurrently "npm run dev" "npm run start"
 // to run server and vite at the same time
 
-const currUser = "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1";
 export let user: User;
 
 let dbPulled = false;
@@ -21,10 +20,10 @@ let dbPulled = false;
  *
  * @return {*} - FriendPage HTML
  */
-export default function SpotifyPage() {
+export default function SpotifyPage(uid: { uCreds: string }) {
   const [dbCall, setUser] = useState(null);
   if (!dbPulled || dbCall == null) {
-    callDB(setUser);
+    callDB(uid.uCreds, setUser);
   }
   return (
     <div style={{ display: "flex", justifyContent: "space-evenly" }}>
@@ -48,10 +47,10 @@ export default function SpotifyPage() {
   );
 }
 
-async function callDB(setUser: any) {
+async function callDB(uid: string, setUser: any) {
   // Query Firestore for information from currently logged in user
   const querySnapshot = await getDoc(
-    doc(db, "Users", currUser).withConverter(userConverter)
+    doc(db, "Users", uid).withConverter(userConverter)
   );
   console.log("DB Call");
   const dbUser = querySnapshot.data();
