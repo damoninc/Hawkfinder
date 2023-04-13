@@ -4,6 +4,7 @@ import User from "../../data/User";
 import { updateEmail, updatePassword } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
+import "../../styles/accountsettings.css";
 import { db } from "../../firebase/config";
 import {
   Button,
@@ -13,6 +14,7 @@ import {
   List,
   ListItem,
   ListItemButton,
+  Paper,
   TextField,
   Typography,
 } from "@mui/material";
@@ -79,7 +81,7 @@ function AccountSettingsPage(passedUser: any) {
    * Uses FireBase changeUserPassword function to change the current password.
    * If the user needs to reauth, will redirect to another page.
    * @param passwordInput : string - The user inputed password they want to change
-  */
+   */
   //TODO:
   function changeUserPassword(passwordInput: string) {
     console.log("You're in the function!");
@@ -322,27 +324,29 @@ function AccountSettingsPage(passedUser: any) {
         Hi, {userData?.profile.firstName + " " + userData?.profile.lastName}!
       </Typography>
       <Typography>Welcome to Account Settings!</Typography>
-      <List>
-        <ListItemButton
-          selected={selectItem == "1"}
-          onClick={() => setSelectedItem("1")}
-        >
-          <ListItem>Info</ListItem>
-        </ListItemButton>
-        <ListItemButton
-          selected={selectItem == "2"}
-          onClick={() => setSelectedItem("2")}
-        >
-          <ListItem>Change Email</ListItem>
-        </ListItemButton>
-        <ListItemButton
-          selected={selectItem == "3"}
-          onClick={() => setSelectedItem("3")}
-        >
-          <ListItem>Change Password</ListItem>
-        </ListItemButton>
-      </List>
-      <Container>{displayItem()}</Container>
+      <div className="account-wrapper">
+          <List className="account-box">
+            <ListItemButton
+              selected={selectItem == "1"}
+              onClick={() => setSelectedItem("1")}
+            >
+              <ListItem>Info</ListItem>
+            </ListItemButton>
+            <ListItemButton
+              selected={selectItem == "2"}
+              onClick={() => setSelectedItem("2")}
+            >
+              <ListItem>Change Email</ListItem>
+            </ListItemButton>
+            <ListItemButton
+              selected={selectItem == "3"}
+              onClick={() => setSelectedItem("3")}
+            >
+              <ListItem>Change Password</ListItem>
+            </ListItemButton>
+          </List>
+        <Container className="account-settings">{displayItem()}</Container>
+      </div>
     </div>
   );
 }
