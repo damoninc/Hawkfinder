@@ -10,7 +10,7 @@
 - `npm install firebase`
 - `npm install -g firebase-tools`
 6) Install extra dependencies
-- `npm run extra_scrpits`
+- `npm run extra_scripts`
 7) Type "npm run dev" to run the application
 8) Open "http://localhost:5173/" in browser of your choice
 9) Ctrl+C or "q" to close the local server
