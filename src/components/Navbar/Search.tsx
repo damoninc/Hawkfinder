@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import User, { userConverter } from "../../data/User";
 import "../../styles/friendpage.css";
-import * as fp from "./FriendPage";
 import { db } from "../../firebase/config";
 import { collection, query, getDocs } from "firebase/firestore";
 import { Button, TextField } from "@mui/material";
-import UserBox from "./UserBox";
 import { useFormik } from "formik";
+import FriendBox from "../FriendSystem/FriendBox";
+import Navbar from "./Navbar";
 
 /**
  * Generates a HTML block that displays a list of Users based
@@ -14,56 +14,46 @@ import { useFormik } from "formik";
  *
  * @return {*} - FriendSearch HTML
  */
-export default function FriendSearch() {
+let resultsLoaded = false;
+let lastSearch = "";
+
+export default function SearchPage(currUser: { uCreds: string | undefined }) {
   const [dbCall, setUsers] = useState(null);
 
-  /**
-   * Input Validation using Formik
-   */
-  const validate = () => {
-    const errors: ErrorSearchInfo = {};
-    if (!formik.values.search) {
-      errors.search = "Search must not be empty";
-    }
-    return errors;
-  };
+  const hashParams = window.location.hash.split("#")[1];
+  const urlParams = new URLSearchParams(hashParams);
+  const search = urlParams.get("search");
 
-  const formik = useFormik({
-    initialValues: {
-      search: "",
-    },
-    validate,
-    onSubmit: (values) => {
-      callDB(setUsers, values.search);
-    },
-  });
+  console.log(search);
 
+  if (!search) {
+    return (
+      <div>
+        <Navbar />
+        <h1>Enter a good search man</h1>
+      </div>
+    );
+  } else if (lastSearch != search) {
+    lastSearch = search;
+    resultsLoaded = false;
+  }
+
+  if (!resultsLoaded) {
+    callDB(setUsers, search);
+    resultsLoaded = true;
+  }
   return (
-    <div className="search">
-      <h1>User Search</h1>
-      <form onSubmit={formik.handleSubmit}>
-        <TextField
-          label="Search"
-          variant="outlined"
-          focused
-          id="search"
-          name="search"
-          value={formik.values.search}
-          onChange={formik.handleChange}
-          error={formik.touched.search && Boolean(formik.errors.search)}
-          helperText={formik.touched.search && formik.errors.search}
-        />
-        <Button variant="contained" type="submit" style={{ height: "100%" }}>
-          Search
-        </Button>
-      </form>
-      {checkNullList(dbCall)}
+    <div>
+      <Navbar />
+      <div className="search">
+        <h1>User Search</h1>
+        {checkNullList(dbCall)}
+      </div>
     </div>
   );
 }
 
 function checkNullList(users: User[] | null) {
-  // Returns a list of FriendBox if the user's friends list is not empty
   if (users == null) {
     return (
       <div className="loadUsers">
@@ -82,7 +72,7 @@ function checkNullList(users: User[] | null) {
       <div className="userBlock">
         {users.map((user) => (
           <div className="user" key={user.username}>
-            {UserBox(user, buttons)}
+            <FriendBox friend={user} />
           </div>
         ))}
       </div>
@@ -90,36 +80,6 @@ function checkNullList(users: User[] | null) {
   }
 }
 
-function buttons(user: User) {
-  return (
-    <div className="buttons">
-      <button
-        className="button"
-        onClick={() => {
-          fp.goToProfile(user);
-        }}
-      >
-        Profile
-      </button>
-      <button
-        className="button"
-        type="button"
-        onClick={() => {
-          fp.addFriend(user.profile.userName);
-        }}
-      >
-        Add
-      </button>
-    </div>
-  );
-}
-
-/**
- * Function used to query FireBase for the friends list.
- * Sets dbCall Hook in FriendSearch after database call finished
- *
- * @param {*} setFriends - Hook to set friends list
- */
 async function callDB(setUsers: any, msg: string) {
   msg = msg.replace(/\s/g, "");
 

@@ -29,6 +29,8 @@ import CurrentSong, {
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SpotifyAuthDeauth from "../SpotifyIntegration/SpotifyLogin";
 import { Navigate, useNavigate } from "react-router-dom";
+import Navbar from "../Navbar/Navbar";
+import LoadingPage from "../Navbar/Loading";
 
 export let user: User;
 
@@ -44,7 +46,6 @@ let dbPulled = false;
 export default function FriendPage(currUser: { uCreds: string }) {
   const [dbCall, setFriends] = useState(null);
   const [pageSwitch, setSwitch] = useState(0);
-  const navigate = useNavigate();
 
   if (!dbPulled || dbCall == null) {
     callDB(currUser.uCreds, setFriends);
@@ -63,6 +64,7 @@ export default function FriendPage(currUser: { uCreds: string }) {
 
   return (
     <div>
+      <Navbar />
       <div>
         <Grid
           container
@@ -112,12 +114,7 @@ function checkNullList(friends: User[] | null) {
 
   // Returns a list of FriendBox if the user's friends list is not empty
   if (friends == null) {
-    return (
-      <div className="loadFriend">
-        <h2>Loading Friends...</h2>
-        <CircularProgress />
-      </div>
-    );
+    return <div>{LoadingPage("Loading Friends")}</div>;
   }
   if (friends.length == 0) {
     return (
@@ -220,9 +217,7 @@ class RemoveButton extends React.Component<IProps, IState> {
   render() {
     if (this.state.profileClicked) {
       return (
-        <Navigate
-          to={`/components/Profile#userid=${this.props.user.userid}`}
-        />
+        <Navigate to={`/components/Profile#userid=${this.props.user.userid}`} />
       );
     }
     return (
@@ -300,7 +295,7 @@ class RemoveButton extends React.Component<IProps, IState> {
               }}
               onClick={() => {
                 // this.setState({ clicked: false });
-                console.log("changed for linting")
+                console.log("changed for linting");
               }}
             >
               Cancel

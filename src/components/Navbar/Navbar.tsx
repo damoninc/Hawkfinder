@@ -17,9 +17,11 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { Navigate, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { Button } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { auth } from "../../firebase/config";
 import PeopleIcon from "@mui/icons-material/People";
+import FriendSearch from "../FriendSystem/FriendSearch";
+import { useFormik } from "formik";
 
 /**
  * The stylization for the searchbar
@@ -78,6 +80,7 @@ export default function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
+  const [searchParam, setSearch] = React.useState<string>("");
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -97,7 +100,7 @@ export default function Navbar() {
     setMobileMoreAnchorEl(null);
   };
 
-   /**
+  /**
    * Handles the behavior when the profile menu is closed
    */
   const handleMenuClose = () => {
@@ -107,7 +110,7 @@ export default function Navbar() {
 
   /**
    * Handles the behavior when the mobile modal is opened.
-   * Sets the mobile anchor 
+   * Sets the mobile anchor
    * @param event Mouse event
    */
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -135,22 +138,30 @@ export default function Navbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <a href='/components/Profile' style={{ textDecoration: 'none', color: 'inherit' }}> <MenuItem
-        onClick={() => {
-          handleMenuClose;
-        }}
+      <a
+        href="/components/Profile"
+        style={{ textDecoration: "none", color: "inherit" }}
       >
-        Profile
-      </MenuItem>
+        {" "}
+        <MenuItem
+          onClick={() => {
+            handleMenuClose;
+          }}
+        >
+          Profile
+        </MenuItem>
       </a>
-      <a href='/components/AccountSettings' style={{ textDecoration: 'none', color: 'inherit' }}>
-      <MenuItem
-        onClick={() => {
-          handleMenuClose;
-        }}
+      <a
+        href="/components/AccountSettings"
+        style={{ textDecoration: "none", color: "inherit" }}
       >
-        My account
-      </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleMenuClose;
+          }}
+        >
+          My account
+        </MenuItem>
       </a>
       <MenuItem>
         <Button variant="contained" onClick={() => signOut(auth)}>
@@ -161,7 +172,7 @@ export default function Navbar() {
   );
 
   const mobileMenuId = "primary-search-account-menu-mobile";
-  
+
   /**
    * This is the mobile render view for the navbar
    */
@@ -216,6 +227,31 @@ export default function Navbar() {
     </Menu>
   );
 
+  /**
+   * Input Validation using Formik
+   */
+  const validate = () => {
+    const errors: { search?: string } = {};
+    if (!formik.values.search) {
+      errors.search = "Search must not be empty";
+    }
+    return errors;
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      search: "",
+    },
+    validate,
+    onSubmit: (values) => {
+      setSearch(values.search);
+    },
+  });
+
+  if (searchParam !== "") {
+    return <Navigate to={`/components/Search#search=${searchParam}`} />;
+  }
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ backgroundColor: "teal" }}>
@@ -243,10 +279,26 @@ export default function Navbar() {
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-            />
+            <form onSubmit={formik.handleSubmit}>
+              <TextField
+                label="Search"
+                variant="outlined"
+                focused
+                id="search"
+                name="search"
+                value={formik.values.search}
+                onChange={formik.handleChange}
+                error={formik.touched.search && Boolean(formik.errors.search)}
+                helperText={formik.touched.search && formik.errors.search}
+              />
+              <Button
+                variant="contained"
+                type="submit"
+                style={{ height: "100%" }}
+              >
+                Search
+              </Button>
+            </form>
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
