@@ -17,11 +17,11 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { Navigate, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { Button, TextField } from "@mui/material";
+import { Button, InputAdornment, TextField } from "@mui/material";
 import { auth } from "../../firebase/config";
 import PeopleIcon from "@mui/icons-material/People";
-import FriendSearch from "../FriendSystem/FriendSearch";
 import { useFormik } from "formik";
+import { SearchPagefunc } from "./Search";
 
 /**
  * The stylization for the searchbar
@@ -72,6 +72,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+export let searchParam: string;
+
 /**
  * This is a universal navigation bar that will be implemented in all webpages for a given signed in user.
  * @returns Navigation bar
@@ -80,7 +82,7 @@ export default function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
-  const [searchParam, setSearch] = React.useState<string>("");
+  const navigate = useNavigate();
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -244,13 +246,9 @@ export default function Navbar() {
     },
     validate,
     onSubmit: (values) => {
-      setSearch(values.search);
+      navigate(`/components/Search#q=${values.search.replace(/\s/g, "")}`)
     },
   });
-
-  if (searchParam !== "") {
-    return <Navigate to={`/components/Search#search=${searchParam}`} />;
-  }
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -272,34 +270,27 @@ export default function Navbar() {
             }}
           >
             HAWK
-            <img src="/src/assets/images/My_project.png" height="35px" />
+            <img src="https://firebasestorage.googleapis.com/v0/b/csc-450-project.appspot.com/o/HAWKFINDER%2FMy_project.png?alt=media&token=9c88ec23-9c4e-46b7-8eb9-a907be7b2cfc" height="35px" />
             FINDER
           </Typography>
           <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
             <form onSubmit={formik.handleSubmit}>
               <TextField
-                label="Search"
                 variant="outlined"
                 focused
+                fullWidth
+                InputProps={{
+                  startAdornment: <InputAdornment position="start"><SearchIcon /></InputAdornment>,
+                }}
                 id="search"
                 name="search"
                 value={formik.values.search}
                 onChange={formik.handleChange}
                 error={formik.touched.search && Boolean(formik.errors.search)}
-                helperText={formik.touched.search && formik.errors.search}
               />
-              <Button
-                variant="contained"
-                type="submit"
-                style={{ height: "100%" }}
-              >
-                Search
-              </Button>
             </form>
           </Search>
+          
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton

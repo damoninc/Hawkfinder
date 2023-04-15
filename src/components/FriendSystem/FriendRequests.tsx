@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import User, { userConverter } from "../../data/User";
 import "../../styles/friendrequest.css";
 import * as fp from "./FriendPage";
-import { CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Stack } from "@mui/material";
 import { db } from "../../firebase/config";
 import {
   doc,
@@ -38,13 +38,32 @@ function FriendRequests(user: User) {
     );
   }
   return (
-    <div className="page">
+    <Box 
+    sx={{
+      display:"grid",
+      border: "4px solid teal",
+      borderRadius: "25px",
+      overflow:"hidden",
+      padding: "1%",
+      paddingTop: "0.25%",
+      gridTemplateRows: "10% 95%",
+      justifyItems: "center"
+    }}
+    >      
       <h1>Friend Requests</h1>
-      <div className="requests">
+      <Box 
+        sx={{
+        display:"grid",
+        width: "100%",
+        height: "100%",
+        overflow:"hidden",
+        gridTemplateColumns: "50% 50%",
+      justifyContent: "center"}}
+      >
         {IncomingRequests(user, incoming)}
         {OutgoingRequests(user, outgoing)}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
 
@@ -64,25 +83,30 @@ function IncomingRequests(currUser: User, incoming: Array<User> | null) {
         <h2>No Incoming Requests</h2>
       </div>
     ) : (
-      <div className="userBlock">
-        {incoming.map((user) => (
-          <div className="user" key={user.username}>
-            {UserBox(user, inRequestButtons)}
-          </div>
-        ))}
-      </div>
+      <div style={{ display: "flex", justifyContent: "space-evenly", flexWrap: "wrap" }}>
+      {incoming.map((req) => (
+        <div className="user" key={req.username}>
+          <UserBox user={req} currentUser={currUser}/>
+        </div>
+      ))}
+    </div>
     );
 
   return (
-    <div>
+    <Stack 
+      direction="column"
+      justifyContent="center"
+      alignItems="center"
+      spacing={0.5}
+    >
       <h2>Incoming Requests</h2>
       {users}
-    </div>
+    </Stack>
   );
 }
 
 // Returns HTML of UserBoxes for outgoing requests
-function OutgoingRequests(user: User, outgoing: Array<User> | null) {
+function OutgoingRequests(currUser: User, outgoing: Array<User> | null) {
   if (outgoing == null) {
     return (
       <div className="loadUser">
@@ -97,79 +121,25 @@ function OutgoingRequests(user: User, outgoing: Array<User> | null) {
         <h2>No Outgoing Requests</h2>
       </div>
     ) : (
-      <div className="userBlock">
-        {outgoing.map((request) => (
-          <div className="user" key={request.username}>
-            {UserBox(request, outRequestButtons)}
-          </div>
-        ))}
-      </div>
+      <div style={{ display: "flex", justifyContent: "space-evenly", flexWrap: "wrap" }}>
+      {outgoing.map((req) => (
+        <div className="user" key={req.username}>
+          <UserBox user={req} currentUser={currUser}/>
+        </div>
+      ))}
+    </div>
     );
 
   return (
-    <div>
+    <Stack 
+    direction="column"
+    justifyContent="center"
+    alignItems="center"
+    spacing={0.5}
+  >
       <h2>Sent Requests</h2>
       {users}
-    </div>
-  );
-}
-
-// HTML buttons for when the UserBox is for an incoming request
-function inRequestButtons(user: User) {
-  return (
-    <div className="buttons">
-      <button
-        className="button"
-        onClick={() => {
-          fp.goToProfile(user);
-        }}
-      >
-        Profile
-      </button>
-      <button
-        className="button"
-        type="button"
-        onClick={() => {
-          accept(user);
-        }}
-      >
-        Accept
-      </button>
-      <button
-        className="button"
-        type="button"
-        onClick={() => {
-          decline(user);
-        }}
-      >
-        Decline
-      </button>
-    </div>
-  );
-}
-
-// HTML buttons for when the UserBox is for an outgoing request
-function outRequestButtons(user: User) {
-  return (
-    <div className="buttons">
-      <button
-        className="button"
-        onClick={() => {
-          fp.goToProfile(user);
-        }}
-      >
-        Profile
-      </button>
-      <button
-        className="button"
-        type="button"
-        onClick={() => {
-          cancel(user);
-        }}
-      >
-        Cancel
-      </button>
-    </div>
+    </Stack>
   );
 }
 
@@ -180,7 +150,7 @@ function outRequestButtons(user: User) {
  *
  * @param {User} request - User linked to declined friend request
  */
-async function decline(request: User) {
+export async function decline(currUser: User, request: User) {
   if (
     confirm(
       "Are you sure you want to decline " +
@@ -189,16 +159,16 @@ async function decline(request: User) {
     )
   ) {
     if (request !== undefined) {
-      const indexFriend = fp.user.incomingRequests.indexOf(request.userid, 0);
-      const indexUser = request.outgoingRequests.indexOf(fp.user.userid, 0);
+      const indexFriend = currUser.incomingRequests.indexOf(request.userid, 0);
+      const indexUser = request.outgoingRequests.indexOf(currUser.userid, 0);
 
-      indexFriend > -1 ? fp.user.incomingRequests.splice(indexFriend, 1) : null;
+      indexFriend > -1 ? currUser.incomingRequests.splice(indexFriend, 1) : null;
       indexUser > -1 ? request.outgoingRequests.splice(indexUser, 1) : null;
 
       await updateDoc(
-        doc(db, "Users", fp.user.userid),
+        doc(db, "Users", currUser.userid),
         "incomingRequests",
-        fp.user.incomingRequests
+        currUser.incomingRequests
       ).then(async () => {
         await updateDoc(
           doc(db, "Users", request.userid),
@@ -219,32 +189,25 @@ async function decline(request: User) {
  *
  * @param {User} request - User linked to request
  */
-async function accept(request: User) {
-  if (
-    confirm(
-      "Are you sure you want to accept " +
-        request.profile.userName +
-        "'s request ?"
-    )
-  ) {
+export async function accept(currUser: User, request: User) {
     if (request !== undefined) {
-      const indexRequest = fp.user.incomingRequests.indexOf(request.userid, 0);
+      const indexRequest = currUser.incomingRequests.indexOf(request.userid, 0);
       indexRequest > -1
-        ? fp.user.incomingRequests.splice(indexRequest, 1)
+        ? currUser.incomingRequests.splice(indexRequest, 1)
         : null;
 
-      const indexOutUser = request.outgoingRequests.indexOf(fp.user.userid, 0);
+      const indexOutUser = request.outgoingRequests.indexOf(currUser.userid, 0);
       indexOutUser > -1
         ? request.outgoingRequests.splice(indexOutUser, 1)
         : null;
 
-      fp.user.friendsList.push(request.userid);
-      request.friendsList.push(fp.user.userid);
+      currUser.friendsList.push(request.userid);
+      request.friendsList.push(currUser.userid);
 
       await updateDoc(
-        doc(db, "Users", fp.user.userid),
+        doc(db, "Users", currUser.userid),
         "friendsList",
-        fp.user.friendsList
+        currUser.friendsList
       );
       await updateDoc(
         doc(db, "Users", request.userid),
@@ -253,9 +216,9 @@ async function accept(request: User) {
       );
 
       await updateDoc(
-        doc(db, "Users", fp.user.userid),
+        doc(db, "Users", currUser.userid),
         "incomingRequests",
-        fp.user.incomingRequests
+        currUser.incomingRequests
       ).then(async () => {
         await updateDoc(
           doc(db, "Users", request.userid),
@@ -269,34 +232,26 @@ async function accept(request: User) {
       });
     }
   }
-}
 
 /**
  * Cancels a friend request when the cancel button on a request is pressed
  *
  * @param {User} request - the user associated with the cancelled request
  */
-async function cancel(request: User) {
-  if (
-    confirm(
-      "Are you sure you want to cancel your friend request to " +
-        request.profile.userName +
-        "?"
-    )
-  ) {
+export async function cancel(currUser: User, request: User) {
     if (request !== undefined) {
-      const indexRequest = fp.user.outgoingRequests.indexOf(request.userid, 0);
-      const indexUser = request.incomingRequests.indexOf(fp.user.userid, 0);
+      const indexRequest = currUser.outgoingRequests.indexOf(request.userid, 0);
+      const indexUser = request.incomingRequests.indexOf(currUser.userid, 0);
 
       indexRequest > -1
-        ? fp.user.outgoingRequests.splice(indexRequest, 1)
+        ? currUser.outgoingRequests.splice(indexRequest, 1)
         : null;
       indexUser > -1 ? request.incomingRequests.splice(indexUser, 1) : null;
 
       await updateDoc(
-        doc(db, "Users", fp.user.userid),
+        doc(db, "Users", currUser.userid),
         "outgoingRequests",
-        fp.user.outgoingRequests
+        currUser.outgoingRequests
       ).then(async () => {
         await updateDoc(
           doc(db, "Users", request.userid),
@@ -310,7 +265,7 @@ async function cancel(request: User) {
       });
     }
   }
-}
+
 
 /**
  * Function used to query FireBase for the incoming and outgoing friend requests

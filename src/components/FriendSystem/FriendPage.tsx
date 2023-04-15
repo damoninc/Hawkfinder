@@ -5,6 +5,7 @@ import FriendBox from "./FriendBox";
 import FriendSearch from "./FriendSearch";
 import {
   Badge,
+  Box,
   Button,
   CircularProgress,
   Drawer,
@@ -48,14 +49,40 @@ export default function FriendPage(currUser: { uCreds: string }) {
   const [pageSwitch, setSwitch] = useState(0);
 
   if (!dbPulled || dbCall == null) {
-    callDB(currUser.uCreds, setFriends);
+    //callDB(currUser.uCreds, setFriends);
   }
 
   const friendList = (
-    <div className="friends-list">
+    <Box 
+      sx={{
+        display:"grid",
+        border: "4px solid teal",
+        borderRadius: "25px",
+        overflow:"hidden",
+        padding: "0%",
+        paddingTop: "0",
+        gridTemplateRows: "75px 100%",
+        justifyItems: "center",
+        height:"100%"
+      }}
+    >      
       <h1>Friends List</h1>
-      {checkNullList(dbCall)}
-    </div>
+      <Box 
+        sx={{
+          display:"flex",
+          width: "100%",
+          height: "100%",
+          overflow:"hidden",
+          justifyItems: "center",
+          borderTop: "4px solid black",
+          paddingTop: "1%",
+          paddingLeft: "5%",
+          paddingRight: "5%"
+        }}
+      >
+        {checkNullList(dbCall)}
+      </Box>
+    </Box>
   );
 
   const friendRequests = FriendRequests(user);
@@ -114,7 +141,15 @@ function checkNullList(friends: User[] | null) {
 
   // Returns a list of FriendBox if the user's friends list is not empty
   if (friends == null) {
-    return <div>{LoadingPage("Loading Friends")}</div>;
+    return (
+      <Stack   
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        spacing={2}
+      >
+        {LoadingPage("Loading Friends")}
+      </Stack>);
   }
   if (friends.length == 0) {
     return (
@@ -124,8 +159,8 @@ function checkNullList(friends: User[] | null) {
     );
   } else {
     return (
-      <div className="friendBlock">
-        {friends.map((friend) => {
+      <div style={{ display: "flex", justifyContent:"center", flexWrap: "wrap", width:"100%" }}>
+      {friends.map((friend) => {
           return (
             <div className="friend" key={friend.username}>
               <div style={{ display: "flex" }}>
@@ -294,8 +329,7 @@ class RemoveButton extends React.Component<IProps, IState> {
                 marginLeft: "2px",
               }}
               onClick={() => {
-                // this.setState({ clicked: false });
-                console.log("changed for linting");
+                this.setState({ removeClicked: false });
               }}
             >
               Cancel
@@ -307,59 +341,36 @@ class RemoveButton extends React.Component<IProps, IState> {
   }
 }
 
-/**
- * When called, sends a friend request to the given user
- *
- * @export
- * @param {string} [friendUsername] - username of the friend to send a request to
- */
-export async function addFriend(friendUsername?: string) {
-  if (confirm("Add Friend " + friendUsername + "?")) {
-    if (friendUsername !== undefined) {
-      await getDocs(
-        query(
-          collection(db, "Users"),
-          where("profile.username", "==", friendUsername)
-        )
-      ).then(async (id) => {
-        if (id.docs[0] !== undefined) {
-          const friend: User | undefined = userConverter.fromFirestore(
-            id.docs[0]
-          );
+// TODO Document this
+export async function addFriend(currUser: User, friend: User) {
+  if (friend && currUser) {
+    if (!currUser.friendsList.includes(friend.userid)) {
+      currUser.outgoingRequests.push(friend.userid);
+      friend.incomingRequests.push(currUser.userid);
 
-          if (friend !== undefined) {
-            if (!user.friendsList.includes(friend.userid)) {
-              user.outgoingRequests.push(friend.userid);
-              friend.incomingRequests.push(user.userid);
+      // update outgoing requests in FireStore
+      await updateDoc(
+        doc(db, "Users", currUser.userid),
+        "outgoingRequests",
+        currUser.outgoingRequests
+      );
 
-              // update outgoing requests in FireStore
-              await updateDoc(
-                doc(db, "Users", user.userid),
-                "outgoingRequests",
-                user.outgoingRequests
-              );
+      // update incoming requests in FireStore
+      await updateDoc(
+        doc(db, "Users", friend.userid),
+        "incomingRequests",
+        friend.incomingRequests
+      );
 
-              // update incoming requests in FireStore
-              await updateDoc(
-                doc(db, "Users", friend.userid),
-                "incomingRequests",
-                friend.incomingRequests
-              );
-
-              dbPulled = false;
-              alert("Added " + friend.profile.userName);
-              window.location.reload();
-            } else {
-              alert("This user is already your friend");
-            }
-          }
-        } else {
-          alert("This user does not exist");
-        }
-      });
+      dbPulled = false;
+      alert("Added " + friend.profile.userName);
+      window.location.reload();
+    } else {
+      alert("This user is already your friend");
     }
   }
-}
+  }
+
 
 /**
  * Removes the passed in User from the currently logged in user's friends list
@@ -368,52 +379,37 @@ export async function addFriend(friendUsername?: string) {
  * @param {User} friend - friend to be removed
  */
 export async function removeFriend(friend: User) {
-  if (
-    confirm("Are you sure you want to remove " + friend.profile.userName + "?")
-  ) {
-    if (friend !== undefined) {
-      // get indicies and remove friend from user's friends list
-      // and and user from friend's friend list
-      const indexFriend = user.friendsList.indexOf(friend.userid, 0);
-      const indexUser = friend.friendsList.indexOf(user.userid, 0);
+  if (friend !== undefined) {
+    // get indicies and remove friend from user's friends list
+    // and and user from friend's friend list
+    const indexFriend = user.friendsList.indexOf(friend.userid, 0);
+    const indexUser = friend.friendsList.indexOf(user.userid, 0);
 
-      if (indexFriend < 0 || indexUser < 0) {
-        alert("You are not friends");
-        return;
-      }
-
-      indexUser > -1 ? user.friendsList.splice(indexFriend, 1) : null;
-      indexFriend > -1 ? friend.friendsList.splice(indexUser, 1) : null;
-
-      // Update User's and friend's friends list to reflect the removal
-      await updateDoc(
-        doc(db, "Users", user.userid),
-        "friendsList",
-        user.friendsList
-      ).then(async () => {
-        await updateDoc(
-          doc(db, "Users", friend.userid),
-          "friendsList",
-          friend.friendsList
-        ).then(() => {
-          dbPulled = false;
-          alert("Removed " + friend.profile.userName);
-          window.location.reload();
-        });
-      });
+    if (indexFriend < 0 || indexUser < 0) {
+      alert("You are not friends");
+      return;
     }
-  }
-}
 
-/**
- * When called and sent a user object, the page will redirect to that user's profile
- *
- * @export
- * @param {User} friend - friend whose profile you want to navigate
- */
-export function goToProfile(friend: User) {
-  // Dummy function for navigating to user's profile
-  alert("Cannot go to " + friend.username + "'s Profile");
+    indexUser > -1 ? user.friendsList.splice(indexFriend, 1) : null;
+    indexFriend > -1 ? friend.friendsList.splice(indexUser, 1) : null;
+
+    // Update User's and friend's friends list to reflect the removal
+    await updateDoc(
+      doc(db, "Users", user.userid),
+      "friendsList",
+      user.friendsList
+    ).then(async () => {
+      await updateDoc(
+        doc(db, "Users", friend.userid),
+        "friendsList",
+        friend.friendsList
+      ).then(() => {
+        dbPulled = false;
+        alert("Removed " + friend.profile.userName);
+        window.location.reload();
+      });
+    });
+  }
 }
 
 async function callDB(signedUser: string, setFriends: any) {

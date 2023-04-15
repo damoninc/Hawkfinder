@@ -2,11 +2,15 @@ import React, { useState } from "react";
 import User, { userConverter } from "../../data/User";
 import "../../styles/friendpage.css";
 import { db } from "../../firebase/config";
-import { collection, query, getDocs } from "firebase/firestore";
-import { Button, TextField } from "@mui/material";
+import { collection, query, getDocs, doc, getDoc } from "firebase/firestore";
+import { Button, CircularProgress, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import FriendBox from "../FriendSystem/FriendBox";
 import Navbar from "./Navbar";
+import { useLocation, useNavigate } from "react-router-dom";
+import UserBox from "../FriendSystem/UserBox";
+import { ButtonType } from "../FriendSystem/UserBox";
+
 
 /**
  * Generates a HTML block that displays a list of Users based
@@ -17,97 +21,125 @@ import Navbar from "./Navbar";
 let resultsLoaded = false;
 let lastSearch = "";
 
-export default function SearchPage(currUser: { uCreds: string | undefined }) {
-  const [dbCall, setUsers] = useState(null);
+interface IProps {
+  uCreds : string | undefined
+}
 
-  const hashParams = window.location.hash.split("#")[1];
-  const urlParams = new URLSearchParams(hashParams);
-  const search = urlParams.get("search");
+interface IState {
+  dbCall : User[] | null,
+  search : string | null,
+  loggedUser : User | null
+}
 
-  console.log(search);
+export default class SearchPage extends React.Component<IProps, IState> {
+  rerender = false;
+  intervalID: any;
+  constructor(props : IProps) {
+    super(props)
+    this.state = {dbCall: null, search: "", loggedUser: null}
+  }
 
-  if (!search) {
-    return (
+  componentDidMount(): void {
+    this.intervalID = setInterval(
+      () => {
+        const search = new URLSearchParams(window.location.hash.split("#")[1]).get("q");
+        if (search != this.state.search) {
+          this.setState({search: search}) 
+          console.log("trying to find search")
+          this.rerender = true
+        }
+      },
+      500
+    );
+  }
+  componentWillUnmount(): void {
+      clearInterval(this.intervalID)
+  }
+
+  render() {
+    if (this.rerender){
+      console.log("calling db")
+      this.callDB()
+      this.rerender = false
+  }
+      return (
       <div>
         <Navbar />
-        <h1>Enter a good search man</h1>
-      </div>
-    );
-  } else if (lastSearch != search) {
-    lastSearch = search;
-    resultsLoaded = false;
-  }
-
-  if (!resultsLoaded) {
-    callDB(setUsers, search);
-    resultsLoaded = true;
-  }
-  return (
-    <div>
-      <Navbar />
-      <div className="search">
-        <h1>User Search</h1>
-        {checkNullList(dbCall)}
-      </div>
-    </div>
-  );
-}
-
-function checkNullList(users: User[] | null) {
-  if (users == null) {
-    return (
-      <div className="loadUsers">
-        <h2>...</h2>
+        <div className="search">
+          <h1>User Search</h1>
+          {this.checkNullList()}
+        </div>
       </div>
     );
   }
-  if (users.length == 0) {
-    return (
-      <div>
-        <h2>This user does not exist :(</h2>
-      </div>
+
+  async callDB() {
+    const querySnapshot = await getDoc(
+      doc(db, "Users", this.props.uCreds!).withConverter(userConverter)
     );
-  } else {
-    return (
-      <div className="userBlock">
-        {users.map((user) => (
-          <div className="user" key={user.username}>
-            <FriendBox friend={user} />
-          </div>
-        ))}
-      </div>
-    );
-  }
-}
+    const dbUser = querySnapshot.data();
+    if (dbUser !== undefined) {
+      this.setState({loggedUser: dbUser})
+    }
 
-async function callDB(setUsers: any, msg: string) {
-  msg = msg.replace(/\s/g, "");
+    let msg = this.state.search
+    const users: User[] = [];
 
-  const users: User[] = [];
-
-  if (msg.length == 0) {
-    setUsers(users);
-  }
-
-  msg = msg.toLocaleLowerCase();
-  await getDocs(query(collection(db, "Users"))).then(async (usersData) => {
-    usersData.forEach((user) => {
-      const data: User | undefined = userConverter.fromFirestore(user);
-      if (data !== undefined) {
-        if (
-          data.profile.userName.toLocaleLowerCase().includes(msg) ||
-          data.profile.firstName.toLocaleLowerCase().includes(msg) ||
-          data.profile.lastName.toLocaleLowerCase().includes(msg) ||
-          `${data.profile.firstName.toLocaleLowerCase()} ${data.profile.lastName.toLocaleLowerCase()}`.includes(
-            msg
-          )
-        ) {
-          users.push(data);
+    if (msg == null || msg.length == 0) {
+      this.setState({dbCall: null});
+      return;
+    }
+    
+    msg = msg.replace(/\s/g, "");
+    msg = msg.toLocaleLowerCase();
+    await getDocs(query(collection(db, "Users"))).then(async (usersData) => {
+      usersData.forEach((user) => {
+        const data: User | undefined = userConverter.fromFirestore(user);
+        if (data !== undefined) {
+          if (
+            data.profile.userName.toLocaleLowerCase().includes(msg!) ||
+            data.profile.firstName.toLocaleLowerCase().includes(msg!) ||
+            data.profile.lastName.toLocaleLowerCase().includes(msg!) ||
+            `${data.profile.firstName.toLocaleLowerCase()}${data.profile.lastName.toLocaleLowerCase()}`.includes(
+              msg!
+            )
+          ) {
+            users.push(data);
+          }
         }
-      }
+      });
+      this.setState({dbCall: users});
+      resultsLoaded = true
+      console.log("db call");
     });
+  }
 
-    setUsers(users);
-    console.log("db call");
-  });
+  checkNullList() {
+    if (this.state.dbCall == null || this.state.loggedUser == null) {
+      return (
+        <div className="loadUsers">
+          <CircularProgress />
+        </div>
+      );
+    }
+    if (this.state.dbCall.length == 0) {
+      return (
+        <div>
+          <h2>This user does not exist :(</h2>
+        </div>
+      );
+    }    
+    else {
+      return (
+        <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
+          {this.state.dbCall.map((user) => (
+            <div className="user" key={user.username}>
+              <UserBox user={user} currentUser={this.state.loggedUser}/>
+            </div>
+          ))}
+        </div>
+      );
+    }
+  }
+
 }
