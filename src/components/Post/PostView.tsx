@@ -27,6 +27,7 @@ function PostView(props: any) {
    */
   useEffect(() => {
     // Creates a pointer reference to the image of the post
+    // TODO: Pass the URL from ForumPost to PostView
     const imageRef = ref(storage, "Posts/" + props.imageURL);
 
     if (props.imageURL != "") {

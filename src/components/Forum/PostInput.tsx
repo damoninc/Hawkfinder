@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import { db, storage } from "../../firebase/config";
 import {
@@ -9,12 +9,17 @@ import {
   InputLabel,
   Popover,
   Typography,
+  Autocomplete,
+  Stack,
 } from "@mui/material";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import {
   addDoc,
   collection,
+  doc,
+  getDoc,
+  getDocs,
   serverTimestamp,
   updateDoc,
 } from "@firebase/firestore";
@@ -23,12 +28,31 @@ import "../../styles/postinput.css";
 
 const PostInput = (props: any) => {
   // HOOKS ----------------------------------------------------------------
-  // These hooks keep track of user input
+  // Keep track of user input
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [interest, setInterest] = useState("");
   const [postText, setPostText] = useState("");
-  // This hook will be used for the popover
+  // Will be used for the popover
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  // Stores the interests from Firestore
+  const [interests, setInterests] = useState([]);
+
+  useEffect(() => {
+    getInterests();
+  }, []);
+
+  /**
+   * Gets all the interests from Firestore
+   */
+  const getInterests = async () => {
+    const interestRef = doc(db, "Interests", "Interests");
+    const interestSnap = await getDoc(interestRef);
+    if (interestSnap.exists()) {
+      setInterests(interestSnap.data().Interests);
+    } else {
+      console.log("Doc does not exist...");
+    }
+  };
 
   /**
    * Renames the user's image input filename to the
@@ -150,18 +174,25 @@ const PostInput = (props: any) => {
         </div>
       )}
       <FormControl className="interest-input">
-        <InputLabel>Interest</InputLabel>
-        <Select
-          label="Interest"
-          value={interest}
-          onChange={(event: React.ChangeEvent<HTMLInputElement> | any) => {
-            setInterest(event.target.value);
+        <Autocomplete
+          onChange={(e, value) => {
+            if (value) {
+              console.log("setting interest: ", value);
+              setInterest(value);
+            }
           }}
-        >
-          <MenuItem value={"Music"}>Music</MenuItem>
-          <MenuItem value={"Food"}>Food</MenuItem>
-          <MenuItem value={"Film"}>Film</MenuItem>
-        </Select>
+          options={interests}
+          getOptionLabel={(option) => option}
+          renderInput={(params) => (
+            <TextField
+              sx={{ width: "100%" }}
+              {...params}
+              variant="outlined"
+              label="Interests"
+              placeholder="Choose any"
+            />
+          )}
+        />
       </FormControl>
       <Button variant="outlined" component="label" className="upload-image">
         <FileUploadIcon style={{ fill: "teal" }} />
