@@ -10,6 +10,16 @@ import { getDownloadURL, ref } from "firebase/storage";
 import { doc, getDoc } from "@firebase/firestore";
 
 function ForumPost(props: any) {
+  // HOOKS ----------------------------------------------------------------
+  // Hook for the ratings of each post
+  const [ratings, setRatings] = useState(props.rating);
+  // Determines whether the user has upvoted
+  const [upvoted, setUpvoted] = useState(false);
+  // Determines whether the user has downvoted
+  const [downvoted, setDownvoted] = useState(false);
+  // The image of the post
+  const [image, setImage] = useState("");
+  // The profile pic of the poster
   const [profilePic, setProfilePic] = useState("");
 
   /**
@@ -42,12 +52,8 @@ function ForumPost(props: any) {
         const profilePicPath: string = doc.data().profile.profilePicture;
         const profileImageRef = ref(storage, profilePicPath);
         if (profilePicPath != "") {
-          console.log("getting image: ", profilePicPath);
           getDownloadURL(profileImageRef)
             .then((url) => {
-              console.log(
-                `ProfileURL: ${url} | Description: ${props.description}`
-              );
               setProfilePic(url);
             })
             .catch(() => {
@@ -68,16 +74,6 @@ function ForumPost(props: any) {
   // const userRating = () => {
 
   // }
-
-  // HOOKS ----------------------------------------------------------------
-  // Hook for the ratings of each post
-  const [ratings, setRatings] = useState(props.rating);
-  // Determines whether the user has upvoted
-  const [upvoted, setUpvoted] = useState(false);
-  // Determines whether the user has downvoted
-  const [downvoted, setDownvoted] = useState(false);
-  // The image of the post
-  const [image, setImage] = useState("");
 
   /**
    * Handles the logic for upvoting
