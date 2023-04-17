@@ -2,15 +2,13 @@ import React from "react";
 import User from "../../data/User";
 import axios from "axios";
 import "../../styles/spotify.css";
-import { LinearProgress } from "@mui/material";
+import { LinearProgress, Stack } from "@mui/material";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/config";
 
 const api_uri = "https://api.spotify.com/v1";
 const spotifyLogo =
   "https://firebasestorage.googleapis.com/v0/b/csc-450-project.appspot.com/o/HAWKFINDER%2Ffile-spotify-logo-png-4.png?alt=media&token=4ffa3420-edf1-4f8e-8ee4-8b1b7fc19093";
-
-const spotifyPulled: boolean[] = [false, true, true];
 
 function DisplaySong(song: Song, times?: number[]) {
   return (
@@ -19,7 +17,7 @@ function DisplaySong(song: Song, times?: number[]) {
         display: "block",
         border: "1px solid black",
         maxWidth: "400px",
-        minWidth: "350px",
+        minWidth: "250px",
         padding: "10px",
         borderRadius: "25px",
       }}
@@ -30,7 +28,7 @@ function DisplaySong(song: Song, times?: number[]) {
             src={
               song.album.images[1].url == null ? "" : song.album.images[1].url
             }
-            style={{ width: "100px", height: "100px" }}
+            style={{ width: "100px", height: "100px", borderRadius: 25 }}
           />
         </div>
         <div className="songText">
@@ -417,17 +415,24 @@ export class RecentSongs extends spotifyComponent {
         return (
           <div>
             <h3>Recent Songs</h3>
-            {this.state.result.items
-              .slice(this.props.limit === undefined ? 15 : -this.props.limit)
-              .map((song: any) => (
-                <div
-                  key={
-                    song.track.id + Math.floor(Math.random() * 3000).toString()
-                  }
-                >
-                  {DisplaySong(song.track)}
-                </div>
-              ))}
+            <Stack
+              spacing={2}
+              sx={{ borderTop: "3px solid gray", paddingTop: "10px" }}
+            >
+              {this.state.result.items
+                .slice(this.props.limit === undefined ? 15 : -this.props.limit)
+                .map((song: any) => (
+                  <div
+                    style={{ maxWidth: "350px" }}
+                    key={
+                      song.track.id +
+                      Math.floor(Math.random() * 3000).toString()
+                    }
+                  >
+                    {DisplaySong(song.track)}
+                  </div>
+                ))}
+            </Stack>
           </div>
         );
       }

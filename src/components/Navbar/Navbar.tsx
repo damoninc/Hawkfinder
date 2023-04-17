@@ -5,15 +5,12 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
@@ -34,7 +31,7 @@ const Search = styled("div")(({ theme }) => ({
   borderRadius: "50px",
   backgroundColor: alpha(theme.palette.common.white, 0.35),
   "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.40),
+    backgroundColor: alpha(theme.palette.common.white, 0.4),
   },
   marginRight: theme.spacing(2),
   marginLeft: 0,
@@ -73,11 +70,10 @@ const StyledInputBase = styled(TextField)(({ theme }) => ({
     [theme.breakpoints.up("sm")]: {
       width: "20ch",
     },
-
   },
 }));
 
-let loggedUser : User;
+let loggedUser: User;
 let pulled = false;
 
 /**
@@ -88,12 +84,12 @@ export default function Navbar() {
   const [authUser] = useAuthState(auth);
   const [currUser, setUser] = React.useState(user);
 
-  if (!user && (!loggedUser && !pulled )) {
-    console.log()
+  if (!user && !loggedUser && !pulled) {
+    console.log();
     callDB(authUser?.uid, setUser);
-    pulled = true
+    pulled = true;
   }
-  
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -210,12 +206,24 @@ export default function Navbar() {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <IconButton 
-          size="large" 
-          aria-label="show 4 new mails" 
-          color="inherit" 
-          onClick={() => {navigate("/components/Friends/requests")}}>
-          <Badge badgeContent={user ? user.incomingRequests.length : currUser ? currUser.incomingRequests.length : 0} color="error">
+        <IconButton
+          size="large"
+          aria-label="show 4 new mails"
+          color="inherit"
+          onClick={() => {
+            navigate("/components/Friends/requests");
+          }}
+        >
+          <Badge
+            badgeContent={
+              user
+                ? user.incomingRequests.length
+                : currUser
+                ? currUser.incomingRequests.length
+                : 0
+            }
+            color="error"
+          >
             <MailIcon />
           </Badge>
         </IconButton>
@@ -247,7 +255,9 @@ export default function Navbar() {
     return errors;
   };
 
-  const search = new URLSearchParams(window.location.hash.split("#")[1]).get("q");
+  const search = new URLSearchParams(window.location.hash.split("#")[1]).get(
+    "q"
+  );
 
   const formik = useFormik({
     initialValues: {
@@ -255,7 +265,7 @@ export default function Navbar() {
     },
     validate,
     onSubmit: (values) => {
-      navigate(`/components/Search#q=${values.search.replace(/\s/g, "")}`)
+      navigate(`/components/Search#q=${values.search.replace(/\s/g, "")}`);
     },
   });
 
@@ -279,7 +289,10 @@ export default function Navbar() {
             }}
           >
             HAWK
-            <img src="https://firebasestorage.googleapis.com/v0/b/csc-450-project.appspot.com/o/HAWKFINDER%2FMy_project.png?alt=media&token=9c88ec23-9c4e-46b7-8eb9-a907be7b2cfc" height="35px" />
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/csc-450-project.appspot.com/o/HAWKFINDER%2FMy_project.png?alt=media&token=9c88ec23-9c4e-46b7-8eb9-a907be7b2cfc"
+              height="35px"
+            />
             FINDER
           </Typography>
           <Typography
@@ -288,16 +301,19 @@ export default function Navbar() {
             component="a"
             sx={{
               display: { xs: "flex", md: "none" },
-              paddingRight: {xs: "20px", md: "0"}
+              paddingRight: { xs: "20px", md: "0" },
             }}
           >
             <a href="/components/Forum">
-              <img src="https://firebasestorage.googleapis.com/v0/b/csc-450-project.appspot.com/o/HAWKFINDER%2FMy_project.png?alt=media&token=9c88ec23-9c4e-46b7-8eb9-a907be7b2cfc" height="35px" />
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/csc-450-project.appspot.com/o/HAWKFINDER%2FMy_project.png?alt=media&token=9c88ec23-9c4e-46b7-8eb9-a907be7b2cfc"
+                height="35px"
+              />
             </a>
           </Typography>
           <Search>
             <form onSubmit={formik.handleSubmit}>
-              <SearchIconWrapper >
+              <SearchIconWrapper>
                 <SearchIcon />
               </SearchIconWrapper>
               <TextField
@@ -307,19 +323,19 @@ export default function Navbar() {
                 value={formik.values.search}
                 onChange={formik.handleChange}
                 error={formik.touched.search && Boolean(formik.errors.search)}
-                sx={{width:"100%"}}
+                sx={{ width: "100%" }}
                 inputProps={{
                   style: {
                     paddingLeft: "50px",
                     margin: 0,
                     paddingTop: "15px",
-                    paddingBottom: "15px"
-                  }
-               }}
+                    paddingBottom: "15px",
+                  },
+                }}
               />
             </form>
           </Search>
-          
+
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton
@@ -328,7 +344,16 @@ export default function Navbar() {
               color="inherit"
               href="/components/Friends/requests"
             >
-              <Badge badgeContent={user ? user.incomingRequests.length : loggedUser ? loggedUser.incomingRequests.length : 0} color="error">
+              <Badge
+                badgeContent={
+                  user
+                    ? user.incomingRequests.length
+                    : loggedUser
+                    ? loggedUser.incomingRequests.length
+                    : 0
+                }
+                color="error"
+              >
                 <MailIcon />
               </Badge>
             </IconButton>
@@ -374,19 +399,19 @@ export default function Navbar() {
   );
 }
 
-async function callDB(refreshUser: string | undefined, setUser : any) {
+async function callDB(refreshUser: string | undefined, setUser: any) {
   if (user || !refreshUser) {
     return;
   }
-    // Query Firestore for information from currently logged in user
-    const querySnapshot = await getDoc(
-      doc(db, "Users", refreshUser).withConverter(userConverter)
-    );
-    console.log("Pulling user for Navbar notifs");
+  // Query Firestore for information from currently logged in user
+  const querySnapshot = await getDoc(
+    doc(db, "Users", refreshUser).withConverter(userConverter)
+  );
+  console.log("Pulling user for Navbar notifs");
 
-    const dbUser = querySnapshot.data();
-    if (dbUser !== undefined) {
-      loggedUser = dbUser;
-      setUser(loggedUser)
-    }
+  const dbUser = querySnapshot.data();
+  if (dbUser !== undefined) {
+    loggedUser = dbUser;
+    setUser(loggedUser);
+  }
 }

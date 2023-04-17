@@ -12,19 +12,10 @@ import {
   Typography,
 } from "@mui/material";
 import { db } from "../../firebase/config";
-import {
-  doc,
-  collection,
-  query,
-  where,
-  getDoc,
-  getDocs,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, collection, query, getDocs, updateDoc } from "firebase/firestore";
 import FriendRequests from "./FriendRequests";
 import CurrentSong, {
   RecentSongs,
-  TopSongs,
 } from "../SpotifyIntegration/SpotifyComponents";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -42,7 +33,7 @@ let dbPulled = false;
  * @param signedUser : string
  * @return {*} - FriendPage HTML
  */
-export default function FriendPage(props: { uCreds: string, page: string }) {
+export default function FriendPage(props: { uCreds: string; page: string }) {
   const [dbCall, setFriends] = useState(null);
   const navigate = useNavigate();
 
@@ -51,22 +42,24 @@ export default function FriendPage(props: { uCreds: string, page: string }) {
   }
 
   const friendList = (
-    <Grid 
-    sx={{
-      border: "4px solid teal",
-      borderRadius: "25px",
-      overflow:"hidden",
-      gridTemplateRows: "75px 100%",
-      justifyItems: "center",
-    }}
-    >     
-      <Typography variant="h4" align="center" padding={"10px"}><b>Friends List</b></Typography>
-      <Box 
+    <Grid
+      sx={{
+        border: "4px solid teal",
+        borderRadius: "25px",
+        overflow: "hidden",
+        gridTemplateRows: "75px 100%",
+        justifyItems: "center",
+      }}
+    >
+      <Typography variant="h4" align="center" padding={"10px"}>
+        <b>Friends List</b>
+      </Typography>
+      <Box
         sx={{
-          display:"flex",
+          display: "flex",
           width: "100%",
           height: "100%",
-          overflow:"hidden",
+          overflow: "hidden",
           justifyContent: "center",
           borderTop: "4px solid gray",
           paddingTop: "1%",
@@ -91,7 +84,9 @@ export default function FriendPage(props: { uCreds: string, page: string }) {
         >
           <Button
             variant="contained"
-            onClick={() => {navigate("/components/Friends")}}
+            onClick={() => {
+              navigate("/components/Friends");
+            }}
             style={{ margin: "15px" }}
           >
             Friends
@@ -100,13 +95,24 @@ export default function FriendPage(props: { uCreds: string, page: string }) {
             badgeContent={user !== undefined ? user.incomingRequests.length : 0}
             color="success"
           >
-            <Button variant="contained" onClick={() => {navigate("/components/Friends/requests")}}>
+            <Button
+              variant="contained"
+              onClick={() => {
+                navigate("/components/Friends/requests");
+              }}
+            >
               Requests
             </Button>
           </Badge>
         </Grid>
       </div>
-      {props.page == "list" ? friendList : props.page == "requests" ? friendRequests : <div></div> }
+      {props.page == "list" ? (
+        friendList
+      ) : props.page == "requests" ? (
+        friendRequests
+      ) : (
+        <div></div>
+      )}
     </div>
   );
 }
@@ -125,14 +131,15 @@ function checkNullList(friends: User[] | null) {
   // Returns a list of FriendBox if the user's friends list is not empty
   if (friends == null) {
     return (
-      <Stack   
+      <Stack
         direction="column"
         justifyItems="center"
         alignItems="center"
         spacing={2}
       >
         {LoadingPage("Loading Friends")}
-      </Stack>);
+      </Stack>
+    );
   }
   if (friends.length == 0) {
     return (
@@ -142,8 +149,15 @@ function checkNullList(friends: User[] | null) {
     );
   } else {
     return (
-      <div style={{ display: "flex", justifyContent:"center", flexWrap: "wrap", width:"100%" }}>
-      {friends.map((friend) => {
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          flexWrap: "wrap",
+          width: "100%",
+        }}
+      >
+        {friends.map((friend) => {
           return (
             <div className="friend" key={friend.username}>
               <div style={{ display: "flex" }}>
@@ -198,16 +212,7 @@ function checkNullList(friends: User[] | null) {
                         <li key={interest}>{interest}</li>
                       ))}
                     </ul>
-                    <Stack
-                      direction="row"
-                      justifyContent="center"
-                      alignItems="left"
-                      spacing={2}
-                      style={{ paddingLeft: "15px" }}
-                    >
-                      <TopSongs user={friend} small={true} limit={10} />
-                      <RecentSongs user={friend} small={true} limit={10} />
-                    </Stack>
+                    <RecentSongs user={friend} small={false} limit={10} />
                   </Stack>
                 </div>
               </Drawer>
@@ -352,8 +357,7 @@ export async function addFriend(currUser: User, friend: User) {
       alert("This user is already your friend");
     }
   }
-  }
-
+}
 
 /**
  * Removes the passed in User from the currently logged in user's friends list
@@ -406,33 +410,29 @@ async function callDB(signedUser: string, setFriends: any) {
   // if (dbUser !== undefined) {
   //   user = dbUser;
 
-    // Friends list query from FireStore\
-    const friends = new Array<User>();
-      await getDocs(
-        query(collection(db, "Users"))
-      ).then((friendList) => {
-        console.log("Pulling users for friends list")
-        const users = new Array<User>();
-        friendList.forEach((user) => {
-          const data: User | undefined = userConverter.fromFirestore(user);
-          if (data !== undefined) {
-            users.push(data);
-          }
-        });
+  // Friends list query from FireStore\
+  const friends = new Array<User>();
+  await getDocs(query(collection(db, "Users"))).then((friendList) => {
+    console.log("Pulling users for friends list");
+    const users = new Array<User>();
+    friendList.forEach((user) => {
+      const data: User | undefined = userConverter.fromFirestore(user);
+      if (data !== undefined) {
+        users.push(data);
+      }
+    });
 
-        const tmpUser = users.find(usr => usr.userid === signedUser);
+    const tmpUser = users.find((usr) => usr.userid === signedUser);
 
-        if (tmpUser !== undefined) {
-          user = tmpUser;
-          users.forEach((friend) => {
-            if (friend !== undefined && user.friendsList.includes(friend.userid)){
-              friends.push(friend)
-            }
-          })
-          setFriends(friends)
-          dbPulled = true
-
+    if (tmpUser !== undefined) {
+      user = tmpUser;
+      users.forEach((friend) => {
+        if (friend !== undefined && user.friendsList.includes(friend.userid)) {
+          friends.push(friend);
         }
       });
-  }
-
+      setFriends(friends);
+      dbPulled = true;
+    }
+  });
+}
