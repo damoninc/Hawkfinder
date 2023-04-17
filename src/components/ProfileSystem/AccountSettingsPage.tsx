@@ -162,7 +162,7 @@ function AccountSettingsPage(passedUser: any) {
       },
     });
     return (
-      <fieldset className="loginSquare">
+      <Paper variant="outlined" className="loginSquare">
         <h1>Change Email</h1>
         <form onSubmit={formikEmail.handleSubmit}>
           <Container className="formGaps">
@@ -214,7 +214,7 @@ function AccountSettingsPage(passedUser: any) {
             </Grid>
           </Container>
         </form>
-      </fieldset>
+      </Paper>
     );
   }
 
@@ -260,7 +260,7 @@ function AccountSettingsPage(passedUser: any) {
     });
 
     return (
-      <fieldset className="loginSquare">
+      <Paper variant="outlined" className="loginSquare">
         <h1>Change Password</h1>
         <form onSubmit={formikPassword.handleSubmit}>
           <Container className="formGaps">
@@ -313,38 +313,40 @@ function AccountSettingsPage(passedUser: any) {
             </Grid>
           </Container>
         </form>
-      </fieldset>
+      </Paper>
     );
   }
 
   return (
     <div>
-      <Navbar />
-      <Typography fontSize={30}>
-        Hi, {userData?.profile.firstName + " " + userData?.profile.lastName}!
-      </Typography>
-      <Typography>Welcome to Account Settings!</Typography>
+      <div style={{textAlign: "center", marginBottom: "20px"}}>
+        <Typography fontSize={30}>
+          Hi, {userData?.profile.firstName + " " + userData?.profile.lastName}!
+        </Typography>
+        <Typography>Welcome to Account Settings!</Typography>
+      </div>
+      <hr />
       <div className="account-wrapper">
-          <List className="account-box">
-            <ListItemButton
-              selected={selectItem == "1"}
-              onClick={() => setSelectedItem("1")}
-            >
-              <ListItem>Info</ListItem>
-            </ListItemButton>
-            <ListItemButton
-              selected={selectItem == "2"}
-              onClick={() => setSelectedItem("2")}
-            >
-              <ListItem>Change Email</ListItem>
-            </ListItemButton>
-            <ListItemButton
-              selected={selectItem == "3"}
-              onClick={() => setSelectedItem("3")}
-            >
-              <ListItem>Change Password</ListItem>
-            </ListItemButton>
-          </List>
+        <List className="account-box">
+          <ListItemButton
+            selected={selectItem == "1"}
+            onClick={() => setSelectedItem("1")}
+          >
+            <ListItem>Info</ListItem>
+          </ListItemButton>
+          <ListItemButton
+            selected={selectItem == "2"}
+            onClick={() => setSelectedItem("2")}
+          >
+            <ListItem>Change Email</ListItem>
+          </ListItemButton>
+          <ListItemButton
+            selected={selectItem == "3"}
+            onClick={() => setSelectedItem("3")}
+          >
+            <ListItem>Change Password</ListItem>
+          </ListItemButton>
+        </List>
         <Container className="account-settings">{displayItem()}</Container>
       </div>
     </div>

@@ -6,7 +6,7 @@ import React from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
-import { Button, CircularProgress, TextField } from "@mui/material";
+import { Button, CircularProgress, Paper, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useFormik } from "formik";
 import { Container } from "@mui/system";
@@ -123,7 +123,7 @@ function LoginScreen() {
 
   // TODO: Obscure text password boxes
   return (
-    <fieldset className="loginSquare">
+    <Paper variant="outlined" className="loginSquare">
       <h1>Login</h1>
       <form onSubmit={formik.handleSubmit}>
         <Container className="formGaps">
@@ -161,7 +161,7 @@ function LoginScreen() {
             {loadingUserMessage()}
             <Container>
               <Grid item>
-                <Button variant="outlined" type="submit">
+                <Button variant="contained" color="primary" type="submit">
                   Login
                 </Button>
               </Grid>
@@ -171,7 +171,7 @@ function LoginScreen() {
                 <h2 style={{ fontSize: "15px" }}>New user?</h2>
                 <Link
                   to="/components/Signup"
-                  style={{ color: "#1ed5db", fontSize: "20px" }}
+                  style={{ color: "#1ed5db", fontSize: "20px", fontWeight: "bold"}}
                 >
                   Sign up now!
                 </Link>
@@ -180,7 +180,7 @@ function LoginScreen() {
           </Grid>
         </Container>
       </form>
-    </fieldset>
+    </Paper>
   );
 }
 export default LoginScreen;

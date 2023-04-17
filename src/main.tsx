@@ -6,7 +6,7 @@ import App from "./App";
 /**
  * This gives us our basic theme. We can choose our primary, secondary, status, and other colors to our MUI properties.
  */
-const screecherTheme = createTheme({
+export const screecherTheme = createTheme({
   palette: {
     primary: {
       main: "#1ed5db",

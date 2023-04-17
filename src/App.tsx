@@ -31,47 +31,47 @@ function App() {
   const [user] = useAuthState(auth);
   return (
     <div className="app">
-      <h3>All the pages we are working on</h3>
-      {/* <h3>John</h3> */}
-      <Router>
+      {/* <h3>All the pages we are working on</h3>
         <nav className="navbar">
-          <ul>
-            John
-            <li>
-              <Link to="/components/Forum">Forum</Link>
-            </li>
-          </ul>
-          <ul>
-            Nicholaus
-            <li>
-              <Link to="/components/Friends">Friends List</Link>
-            </li>
-            <li>
-              <Link to="/components/Spotify">Spotify Int</Link>
-            </li>
-          </ul>
-          <ul>
-            Octavio
-            <li>
-              <Link to="/">Login</Link>
-            </li>
-            <li>
-              <Link to="/components/Signup">Signup</Link>
-            </li>
-            <li>
-              <Link to="/components/SignedIn">SignedInPage</Link>
-            </li>
-          </ul>
-          <ul>
-            Damon
-            <li>
-              <Link to="/components/Profile">Profile</Link>
-            </li>
-            <li>
-              <Link to="/components/AccountSettings">Account Settings</Link>
-            </li>
-          </ul>
-        </nav>
+        <ul>
+        John
+        <li>
+        <Link to="/components/Forum">Forum</Link>
+        </li>
+        </ul>
+        <ul>
+        Nicholaus
+        <li>
+        <Link to="/components/Friends">Friends List</Link>
+        </li>
+        <li>
+        <Link to="/components/Spotify">Spotify Int</Link>
+        </li>
+        </ul>
+        <ul>
+        Octavio
+        <li>
+        <Link to="/">Login</Link>
+        </li>
+        <li>
+        <Link to="/components/Signup">Signup</Link>
+        </li>
+        <li>
+        <Link to="/components/SignedIn">SignedInPage</Link>
+        </li>
+        </ul>
+        <ul>
+        Damon
+        <li>
+        <Link to="/components/Profile">Profile</Link>
+        </li>
+        <li>
+        <Link to="/components/AccountSettings">Account Settings</Link>
+        </li>
+        </ul>
+        </nav> 
+      Comment out temporarily */}
+      <Router>
         {user ? <Navbar /> : null}
         <Routes>
           <Route

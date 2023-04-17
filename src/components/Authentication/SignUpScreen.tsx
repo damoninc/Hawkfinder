@@ -6,7 +6,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { db, auth } from "../../firebase/config";
 import { FirebaseError } from "firebase/app";
-import { Button, CircularProgress, Grid, TextField } from "@mui/material";
+import { Button, CircularProgress, Grid, Paper, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import { Container } from "@mui/system";
 import { useNavigate, Link } from "react-router-dom";
@@ -150,7 +150,7 @@ function SignUpScreen() {
 
   // TODO: Obscure text password boxes
   return (
-    <fieldset className="loginSquare">
+    <Paper variant="outlined" className="loginSquare">
       <h1>Sign Up</h1>
       <form onSubmit={formik.handleSubmit}>
         <Container className="formGaps">
@@ -237,7 +237,7 @@ function SignUpScreen() {
             {loadingUserMessage()}
             <Container>
               <Grid item>
-                <Button variant="outlined" type="submit">
+                <Button variant="contained" type="submit">
                   Sign Up
                 </Button>
               </Grid>
@@ -247,7 +247,7 @@ function SignUpScreen() {
                 <h2 style={{ fontSize: "15px" }}>Already have an account?</h2>
                 <Link
                   to="/"
-                  style={{ color: "#1ed5db", fontSize: "20px" }}
+                  style={{ color: "#1ed5db", fontSize: "20px", fontWeight: "bold"}}
                 >
                   Login here!
                 </Link>
@@ -256,7 +256,7 @@ function SignUpScreen() {
           </Grid>
         </Container>
       </form>
-    </fieldset>
+    </Paper>
   );
 }
 export default SignUpScreen;

@@ -5,8 +5,8 @@
 }
 
 .account-box {
-    border-top: solid 2px black;
-    border-right: solid 2px black;
+    box-shadow: 10px 5px 5px rgb(94, 84, 84);
+    height: 100%;
 }
 
 .account-setting {
