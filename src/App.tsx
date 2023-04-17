@@ -20,6 +20,7 @@ import { auth } from "./firebase/config";
 import isUserLoggin from "./components/Authentication/TestAuth";
 import AccountSettingsPage from "./components/ProfileSystem/AccountSettingsPage";
 import ReAuth from "./components/Authentication/Reauth";
+import Navbar from "./components/Navbar/Navbar";
 
 /**
  * The top level of our App. Our routes are declared here, and use these routes
@@ -71,6 +72,7 @@ function App() {
             </li>
           </ul>
         </nav>
+        {user ? <Navbar /> : null}
         <Routes>
           <Route
             path="/components/Forum"
