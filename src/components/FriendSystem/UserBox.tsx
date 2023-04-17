@@ -11,10 +11,6 @@ import * as fp from "./FriendPage";
 import * as requests from "../FriendSystem/FriendRequests";
 
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import RemoveIcon from '@mui/icons-material/Remove';
-import AddIcon from '@mui/icons-material/Add';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import HeadphonesIcon from '@mui/icons-material/Headphones';
@@ -122,7 +118,7 @@ export default class UserBox extends React.Component<IProps, IState> {
             variant="contained" 
             sx={buttonStyle} 
             onClick={() => {let a = true}}>
-            <Typography variant="body1">dis u?</Typography>
+            <Typography variant="body1"><b>dis u?</b></Typography>
           </Button>
         )
       }

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import User, { userConverter } from "../../data/User";
 import "../../styles/friendrequest.css";
 import * as fp from "./FriendPage";
-import { Box, CircularProgress, Stack } from "@mui/material";
+import { Box, CircularProgress, Grid, Stack, Typography } from "@mui/material";
 import { db } from "../../firebase/config";
 import {
   doc,
@@ -38,32 +38,40 @@ function FriendRequests(user: User) {
     );
   }
   return (
-    <Box 
+    <Grid 
     sx={{
-      display:"grid",
       border: "4px solid teal",
       borderRadius: "25px",
       overflow:"hidden",
-      padding: "1%",
-      paddingTop: "0.25%",
-      gridTemplateRows: "10% 95%",
-      justifyItems: "center"
+      padding: "0%",
+      paddingTop: "0",
+      gridTemplateRows: "75px 100%",
+      justifyItems: "center",
+      maxWidth: "100vw"
     }}
     >      
-      <h1>Friend Requests</h1>
+      <Typography variant="h4" align="center" padding={"10px"}><b>Friend Requests</b></Typography>
       <Box 
         sx={{
-        display:"grid",
-        width: "100%",
-        height: "100%",
-        overflow:"hidden",
-        gridTemplateColumns: "50% 50%",
-      justifyContent: "center"}}
+          display:"grid",
+          height: "auto",
+          overflow:"hidden",
+          gridTemplateColumns: "50% 50%",
+          justifyItems: "center",
+          borderTop: "4px solid gray",
+          paddingTop: "1%",
+          paddingLeft: "5%",
+          paddingRight: "5%",
+          paddingBottom: "1%",
+          alignItems: "top"
+        }}
       >
+        <Typography variant="h5" sx={{paddingBottom:"10px"}} textAlign="center"><b>Incoming Requests</b></Typography>
+        <Typography variant="h5" sx={{paddingBottom:"10px"}} textAlign="center"><b>Outgoing Requests</b></Typography>
         {IncomingRequests(user, incoming)}
         {OutgoingRequests(user, outgoing)}
       </Box>
-    </Box>
+    </Grid>
   );
 }
 
@@ -72,7 +80,7 @@ function IncomingRequests(currUser: User, incoming: Array<User> | null) {
   if (incoming == null) {
     return (
       <div className="loadUser">
-        <h2>Loading Requests</h2>
+        <Typography variant="h6" textAlign="center">Loading Requests</Typography>
         <CircularProgress />
       </div>
     );
@@ -80,7 +88,7 @@ function IncomingRequests(currUser: User, incoming: Array<User> | null) {
   const users =
     incoming.length == 0 ? (
       <div>
-        <h2>No Incoming Requests</h2>
+        <Typography variant="h6" textAlign="center">No Incoming Requests</Typography>
       </div>
     ) : (
       <div style={{ display: "flex", justifyContent: "space-evenly", flexWrap: "wrap" }}>
@@ -95,11 +103,10 @@ function IncomingRequests(currUser: User, incoming: Array<User> | null) {
   return (
     <Stack 
       direction="column"
-      justifyContent="center"
+      justifyContent="flex-start"
       alignItems="center"
-      spacing={0.5}
+      spacing={2}
     >
-      <h2>Incoming Requests</h2>
       {users}
     </Stack>
   );
@@ -110,7 +117,7 @@ function OutgoingRequests(currUser: User, outgoing: Array<User> | null) {
   if (outgoing == null) {
     return (
       <div className="loadUser">
-        <h2>Loading Friends...</h2>
+        <Typography variant="h6" textAlign="center">Loading Friends...</Typography>
         <CircularProgress />
       </div>
     );
@@ -118,7 +125,7 @@ function OutgoingRequests(currUser: User, outgoing: Array<User> | null) {
   const users =
     outgoing.length == 0 ? (
       <div>
-        <h2>No Outgoing Requests</h2>
+        <Typography variant="h6" textAlign="center">No Outgoing Requests</Typography>
       </div>
     ) : (
       <div style={{ display: "flex", justifyContent: "space-evenly", flexWrap: "wrap" }}>
@@ -130,17 +137,7 @@ function OutgoingRequests(currUser: User, outgoing: Array<User> | null) {
     </div>
     );
 
-  return (
-    <Stack 
-    direction="column"
-    justifyContent="center"
-    alignItems="center"
-    spacing={0.5}
-  >
-      <h2>Sent Requests</h2>
-      {users}
-    </Stack>
-  );
+  return (users);
 }
 
 // Database Calling
@@ -274,51 +271,38 @@ export async function cancel(currUser: User, request: User) {
  * @param {*} setOutgoing - Hook to set outgoing requests
  */
 async function callDB(user: User, setIncoming: any, setOutgoing: any) {
-  let incomingPulled = false;
-  let outgoingPulled = false;
+  let pulled = false;
   const incoming = new Array<User>();
   const outgoing = new Array<User>();
   if (user === undefined) {
     return;
   }
-  if (user.incomingRequests.length > 0) {
+  if (user.incomingRequests.length > 0 || user.outgoingRequests.length > 0) {
     console.log("DB Call");
     await getDocs(
       query(
         collection(db, "Users"),
-        where("userid", "in", user.incomingRequests)
       )
     ).then((inrequest) => {
-      inrequest.forEach((user) => {
-        const data: User | undefined = userConverter.fromFirestore(user);
+      inrequest.forEach((indata) => {
+        const data: User | undefined = userConverter.fromFirestore(indata);
         if (data !== undefined) {
-          incoming.push(data);
-        }
+          if (user.incomingRequests.includes(data.userid)) {
+            incoming.push(data);
+          } else if (user.outgoingRequests.includes(data.userid)){
+            outgoing.push(data)
+          }
+        } 
       });
-      incomingPulled = true;
       setIncoming(incoming);
-    });
-  }
-  if (user.outgoingRequests.length > 0) {
-    console.log("DB Call");
-    await getDocs(
-      query(
-        collection(db, "Users"),
-        where("userid", "in", user.outgoingRequests)
-      )
-    ).then((outrequest) => {
-      outrequest.forEach((user) => {
-        const data: User | undefined = userConverter.fromFirestore(user);
-        if (data !== undefined) {
-          outgoing.push(data);
-        }
-      });
-      outgoingPulled = true;
       setOutgoing(outgoing);
+      pulled = true
     });
   }
-  !incomingPulled ? setIncoming(incoming) : null;
-  !outgoingPulled ? setOutgoing(outgoing) : null;
+  if (!pulled) {
+    setIncoming(incoming)
+    setOutgoing(outgoing)
+  }
   dbPulled = true;
 }
 

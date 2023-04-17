@@ -3,13 +3,12 @@ import User, { userConverter } from "../../data/User";
 import "../../styles/friendpage.css";
 import { db } from "../../firebase/config";
 import { collection, query, getDocs, doc, getDoc } from "firebase/firestore";
-import { Button, CircularProgress, TextField } from "@mui/material";
+import { Box, Button, CircularProgress, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import FriendBox from "../FriendSystem/FriendBox";
 import Navbar from "./Navbar";
 import { useLocation, useNavigate } from "react-router-dom";
 import UserBox from "../FriendSystem/UserBox";
-import { ButtonType } from "../FriendSystem/UserBox";
 
 
 /**
@@ -18,8 +17,7 @@ import { ButtonType } from "../FriendSystem/UserBox";
  *
  * @return {*} - FriendSearch HTML
  */
-let resultsLoaded = false;
-let lastSearch = "";
+export let lastSearch = "";
 
 interface IProps {
   uCreds : string | undefined
@@ -65,10 +63,18 @@ export default class SearchPage extends React.Component<IProps, IState> {
       return (
       <div>
         <Navbar />
-        <div className="search">
+        <Box 
+          className="search"     
+          sx={{
+            border: "4px solid teal",
+            borderRadius: "25px",
+            overflow:"hidden",
+            gridTemplateRows: "75px 100%",
+            justifyItems: "center",
+          }}>
           <h1>User Search</h1>
           {this.checkNullList()}
-        </div>
+        </Box>
       </div>
     );
   }
@@ -92,6 +98,7 @@ export default class SearchPage extends React.Component<IProps, IState> {
     
     msg = msg.replace(/\s/g, "");
     msg = msg.toLocaleLowerCase();
+    lastSearch = msg;
     await getDocs(query(collection(db, "Users"))).then(async (usersData) => {
       usersData.forEach((user) => {
         const data: User | undefined = userConverter.fromFirestore(user);
@@ -109,7 +116,6 @@ export default class SearchPage extends React.Component<IProps, IState> {
         }
       });
       this.setState({dbCall: users});
-      resultsLoaded = true
       console.log("db call");
     });
   }

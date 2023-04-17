@@ -87,7 +87,17 @@ function App() {
             path="/components/Friends"
             element={
               isUserLoggin(user) ? (
-                <FriendPage uCreds={user!.uid} />
+                <FriendPage uCreds={user!.uid} page="list" />
+              ) : (
+                <Navigate to="/components/Interceptor" />
+              )
+            }
+          />
+          <Route
+            path="/components/Friends/requests"
+            element={
+              isUserLoggin(user) ? (
+                <FriendPage uCreds={user!.uid} page="requests" />
               ) : (
                 <Navigate to="/components/Interceptor" />
               )

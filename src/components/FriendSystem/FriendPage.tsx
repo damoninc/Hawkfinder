@@ -2,15 +2,14 @@ import React, { useState } from "react";
 import User, { userConverter } from "../../data/User";
 import "../../styles/friendpage.css";
 import FriendBox from "./FriendBox";
-import FriendSearch from "./FriendSearch";
 import {
   Badge,
   Box,
   Button,
-  CircularProgress,
   Drawer,
   Grid,
   Stack,
+  Typography,
 } from "@mui/material";
 import { db } from "../../firebase/config";
 import {
@@ -28,7 +27,6 @@ import CurrentSong, {
   TopSongs,
 } from "../SpotifyIntegration/SpotifyComponents";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import SpotifyAuthDeauth from "../SpotifyIntegration/SpotifyLogin";
 import { Navigate, useNavigate } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
 import LoadingPage from "../Navbar/Loading";
@@ -44,50 +42,42 @@ let dbPulled = false;
  * @param signedUser : string
  * @return {*} - FriendPage HTML
  */
-export default function FriendPage(currUser: { uCreds: string }) {
+export default function FriendPage(props: { uCreds: string, page: string }) {
   const [dbCall, setFriends] = useState(null);
-  const [pageSwitch, setSwitch] = useState(0);
+  const navigate = useNavigate();
 
-  if (!dbPulled || dbCall == null) {
-    //callDB(currUser.uCreds, setFriends);
+  if (!dbPulled || !dbCall) {
+    callDB(props.uCreds, setFriends);
   }
 
   const friendList = (
-    <Box 
-      sx={{
-        display:"grid",
-        border: "4px solid teal",
-        borderRadius: "25px",
-        overflow:"hidden",
-        padding: "0%",
-        paddingTop: "0",
-        gridTemplateRows: "75px 100%",
-        justifyItems: "center",
-        height:"100%"
-      }}
-    >      
-      <h1>Friends List</h1>
+    <Grid 
+    sx={{
+      border: "4px solid teal",
+      borderRadius: "25px",
+      overflow:"hidden",
+      gridTemplateRows: "75px 100%",
+      justifyItems: "center",
+    }}
+    >     
+      <Typography variant="h4" align="center" padding={"10px"}><b>Friends List</b></Typography>
       <Box 
         sx={{
           display:"flex",
           width: "100%",
           height: "100%",
           overflow:"hidden",
-          justifyItems: "center",
-          borderTop: "4px solid black",
+          justifyContent: "center",
+          borderTop: "4px solid gray",
           paddingTop: "1%",
-          paddingLeft: "5%",
-          paddingRight: "5%"
         }}
       >
         {checkNullList(dbCall)}
       </Box>
-    </Box>
+    </Grid>
   );
 
   const friendRequests = FriendRequests(user);
-
-  const search = <FriendSearch />;
 
   return (
     <div>
@@ -101,7 +91,7 @@ export default function FriendPage(currUser: { uCreds: string }) {
         >
           <Button
             variant="contained"
-            onClick={() => setSwitch(0)}
+            onClick={() => {navigate("/components/Friends")}}
             style={{ margin: "15px" }}
           >
             Friends
@@ -110,20 +100,13 @@ export default function FriendPage(currUser: { uCreds: string }) {
             badgeContent={user !== undefined ? user.incomingRequests.length : 0}
             color="success"
           >
-            <Button variant="contained" onClick={() => setSwitch(1)}>
+            <Button variant="contained" onClick={() => {navigate("/components/Friends/requests")}}>
               Requests
             </Button>
           </Badge>
-          <Button
-            variant="contained"
-            onClick={() => setSwitch(2)}
-            style={{ margin: "15px" }}
-          >
-            Search
-          </Button>
         </Grid>
       </div>
-      {pageSwitch == 0 ? friendList : pageSwitch == 1 ? friendRequests : search}
+      {props.page == "list" ? friendList : props.page == "requests" ? friendRequests : <div></div> }
     </div>
   );
 }
@@ -144,7 +127,7 @@ function checkNullList(friends: User[] | null) {
     return (
       <Stack   
         direction="column"
-        justifyContent="center"
+        justifyItems="center"
         alignItems="center"
         spacing={2}
       >
@@ -413,37 +396,43 @@ export async function removeFriend(friend: User) {
 }
 
 async function callDB(signedUser: string, setFriends: any) {
-  // Query Firestore for information from currently logged in user
-  const querySnapshot = await getDoc(
-    doc(db, "Users", signedUser).withConverter(userConverter)
-  );
-  console.log("Grabbing User Object");
+  // // Query Firestore for information from currently logged in user
+  // const querySnapshot = await getDoc(
+  //   doc(db, "Users", signedUser).withConverter(userConverter)
+  // );
+  // console.log("Pulling user for friends list");
 
-  const dbUser = querySnapshot.data();
-  if (dbUser !== undefined) {
-    user = dbUser;
-    console.log(user);
-  }
+  // const dbUser = querySnapshot.data();
+  // if (dbUser !== undefined) {
+  //   user = dbUser;
 
-  const friends = new Array<User>();
-  // Friends list query from FireStore
-  if (user.friendsList.length > 0) {
-    await getDocs(
-      query(collection(db, "Users"), where("userid", "in", user.friendsList))
-    ).then((friendList) => {
-      friendList.forEach((user) => {
-        console.log("Getting Friends");
-        const data: User | undefined = userConverter.fromFirestore(user);
-        if (data !== undefined) {
-          friends.push(data);
+    // Friends list query from FireStore\
+    const friends = new Array<User>();
+      await getDocs(
+        query(collection(db, "Users"))
+      ).then((friendList) => {
+        console.log("Pulling users for friends list")
+        const users = new Array<User>();
+        friendList.forEach((user) => {
+          const data: User | undefined = userConverter.fromFirestore(user);
+          if (data !== undefined) {
+            users.push(data);
+          }
+        });
+
+        const tmpUser = users.find(usr => usr.userid === signedUser);
+
+        if (tmpUser !== undefined) {
+          user = tmpUser;
+          users.forEach((friend) => {
+            if (friend !== undefined && user.friendsList.includes(friend.userid)){
+              friends.push(friend)
+            }
+          })
+          setFriends(friends)
+          dbPulled = true
+
         }
       });
-      dbPulled = true;
-      setFriends(friends);
-    });
-  } else {
-    // set friends to be an empty list if friends list is empty
-    setFriends(friends);
-    dbPulled = true;
   }
-}
+

@@ -160,7 +160,6 @@ class spotifyComponent extends React.Component<IProps, IState> {
   }
 
   async makeRequest(user: User, request_uri: string) {
-    console.log("making request");
     if (user.spotify.accessToken != "null") {
       await axios
         .get(api_uri + request_uri, {

@@ -15,31 +15,35 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { Button, InputAdornment, TextField } from "@mui/material";
-import { auth } from "../../firebase/config";
+import { auth, db } from "../../firebase/config";
 import PeopleIcon from "@mui/icons-material/People";
 import { useFormik } from "formik";
-import { SearchPagefunc } from "./Search";
+import { user } from "../FriendSystem/FriendPage";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { doc, getDoc } from "firebase/firestore";
+import User, { userConverter } from "../../data/User";
 
 /**
  * The stylization for the searchbar
  */
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  borderRadius: "50px",
+  backgroundColor: alpha(theme.palette.common.white, 0.35),
   "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
+    backgroundColor: alpha(theme.palette.common.white, 0.40),
   },
   marginRight: theme.spacing(2),
   marginLeft: 0,
   width: "100%",
-  [theme.breakpoints.up("sm")]: {
+  [theme.breakpoints.up("md")]: {
     marginLeft: theme.spacing(3),
     width: "auto",
   },
+  overflow: "hidden",
 }));
 
 /**
@@ -58,27 +62,38 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
 /**
  * The stylized base for the navbar
  */
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
+const StyledInputBase = styled(TextField)(({ theme }) => ({
   color: "inherit",
-  "& .MuiInputBase-input": {
+  "& .MuiOutlinedInput-root": {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     width: "100%",
-    [theme.breakpoints.up("md")]: {
+    [theme.breakpoints.up("sm")]: {
       width: "20ch",
     },
+
   },
 }));
 
-export let searchParam: string;
+let loggedUser : User;
+let pulled = false;
 
 /**
  * This is a universal navigation bar that will be implemented in all webpages for a given signed in user.
  * @returns Navigation bar
  */
 export default function Navbar() {
+  const [authUser] = useAuthState(auth);
+  const [currUser, setUser] = React.useState(user);
+
+  if (!user && (!loggedUser && !pulled )) {
+    console.log()
+    callDB(authUser?.uid, setUser);
+    pulled = true
+  }
+  
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -195,24 +210,16 @@ export default function Navbar() {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
+        <IconButton 
+          size="large" 
+          aria-label="show 4 new mails" 
+          color="inherit" 
+          onClick={() => {navigate("/components/Friends/requests")}}>
+          <Badge badgeContent={user ? user.incomingRequests.length : currUser ? currUser.incomingRequests.length : 0} color="error">
             <MailIcon />
           </Badge>
         </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
+        <p>Requests</p>
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
@@ -240,9 +247,11 @@ export default function Navbar() {
     return errors;
   };
 
+  const search = new URLSearchParams(window.location.hash.split("#")[1]).get("q");
+
   const formik = useFormik({
     initialValues: {
-      search: "",
+      search: search ? search : "",
     },
     validate,
     onSubmit: (values) => {
@@ -273,20 +282,40 @@ export default function Navbar() {
             <img src="https://firebasestorage.googleapis.com/v0/b/csc-450-project.appspot.com/o/HAWKFINDER%2FMy_project.png?alt=media&token=9c88ec23-9c4e-46b7-8eb9-a907be7b2cfc" height="35px" />
             FINDER
           </Typography>
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            sx={{
+              display: { xs: "flex", md: "none" },
+              paddingRight: {xs: "20px", md: "0"}
+            }}
+          >
+            <a href="/components/Forum">
+              <img src="https://firebasestorage.googleapis.com/v0/b/csc-450-project.appspot.com/o/HAWKFINDER%2FMy_project.png?alt=media&token=9c88ec23-9c4e-46b7-8eb9-a907be7b2cfc" height="35px" />
+            </a>
+          </Typography>
           <Search>
             <form onSubmit={formik.handleSubmit}>
+              <SearchIconWrapper >
+                <SearchIcon />
+              </SearchIconWrapper>
               <TextField
-                variant="outlined"
-                focused
-                fullWidth
-                InputProps={{
-                  startAdornment: <InputAdornment position="start"><SearchIcon /></InputAdornment>,
-                }}
+                variant="filled"
                 id="search"
                 name="search"
                 value={formik.values.search}
                 onChange={formik.handleChange}
                 error={formik.touched.search && Boolean(formik.errors.search)}
+                sx={{width:"100%"}}
+                inputProps={{
+                  style: {
+                    paddingLeft: "50px",
+                    margin: 0,
+                    paddingTop: "15px",
+                    paddingBottom: "15px"
+                  }
+               }}
               />
             </form>
           </Search>
@@ -297,8 +326,9 @@ export default function Navbar() {
               size="large"
               aria-label="show 4 new mails"
               color="inherit"
+              href="/components/Friends/requests"
             >
-              <Badge badgeContent={4} color="error">
+              <Badge badgeContent={user ? user.incomingRequests.length : loggedUser ? loggedUser.incomingRequests.length : 0} color="error">
                 <MailIcon />
               </Badge>
             </IconButton>
@@ -342,4 +372,21 @@ export default function Navbar() {
       {renderMenu}
     </Box>
   );
+}
+
+async function callDB(refreshUser: string | undefined, setUser : any) {
+  if (user || !refreshUser) {
+    return;
+  }
+    // Query Firestore for information from currently logged in user
+    const querySnapshot = await getDoc(
+      doc(db, "Users", refreshUser).withConverter(userConverter)
+    );
+    console.log("Pulling user for Navbar notifs");
+
+    const dbUser = querySnapshot.data();
+    if (dbUser !== undefined) {
+      loggedUser = dbUser;
+      setUser(loggedUser)
+    }
 }
