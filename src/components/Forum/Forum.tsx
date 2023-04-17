@@ -16,7 +16,7 @@ import PostInput from "./PostInput";
 import { Modal, Box, CircularProgress } from "@mui/material";
 import "../../styles/forum.css";
 
-function Forum(passedUser: string = "") {
+function Forum(passedUser: any = "") {
   // HOOKS ----------------------------------------------------------------
   // State for posts must be set with any so the modal knows
   // which component to render without having to use .map()
@@ -39,12 +39,12 @@ function Forum(passedUser: string = "") {
   useEffect(() => {
     setLoading(true);
 
-    if (!passedUser) {
+    if (!passedUser.uCreds) {
       q = query(collection(db, "Posts"), orderBy("postDate", "desc"));
-    } else if (passedUser) {
+    } else if (passedUser.uCreds) {
       q = query(
         collection(db, "Posts"),
-        where("userID", "==", passedUser),
+        where("userID", "==", passedUser.uCreds),
         orderBy("postDate", "desc")
       );
     }
@@ -94,7 +94,7 @@ function Forum(passedUser: string = "") {
   return (
     <div className="forum-container">
       {/* <PostInput reloadPosts={reloadPosts} /> */}
-      {!passedUser ? <PostInput reloadForum={reloadForum} /> : null}
+      {!passedUser.uCreds ? <PostInput reloadForum={reloadForum} /> : null}
       {!loading ? (
         <>
           {posts.map((post: Post, index) => {

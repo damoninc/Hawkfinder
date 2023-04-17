@@ -68,7 +68,7 @@ function ProfilePage(passedUser: any) {
     return (
       <div hidden>
         {EditPage(userPage, docRef, passedUserObj)}
-        {Forum(uid)}
+        <Forum uCreds={uid} />
       </div>
     );
   }
@@ -121,7 +121,7 @@ function ProfilePage(passedUser: any) {
       ) : (
         <div></div>
       )}
-      {Forum(uid)}
+      <Forum uCreds={uid} />
     </>
   );
 }
