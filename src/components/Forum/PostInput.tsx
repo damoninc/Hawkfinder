@@ -23,7 +23,7 @@ import {
   serverTimestamp,
   updateDoc,
 } from "@firebase/firestore";
-import { ref, uploadBytes } from "firebase/storage";
+import { ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
 import "../../styles/postinput.css";
 
 const PostInput = (props: any) => {
@@ -75,13 +75,24 @@ const PostInput = (props: any) => {
     const metadata = {
       contentType: image.type,
     };
-    uploadBytes(postsRef, image, metadata)
-      .then(() => {
-        console.log("Uploaded image! File: " + image);
-      })
-      .catch(() => {
-        console.log("error uploading to firebase");
-      });
+
+    const uploadTask = uploadBytesResumable(postsRef, image, metadata);
+
+    // This makes sure that the upload completes before the Forum is reloaded
+    uploadTask.on("state_changed", {
+      error: (error) => {
+        console.log("Error occurred while uploading: ", error);
+      },
+      complete: () => {
+        // Once the upload is complete, reset the hooks
+        // and reload the Forum
+        setSelectedImage(null);
+        setInterest("");
+        setPostText("");
+        console.log("Upload complete!");
+        props.reloadForum();
+      },
+    });
   }
 
   /**
@@ -107,20 +118,12 @@ const PostInput = (props: any) => {
         const imgName = imgID + "." + imgExt;
         // UPLOADING IMG TO FIREBASE STORAGE
         const newFile: File = renameFile(selectedImage, imgName);
-        setTimeout(() => {
-          // Lets the app upload the file before reloading the page
-          // so that the upload does not get interrupted
-          uploadImage(newFile);
-        }, 1500);
         // UPDATING POST DOCUMENT WITH POINTER TO FIREBASE STORAGE
         await updateDoc(docRef, {
           imageURL: imgName,
         });
+        uploadImage(newFile);
       }
-      setSelectedImage(null);
-      setInterest("");
-      setPostText("");
-      props.reloadForum();
     } else {
       console.log(
         "Post not sent, you must select an interest and enter text input!"
