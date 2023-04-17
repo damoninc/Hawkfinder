@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../../firebase/config";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import {
+  DocumentData,
+  Query,
+  collection,
+  getDocs,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 import Post from "../../data/Post";
 import PostView from "../Post/PostView";
 import ForumPost from "./ForumPost";
@@ -8,7 +16,7 @@ import PostInput from "./PostInput";
 import { Modal, Box, CircularProgress } from "@mui/material";
 import "../../styles/forum.css";
 
-function Forum() {
+function Forum(passedUser: any = "") {
   // HOOKS ----------------------------------------------------------------
   // State for posts must be set with any so the modal knows
   // which component to render without having to use .map()
@@ -20,6 +28,8 @@ function Forum() {
   // Shows loading while fetchPosts() is running
   const [loading, setLoading] = useState(false);
 
+  let q: Query<DocumentData>;
+
   /**
    * Makes a call to the db, grabbing every document
    * in the Posts collection
@@ -29,7 +39,16 @@ function Forum() {
   useEffect(() => {
     setLoading(true);
 
-    const q = query(collection(db, "Posts"), orderBy("postDate", "desc"));
+    if (!passedUser.uCreds) {
+      q = query(collection(db, "Posts"), orderBy("postDate", "desc"));
+    } else if (passedUser.uCreds) {
+      q = query(
+        collection(db, "Posts"),
+        where("userID", "==", passedUser.uCreds),
+        orderBy("postDate", "desc")
+      );
+    }
+
     getDocs(q).then((querySnapshot) => {
       const tempPosts: Post[] = querySnapshot.docs.map((doc) => {
         console.log("DB CALL");
@@ -75,7 +94,7 @@ function Forum() {
   return (
     <div className="forum-container">
       {/* <PostInput reloadPosts={reloadPosts} /> */}
-      <PostInput reloadForum={reloadForum} />
+      {!passedUser.uCreds ? <PostInput reloadForum={reloadForum} /> : null}
       {!loading ? (
         <>
           {posts.map((post: Post, index) => {
