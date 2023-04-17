@@ -63,6 +63,7 @@ function ProfilePage(passedUser: any) {
       });
   }, []);
 
+  // Required to keep the DOM happy.
   if (!userPage || !userProfPic || !userCoverPic) {
     return (
       <div hidden>

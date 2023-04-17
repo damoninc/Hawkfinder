@@ -44,8 +44,8 @@ function Forum(passedUser: string = "") {
     } else if (passedUser) {
       q = query(
         collection(db, "Posts"),
-        orderBy("postDate", "desc"),
-        where("userID", "==", passedUser)
+        where("userID", "==", passedUser),
+        orderBy("postDate", "desc")
       );
     }
 
@@ -94,7 +94,7 @@ function Forum(passedUser: string = "") {
   return (
     <div className="forum-container">
       {/* <PostInput reloadPosts={reloadPosts} /> */}
-      <PostInput reloadForum={reloadForum} />
+      {!passedUser ? <PostInput reloadForum={reloadForum} /> : null}
       {!loading ? (
         <>
           {posts.map((post: Post, index) => {
