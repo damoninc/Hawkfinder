@@ -112,11 +112,26 @@ function AccountSettingsPage(passedUser: any) {
   //TODO: Maybe add reauthentication to this page.
   function displayItem() {
     if (selectItem == "1") {
-      return <h1>Holy Chungus, welcome to account settings!</h1>;
+      return (
+        <div>
+          <h1>
+            Welcome to the account settings! If your session has been active for
+            a while, you may need to reauthenticate!
+          </h1>
+        </div>
+      );
     } else if (selectItem == "2") {
-      return <ChangeEmailComponent />;
+      return (
+        <div className="centered" style={{height: "100%"}}>
+          <ChangeEmailComponent />
+        </div>
+      );
     } else if (selectItem == "3") {
-      return <ChangePasswordComponent />;
+      return (
+        <div className="centered" style={{height: "100%"}}>
+          <ChangePasswordComponent />
+        </div>
+      );
     } else {
       return null;
     }
@@ -319,7 +334,7 @@ function AccountSettingsPage(passedUser: any) {
 
   return (
     <div>
-      <div style={{textAlign: "center", marginBottom: "20px"}}>
+      <div style={{ textAlign: "center", marginBottom: "20px" }}>
         <Typography fontSize={30}>
           Hi, {userData?.profile.firstName + " " + userData?.profile.lastName}!
         </Typography>

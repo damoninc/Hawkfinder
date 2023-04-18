@@ -1,15 +1,11 @@
 .loginSquare {
     font-family: 'Montserrat', sans-serif;
-    margin: auto;
-    width: 50%;
-    max-width: 100%;
-    min-width: 270px;
     padding: 30px;
     text-align: center;
 }
 
 .MuiPaper-outlined.loginSquare  {
-    background-color: #4d8381;
+    background-color: #143132;
 }
 
 .formGaps .MuiContainer-root {

@@ -1,4 +1,4 @@
-import { createTheme, ThemeProvider } from "@mui/material";
+import { createTheme, ThemeProvider, CssBaseline } from "@mui/material";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
@@ -18,6 +18,7 @@ export const screecherTheme = createTheme({
       light: "#ed6f6a",
       dark: "#79000e",
     },
+    mode: "dark",
   },
 });
 
@@ -25,7 +26,8 @@ export const screecherTheme = createTheme({
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ThemeProvider theme={screecherTheme}>
-      <App />
+      <CssBaseline />
+        <App />
     </ThemeProvider>
   </React.StrictMode>
 );
