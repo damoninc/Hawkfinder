@@ -124,6 +124,8 @@ const PostInput = (props: any) => {
         });
         uploadImage(newFile);
       }
+      // This line only runs if no image was uploaded
+      props.reloadForum();
     } else {
       console.log(
         "Post not sent, you must select an interest and enter text input!"
