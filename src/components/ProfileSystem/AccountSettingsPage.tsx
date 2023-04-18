@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import User from "../../data/User";
 import { deleteUser, updateEmail, updatePassword } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import "../../styles/accountsettings.css";
 import { db } from "../../firebase/config";
 import {
@@ -111,6 +111,22 @@ function AccountSettingsPage(passedUser: any) {
     alert("Account has been deleted!");
     deleteUser(passedUser.uCreds)
       .then(() => {
+        deleteDoc(doc(db, "Users", passedUser.uCreds.uid))
+          .then(() => alert("Profile is a gone!"))
+          .catch((error: FirebaseError) => {
+            alert("Error! " + error);
+            switch (error.code) {
+              case "auth/requires-recent-login":
+                alert("You need to sign in again to do this change!");
+                navigate("/components/Reauth");
+                break;
+              default:
+                setSignupMessage(
+                  `Man, I don't even know what happened... ${error.code}`
+                );
+                break;
+            }
+          });
         alert("Rip bozo!");
         navigate("/");
       })
