@@ -47,6 +47,8 @@ interface IState {
   pfpUrl: string;
   mainClicked: boolean;
   smallClick: boolean;
+  modalClick: boolean;
+  refresh: number
 }
 
 export default class UserBox extends React.Component<IProps, IState> {
@@ -56,6 +58,8 @@ export default class UserBox extends React.Component<IProps, IState> {
       pfpUrl: "",
       mainClicked: false,
       smallClick: false,
+      modalClick: false,
+      refresh: 1
     };
   }
 
@@ -91,6 +95,7 @@ export default class UserBox extends React.Component<IProps, IState> {
           color="success"
           onClick={() => {
             func(this.props.currentUser!, this.props.user);
+            setTimeout( () => { this.setState({smallClick: false}) }, 1000 );
           }}
         >
           <CheckIcon />
@@ -131,7 +136,7 @@ export default class UserBox extends React.Component<IProps, IState> {
               variant="contained"
               sx={buttonStyle}
               onClick={() => {
-                this.setState({ smallClick: true });
+                this.setState({ modalClick: true });
               }}
             >
               <Typography variant="body1">
@@ -148,7 +153,7 @@ export default class UserBox extends React.Component<IProps, IState> {
             variant="contained"
             sx={buttonStyle}
             onClick={() => {
-              this.setState({ smallClick: true });
+              this.setState({ modalClick: true });
             }}
           >
             <HeadphonesIcon />
@@ -256,9 +261,9 @@ export default class UserBox extends React.Component<IProps, IState> {
           {buttons()}
         </Box>
         <Modal
-          open={this.state.smallClick}
+          open={this.state.modalClick}
           onClose={() => {
-            this.setState({ smallClick: false });
+            this.setState({ modalClick: false });
           }}
         >
           <Grid

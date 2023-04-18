@@ -352,7 +352,6 @@ export async function addFriend(currUser: User, friend: User) {
 
       dbPulled = false;
       alert("Added " + friend.profile.userName);
-      window.location.reload();
     } else {
       alert("This user is already your friend");
     }
@@ -393,22 +392,13 @@ export async function removeFriend(friend: User) {
       ).then(() => {
         dbPulled = false;
         alert("Removed " + friend.profile.userName);
-        window.location.reload();
       });
     });
   }
 }
 
 async function callDB(signedUser: string, setFriends: any) {
-  // // Query Firestore for information from currently logged in user
-  // const querySnapshot = await getDoc(
-  //   doc(db, "Users", signedUser).withConverter(userConverter)
-  // );
-  // console.log("Pulling user for friends list");
-
-  // const dbUser = querySnapshot.data();
-  // if (dbUser !== undefined) {
-  //   user = dbUser;
+  // Query Firestore for information from currently logged in user
 
   // Friends list query from FireStore\
   const friends = new Array<User>();
@@ -433,6 +423,18 @@ async function callDB(signedUser: string, setFriends: any) {
       });
       setFriends(friends);
       dbPulled = true;
+
+      user.friendsList.forEach((friendId) => {
+        if(!friends.find(friend => friend.userid === friendId)) {
+          const index = user.friendsList.indexOf(friendId, 0);
+          if (index > -1) {
+            user.friendsList.splice(index, 1);
+            updateDoc(doc(db, "Users", user.userid),
+            "friendsList",
+            user.friendsList)
+          }
+        }
+      })
     }
   });
 }

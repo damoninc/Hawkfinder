@@ -26,7 +26,7 @@ let dbPulled = false;
 function FriendRequests(user: User) {
   const [incoming, setIncoming] = useState(null);
   const [outgoing, setOutgoing] = useState(null);
-  if (!dbPulled || (incoming == null && outgoing == null)) {
+  if (!dbPulled || (!incoming && !outgoing)) {
     callDB(user, setIncoming, setOutgoing);
     return (
       <div className="page">
@@ -271,7 +271,7 @@ export async function cancel(currUser: User, request: User) {
  * @param {*} setOutgoing - Hook to set outgoing requests
  */
 async function callDB(user: User, setIncoming: any, setOutgoing: any) {
-  let pulled = false;
+  let pulled = false
   const incoming = new Array<User>();
   const outgoing = new Array<User>();
   if (user === undefined) {
@@ -283,17 +283,56 @@ async function callDB(user: User, setIncoming: any, setOutgoing: any) {
       query(
         collection(db, "Users"),
       )
-    ).then((inrequest) => {
+    ).then(async (inrequest) => {
       inrequest.forEach((indata) => {
         const data: User | undefined = userConverter.fromFirestore(indata);
         if (data !== undefined) {
-          if (user.incomingRequests.includes(data.userid)) {
+          if (user.incomingRequests.includes(data.userid) && !user.friendsList.includes(data.userid)) {
             incoming.push(data);
-          } else if (user.outgoingRequests.includes(data.userid)){
+          } else if (user.outgoingRequests.includes(data.userid) && !user.friendsList.includes(data.userid)){
             outgoing.push(data)
           }
         } 
       });
+      dbPulled = true;
+      let newIncoming = user.incomingRequests
+      const badInIds: string[] = []
+        user.incomingRequests.forEach((reqId) => {
+          const index = incoming.findIndex(item => item.userid === reqId);
+          if (index < 0 || user.friendsList.includes(reqId)) {
+            badInIds.push(reqId)
+          }
+        })
+        newIncoming = newIncoming.filter(item => !badInIds.includes(item))
+      
+
+      let newOutgoing = user.outgoingRequests
+      const badOutIds: string[] = []
+        user.outgoingRequests.forEach((reqId) => {
+          const index = outgoing.findIndex(item => item.userid === reqId);
+          if (index < 0 || user.friendsList.includes(reqId)) {
+            badOutIds.push(reqId)
+          }
+        })
+        newOutgoing = newOutgoing.filter(item => !badOutIds.includes(item))
+
+      if (!newOutgoing.every((val, index) => val === user.outgoingRequests[index]) || !user.outgoingRequests.every((val, index) => val === newOutgoing[index])) {
+        console.log("removing bad friend ids from outgoing")
+      await updateDoc(
+        doc(db, "Users", user.userid),
+        "outgoingRequests",
+        newOutgoing)
+      }
+      console.log(newOutgoing)
+      console.log(user.outgoingRequests)
+      if (!newIncoming.every((val, index) => val === user.incomingRequests[index]) || !user.incomingRequests.every((val, index) => val === newIncoming[index])) {
+        console.log("removing bad friend ids from incoming")
+        await updateDoc(
+          doc(db, "Users", user.userid),
+          "incomingRequests",
+          newIncoming)
+      }
+
       setIncoming(incoming);
       setOutgoing(outgoing);
       pulled = true
@@ -304,6 +343,7 @@ async function callDB(user: User, setIncoming: any, setOutgoing: any) {
     setOutgoing(outgoing)
   }
   dbPulled = true;
+
 }
 
 export default FriendRequests;
