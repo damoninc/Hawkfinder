@@ -8,6 +8,7 @@ import "../../styles/accountsettings.css";
 import { db } from "../../firebase/config";
 import {
   Button,
+  ButtonGroup,
   Container,
   Grid,
   Link,
@@ -31,6 +32,7 @@ function AccountSettingsPage(passedUser: any) {
   const [signupMessage, setSignupMessage] = useState("");
   const [userData, setUserData] = useState<any>();
   const [selectItem, setSelectedItem] = useState("");
+  const [deleteClicked, setDeleteClicked] = useState(false);
 
   const docRef = doc(db, "Users", passedUser.uCreds.uid);
   useEffect(() => {
@@ -114,7 +116,7 @@ function AccountSettingsPage(passedUser: any) {
     if (selectItem == "1") {
       return (
         <div>
-          <h1>
+          <h1 style={{textAlign: "center" }}>
             Welcome to the account settings! If your session has been active for
             a while, you may need to reauthenticate!
           </h1>
@@ -122,14 +124,20 @@ function AccountSettingsPage(passedUser: any) {
       );
     } else if (selectItem == "2") {
       return (
-        <div className="centered" style={{height: "100%"}}>
+        <div className="centered" style={{ height: "100%" }}>
           <ChangeEmailComponent />
         </div>
       );
     } else if (selectItem == "3") {
       return (
-        <div className="centered" style={{height: "100%"}}>
+        <div className="centered" style={{ height: "100%" }}>
           <ChangePasswordComponent />
+        </div>
+      );
+    } else if (selectItem == "4") {
+      return (
+        <div className="centered" style={{ height: "100%", textAlign: "center" }}>
+          <DeleteAccountComponent />
         </div>
       );
     } else {
@@ -332,6 +340,42 @@ function AccountSettingsPage(passedUser: any) {
     );
   }
 
+  function DeleteAccountComponent() {
+    return (
+      <div>
+        {deleteClicked ? <ClickDaButton /> : <NoClickDaButton />} 
+      </div>
+    );
+  }
+
+  function ClickDaButton() {
+    return (
+      <div>
+        <h1>Are you absolutely sure?</h1>
+        <p>I'm not joking, it's really going to be completely gone.</p>
+        <ButtonGroup>
+          <Button variant="contained">Yes</Button>
+          <Button variant="contained" color="error" onClick={() => setDeleteClicked(!deleteClicked)}>No</Button>
+        </ButtonGroup>
+      </div>
+    );
+  }
+  
+  function NoClickDaButton() {
+    return (
+      <div>
+        <h1>The nuclear button...</h1>
+        <Button
+          variant="contained"
+          onClick={() => setDeleteClicked(!deleteClicked)}
+        >
+          Delete Account?
+        </Button>
+        <p>Once you press this button there's no going back.</p>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div style={{ textAlign: "center", marginBottom: "20px" }}>
@@ -360,6 +404,12 @@ function AccountSettingsPage(passedUser: any) {
             onClick={() => setSelectedItem("3")}
           >
             <ListItem>Change Password</ListItem>
+          </ListItemButton>
+          <ListItemButton
+            selected={selectItem == "4"}
+            onClick={() => setSelectedItem("4")}
+          >
+            <ListItem>Delete Account</ListItem>
           </ListItemButton>
         </List>
         <Container className="account-settings">{displayItem()}</Container>
