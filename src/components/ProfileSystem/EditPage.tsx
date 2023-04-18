@@ -337,7 +337,7 @@ function EditPage(
           sx={{ position: "absolute" }}
           onClick={handleOpen}
           className="edit-button"
-          variant="outlined"
+          variant="contained"
         >
           Edit Profile
         </Button>
@@ -346,6 +346,7 @@ function EditPage(
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
+          sx={{overflow:"scroll"}}
         >
           <Box
             sx={{
