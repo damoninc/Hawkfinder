@@ -37,11 +37,11 @@ export default function SpotifyPage(uid: { uCreds: string }) {
       </div>
       <div>
         <h1>Top Songs</h1>
-        <TopSongs user={user} small={true} limit={10} />
+        <TopSongs user={user} small={false} limit={10} />
       </div>
       <div>
         <h1>Recent Songs</h1>
-        <RecentSongs user={user} small={true} limit={10} />
+        <RecentSongs user={user} small={false} limit={10} />
       </div>
     </div>
   );

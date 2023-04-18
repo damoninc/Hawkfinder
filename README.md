@@ -1,3 +1,4 @@
+[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/t1dqGhBU)
 # csc450-sp23-project-team1
 
 ## Installation
@@ -10,7 +11,7 @@
 - `npm install firebase`
 - `npm install -g firebase-tools`
 6) Install extra dependencies
-- `npm run extra_scrpits`
+- `npm run extra_scripts`
 7) Type "npm run dev" to run the application
 8) Open "http://localhost:5173/" in browser of your choice
 9) Ctrl+C or "q" to close the local server

@@ -15,6 +15,7 @@ import ProfilePage from "./components/ProfileSystem/ProfilePage";
 import SpotifyPage from "./components/SpotifyIntegration/SpotifyPage";
 import InterceptorScreen from "./components/Authentication/InterceptorScreen";
 import SignedIn from "./components/Authentication/SignedInScreen";
+import SearchPage from "./components/Navbar/Search";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase/config";
 import isUserLoggin from "./components/Authentication/TestAuth";
@@ -78,7 +79,7 @@ function App() {
             path="/components/Forum"
             element={
               isUserLoggin(user) ? (
-                <Forum />
+                <Forum uCreds={""} />
               ) : (
                 <Navigate to="/components/Interceptor" />
               )
@@ -88,7 +89,17 @@ function App() {
             path="/components/Friends"
             element={
               isUserLoggin(user) ? (
-                <FriendPage uCreds={user!.uid} />
+                <FriendPage uCreds={user!.uid} page="list" />
+              ) : (
+                <Navigate to="/components/Interceptor" />
+              )
+            }
+          />
+          <Route
+            path="/components/Friends/requests"
+            element={
+              isUserLoggin(user) ? (
+                <FriendPage uCreds={user!.uid} page="requests" />
               ) : (
                 <Navigate to="/components/Interceptor" />
               )
@@ -153,6 +164,16 @@ function App() {
             element={
               isUserLoggin(user) ? (
                 <AccountSettingsPage uCreds={user} />
+              ) : (
+                <Navigate to="/components/Interceptor" />
+              )
+            }
+          />
+          <Route
+            path="/components/Search"
+            element={
+              isUserLoggin(user) ? (
+                <SearchPage uCreds={user?.uid} />
               ) : (
                 <Navigate to="/components/Interceptor" />
               )
