@@ -1,7 +1,7 @@
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import User from "../../data/User";
-import { updateEmail, updatePassword } from "firebase/auth";
+import { deleteUser, updateEmail, updatePassword } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import "../../styles/accountsettings.css";
@@ -107,6 +107,29 @@ function AccountSettingsPage(passedUser: any) {
       });
   }
 
+  function order66() {
+    alert("Account has been deleted!");
+    deleteUser(passedUser.uCreds)
+      .then(() => {
+        alert("Rip bozo!");
+        navigate("/");
+      })
+      .catch((error: FirebaseError) => {
+        alert("Error! " + error);
+        switch (error.code) {
+          case "auth/requires-recent-login":
+            alert("You need to sign in again to do this change!");
+            navigate("/components/Reauth");
+            break;
+          default:
+            setSignupMessage(
+              `Man, I don't even know what happened... ${error.code}`
+            );
+            break;
+        }
+      });
+  }
+
   /**
    * Will change what is shown based on useState
    * @returns A component or null
@@ -116,7 +139,7 @@ function AccountSettingsPage(passedUser: any) {
     if (selectItem == "1") {
       return (
         <div>
-          <h1 style={{textAlign: "center" }}>
+          <h1 style={{ textAlign: "center" }}>
             Welcome to the account settings! If your session has been active for
             a while, you may need to reauthenticate!
           </h1>
@@ -136,7 +159,10 @@ function AccountSettingsPage(passedUser: any) {
       );
     } else if (selectItem == "4") {
       return (
-        <div className="centered" style={{ height: "100%", textAlign: "center" }}>
+        <div
+          className="centered"
+          style={{ height: "100%", textAlign: "center" }}
+        >
           <DeleteAccountComponent />
         </div>
       );
@@ -341,11 +367,7 @@ function AccountSettingsPage(passedUser: any) {
   }
 
   function DeleteAccountComponent() {
-    return (
-      <div>
-        {deleteClicked ? <ClickDaButton /> : <NoClickDaButton />} 
-      </div>
-    );
+    return <div>{deleteClicked ? <ClickDaButton /> : <NoClickDaButton />}</div>;
   }
 
   function ClickDaButton() {
@@ -354,13 +376,21 @@ function AccountSettingsPage(passedUser: any) {
         <h1>Are you absolutely sure?</h1>
         <p>I'm not joking, it's really going to be completely gone.</p>
         <ButtonGroup>
-          <Button variant="contained">Yes</Button>
-          <Button variant="contained" color="error" onClick={() => setDeleteClicked(!deleteClicked)}>No</Button>
+          <Button variant="contained" onClick={() => order66()}>
+            Yes
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => setDeleteClicked(!deleteClicked)}
+          >
+            No
+          </Button>
         </ButtonGroup>
       </div>
     );
   }
-  
+
   function NoClickDaButton() {
     return (
       <div>
@@ -407,7 +437,10 @@ function AccountSettingsPage(passedUser: any) {
           </ListItemButton>
           <ListItemButton
             selected={selectItem == "4"}
-            onClick={() => setSelectedItem("4")}
+            onClick={() => {
+              setSelectedItem("4");
+              setDeleteClicked(false);
+            }}
           >
             <ListItem>Delete Account</ListItem>
           </ListItemButton>
