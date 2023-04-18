@@ -1,4 +1,5 @@
 import "../../styles/loginscreen.css";
+import "../../styles/centeritems.css";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth, db } from "../../firebase/config";
@@ -6,7 +7,7 @@ import React from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
-import { Button, CircularProgress, TextField } from "@mui/material";
+import { Button, CircularProgress, Paper, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useFormik } from "formik";
 import { Container } from "@mui/system";
@@ -52,7 +53,6 @@ function LoginScreen() {
     }
     return errors;
   }
-
 
   /**
    * This is the core backbone of the forums. Most of the heavy lifting is done by this hook.
@@ -123,64 +123,72 @@ function LoginScreen() {
 
   // TODO: Obscure text password boxes
   return (
-    <fieldset className="loginSquare">
-      <h1>Login</h1>
-      <form onSubmit={formik.handleSubmit}>
-        <Container className="formGaps">
-          <Grid>
-            <Container>
-              <Grid item>
-                <TextField
-                  label="Email" // What the text box displays
-                  id="email" // Make sure this is the same as your formik value, or it won't allow you to type in the box
-                  type="text" // Setting type to text
-                  onChange={formik.handleChange} // This will use the formik hook to handle most of the backend changes
-                  value={formik.values.email} // This is the value that will change, and is used for validation and submission
-                  error={formik.touched.email && Boolean(formik.errors.email)} // touched means that the user hasn't 'touched' the specific input. Errors will cause the box to turn red if it gets an error.
-                  helperText={formik.touched.email && formik.errors.email} // Same idea as above, but this will display a message specific error.
-                  // onBlur={formik.handleBlur}  Blur means it will check for errors as you're typing. Not ideal for UX.
-                />
-              </Grid>
-            </Container>
-            <Container>
-              <Grid item>
-                <TextField
-                  label="Password"
-                  id="password"
-                  type="text"
-                  onChange={formik.handleChange}
-                  value={formik.values.password}
-                  error={
-                    formik.touched.password && Boolean(formik.errors.password)
-                  }
-                  helperText={formik.touched.password && formik.errors.password}
-                  // onBlur={formik.handleBlur}
-                />
-              </Grid>
-            </Container>
-            {loadingUserMessage()}
-            <Container>
-              <Grid item>
-                <Button variant="outlined" type="submit">
-                  Login
-                </Button>
-              </Grid>
-            </Container>
-            <Container>
-              <Grid item>
-                <h2 style={{ fontSize: "15px" }}>New user?</h2>
-                <Link
-                  to="/components/Signup"
-                  style={{ color: "#1ed5db", fontSize: "20px" }}
-                >
-                  Sign up now!
-                </Link>
-              </Grid>
-            </Container>
-          </Grid>
-        </Container>
-      </form>
-    </fieldset>
+    <div className="centered">
+      <Paper variant="outlined" className="loginSquare">
+        <h1>Login</h1>
+        <form onSubmit={formik.handleSubmit}>
+          <Container className="formGaps">
+            <Grid>
+              <Container>
+                <Grid item>
+                  <TextField
+                    label="Email" // What the text box displays
+                    id="email" // Make sure this is the same as your formik value, or it won't allow you to type in the box
+                    type="text" // Setting type to text
+                    onChange={formik.handleChange} // This will use the formik hook to handle most of the backend changes
+                    value={formik.values.email} // This is the value that will change, and is used for validation and submission
+                    error={formik.touched.email && Boolean(formik.errors.email)} // touched means that the user hasn't 'touched' the specific input. Errors will cause the box to turn red if it gets an error.
+                    helperText={formik.touched.email && formik.errors.email} // Same idea as above, but this will display a message specific error.
+                    // onBlur={formik.handleBlur}  Blur means it will check for errors as you're typing. Not ideal for UX.
+                  />
+                </Grid>
+              </Container>
+              <Container>
+                <Grid item>
+                  <TextField
+                    label="Password"
+                    id="password"
+                    type="text"
+                    onChange={formik.handleChange}
+                    value={formik.values.password}
+                    error={
+                      formik.touched.password && Boolean(formik.errors.password)
+                    }
+                    helperText={
+                      formik.touched.password && formik.errors.password
+                    }
+                    // onBlur={formik.handleBlur}
+                  />
+                </Grid>
+              </Container>
+              {loadingUserMessage()}
+              <Container>
+                <Grid item>
+                  <Button variant="contained" color="primary" type="submit">
+                    Login
+                  </Button>
+                </Grid>
+              </Container>
+              <Container>
+                <Grid item>
+                  <h2 style={{ fontSize: "15px" }}>New user?</h2>
+                  <Link
+                    to="/components/Signup"
+                    style={{
+                      color: "#1ed5db",
+                      fontSize: "20px",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Sign up now!
+                  </Link>
+                </Grid>
+              </Container>
+            </Grid>
+          </Container>
+        </form>
+      </Paper>
+    </div>
   );
 }
 export default LoginScreen;

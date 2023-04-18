@@ -6,7 +6,13 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { db, auth } from "../../firebase/config";
 import { FirebaseError } from "firebase/app";
-import { Button, CircularProgress, Grid, TextField } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Grid,
+  Paper,
+  TextField,
+} from "@mui/material";
 import { useFormik } from "formik";
 import { Container } from "@mui/system";
 import { useNavigate, Link } from "react-router-dom";
@@ -150,113 +156,124 @@ function SignUpScreen() {
 
   // TODO: Obscure text password boxes
   return (
-    <fieldset className="loginSquare">
-      <h1>Sign Up</h1>
-      <form onSubmit={formik.handleSubmit}>
-        <Container className="formGaps">
-          <Grid>
-            <Container>
-              <Grid item>
-                <TextField
-                  label="Email"
-                  id="email"
-                  type="text"
-                  onChange={formik.handleChange}
-                  value={formik.values.email}
-                  error={formik.touched.email && Boolean(formik.errors.email)}
-                  helperText={formik.touched.email && formik.errors.email}
-                />
-              </Grid>
-            </Container>
-            <Container>
-              <Grid item>
-                <TextField
-                  label="Password"
-                  id="password"
-                  type="text"
-                  onChange={formik.handleChange}
-                  value={formik.values.password}
-                  error={
-                    formik.touched.password && Boolean(formik.errors.password)
-                  }
-                  helperText={formik.touched.password && formik.errors.password}
-                />
-              </Grid>
-            </Container>
-            <Container>
-              <Grid item>
-                <TextField
-                  label="Confirm Password"
-                  id="confirmPassword"
-                  type="text"
-                  onChange={formik.handleChange}
-                  value={formik.values.confirmPassword}
-                  error={
-                    formik.touched.confirmPassword &&
-                    Boolean(formik.errors.confirmPassword)
-                  }
-                  helperText={
-                    formik.touched.confirmPassword &&
-                    formik.errors.confirmPassword
-                  }
-                />
-              </Grid>
-            </Container>
-            <Container>
-              <Grid item>
-                <TextField
-                  label="Firstname"
-                  id="firstname"
-                  type="text"
-                  onChange={formik.handleChange}
-                  value={formik.values.firstname}
-                  error={
-                    formik.touched.firstname && Boolean(formik.errors.firstname)
-                  }
-                  helperText={
-                    formik.touched.firstname && formik.errors.firstname
-                  }
-                />
-              </Grid>
-            </Container>
-            <Container>
-              <Grid item>
-                <TextField
-                  label="Lastname"
-                  id="lastname"
-                  type="text"
-                  onChange={formik.handleChange}
-                  value={formik.values.lastname}
-                  error={
-                    formik.touched.lastname && Boolean(formik.errors.lastname)
-                  }
-                  helperText={formik.touched.lastname && formik.errors.lastname}
-                />
-              </Grid>
-            </Container>
-            {loadingUserMessage()}
-            <Container>
-              <Grid item>
-                <Button variant="outlined" type="submit">
-                  Sign Up
-                </Button>
-              </Grid>
-            </Container>
-            <Container>
-              <Grid item>
-                <h2 style={{ fontSize: "15px" }}>Already have an account?</h2>
-                <Link
-                  to="/"
-                  style={{ color: "#1ed5db", fontSize: "20px" }}
-                >
-                  Login here!
-                </Link>
-              </Grid>
-            </Container>
-          </Grid>
-        </Container>
-      </form>
-    </fieldset>
+    <div className="centered">
+      <Paper variant="outlined" className="loginSquare">
+        <h1>Sign Up</h1>
+        <form onSubmit={formik.handleSubmit}>
+          <Container className="formGaps">
+            <Grid>
+              <Container>
+                <Grid item>
+                  <TextField
+                    label="Email"
+                    id="email"
+                    type="text"
+                    onChange={formik.handleChange}
+                    value={formik.values.email}
+                    error={formik.touched.email && Boolean(formik.errors.email)}
+                    helperText={formik.touched.email && formik.errors.email}
+                  />
+                </Grid>
+              </Container>
+              <Container>
+                <Grid item>
+                  <TextField
+                    label="Password"
+                    id="password"
+                    type="text"
+                    onChange={formik.handleChange}
+                    value={formik.values.password}
+                    error={
+                      formik.touched.password && Boolean(formik.errors.password)
+                    }
+                    helperText={
+                      formik.touched.password && formik.errors.password
+                    }
+                  />
+                </Grid>
+              </Container>
+              <Container>
+                <Grid item>
+                  <TextField
+                    label="Confirm Password"
+                    id="confirmPassword"
+                    type="text"
+                    onChange={formik.handleChange}
+                    value={formik.values.confirmPassword}
+                    error={
+                      formik.touched.confirmPassword &&
+                      Boolean(formik.errors.confirmPassword)
+                    }
+                    helperText={
+                      formik.touched.confirmPassword &&
+                      formik.errors.confirmPassword
+                    }
+                  />
+                </Grid>
+              </Container>
+              <Container>
+                <Grid item>
+                  <TextField
+                    label="Firstname"
+                    id="firstname"
+                    type="text"
+                    onChange={formik.handleChange}
+                    value={formik.values.firstname}
+                    error={
+                      formik.touched.firstname &&
+                      Boolean(formik.errors.firstname)
+                    }
+                    helperText={
+                      formik.touched.firstname && formik.errors.firstname
+                    }
+                  />
+                </Grid>
+              </Container>
+              <Container>
+                <Grid item>
+                  <TextField
+                    label="Lastname"
+                    id="lastname"
+                    type="text"
+                    onChange={formik.handleChange}
+                    value={formik.values.lastname}
+                    error={
+                      formik.touched.lastname && Boolean(formik.errors.lastname)
+                    }
+                    helperText={
+                      formik.touched.lastname && formik.errors.lastname
+                    }
+                  />
+                </Grid>
+              </Container>
+              {loadingUserMessage()}
+              <Container>
+                <Grid item>
+                  <Button variant="contained" type="submit">
+                    Sign Up
+                  </Button>
+                </Grid>
+              </Container>
+              <Container>
+                <Grid item>
+                  <h2 style={{ fontSize: "15px" }}>Already have an account?</h2>
+                  <Link
+                    to="/"
+                    style={{
+                      color: "#1ed5db",
+                      fontSize: "20px",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Login here!
+                  </Link>
+                </Grid>
+              </Container>
+            </Grid>
+          </Container>
+        </form>
+      </Paper>
+    </div>
   );
 }
 export default SignUpScreen;
