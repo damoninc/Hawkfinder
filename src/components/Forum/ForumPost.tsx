@@ -21,12 +21,24 @@ function ForumPost(props: any) {
   const [image, setImage] = useState("");
   // The profile pic of the poster
   const [profilePic, setProfilePic] = useState("");
+  // The document of the post used for ratings
+  const [documentSnap, setDocumentSnap] = useState<any>(null);
+  const [documentRef, setDocumentRef] = useState<any>(
+    doc(db, "Posts", props.id)
+  );
 
   /**
    * Grabs the appropriate image URL for the
    * specific post that is rendered
    */
   useEffect(() => {
+    // Grab the document snapshot for the post
+    fetchDoc();
+
+    // Grab the document snapshot for the user
+    const docRef = doc(db, "Users", props.userID);
+    const docSnap = getDoc(docRef);
+
     // Creates a pointer reference to the image of the post
     const imageRef = ref(storage, "Posts/" + props.imageURL);
     if (props.imageURL != "") {
@@ -39,15 +51,12 @@ function ForumPost(props: any) {
         });
     }
 
-    // Grab the document snapshot
-    const docRef = doc(db, "Users", props.userID);
-    const docSnap = getDoc(docRef);
-
     /**
      * This block is responsible for getting
      * the profile picture for the post
      */
-    docSnap.then((doc) => {
+    docSnap.then((doc: any) => {
+      userRating();
       if (doc.exists()) {
         const profilePicPath: string = doc.data().profile.profilePicture;
         const profileImageRef = ref(storage, profilePicPath);
@@ -61,19 +70,39 @@ function ForumPost(props: any) {
             });
         }
       } else {
-        console.log("Error getting document...");
+        console.log("Error gettin user doc...");
       }
     });
+
+    // userRating();
   }, []);
 
+  const fetchDoc = async () => {
+    const docRef = doc(db, "Posts", props.id);
+    setDocumentRef(docRef);
+    const docSnap = await getDoc(documentRef);
+    setDocumentSnap(docSnap);
+  };
+
   /**
-   * TODO: Pass user to the forum to use for this function
-   *       Will make use of the docSnap variable from useEffect
    * Determines if the signed in user has upvoted the post
    */
-  // const userRating = () => {
-
-  // }
+  const userRating = () => {
+    if (documentSnap && Object.keys(documentSnap.data().ratings).length > 0) {
+      const ratingsMap = new Map(Object.entries(documentSnap.data().ratings));
+      for (const [k, v] of ratingsMap) {
+        if (k == props.userID) {
+          if (v == "upvote") {
+            setUpvoted(true);
+            return;
+          } else {
+            setDownvoted(false);
+            return;
+          }
+        }
+      }
+    }
+  };
 
   /**
    * Handles the logic for upvoting

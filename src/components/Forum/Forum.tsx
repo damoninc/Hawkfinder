@@ -83,7 +83,7 @@ function Forum(props: any) {
    */
   useEffect(() => {
     if (!props.passedUser) {
-      q = query(collection(db, "Posts"), orderBy("postDate", "desc"));
+      q = query(collection(db, "Posts"), orderBy("postDate", "desc"), limit(5));
     } else if (props.passedUser) {
       q = query(
         collection(db, "Posts"),

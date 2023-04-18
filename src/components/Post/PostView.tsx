@@ -53,12 +53,8 @@ function PostView(props: any) {
         const profilePicPath: string = doc.data().profile.profilePicture;
         const profileImageRef = ref(storage, profilePicPath);
         if (profilePicPath != "") {
-          console.log("getting image: ", profilePicPath);
           getDownloadURL(profileImageRef)
             .then((url) => {
-              console.log(
-                `ProfileURL: ${url} | Description: ${props.description}`
-              );
               setProfilePic(url);
             })
             .catch(() => {
