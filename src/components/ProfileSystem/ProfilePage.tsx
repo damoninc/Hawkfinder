@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import User, { userConverter } from "../../data/User";
 import "../../styles/Profile.css";
-import {
-  getDoc,
-  doc,
-} from "firebase/firestore";
+import { getDoc, doc } from "firebase/firestore";
 import { auth, db, storage } from "../../firebase/config";
 import { ref, getDownloadURL } from "firebase/storage";
 import Navbar from "../Navbar/Navbar";
 import { Box, Typography } from "@mui/material";
 import EditPage from "./EditPage";
 import CurrentSong from "../SpotifyIntegration/SpotifyComponents";
+import ForumPost from "../Forum/ForumPost";
+import Forum from "../Forum/Forum";
 
 /**
  * This is the main profile page that displays a users profile
@@ -24,13 +23,13 @@ function ProfilePage(passedUser: any) {
 
   console.log(urlParams);
   console.log(uid);
-  const passedUserObj = passedUser.uCreds; //Feel free to change this to the passed in object for testing. Make sure its of type string.
+  const passedUserObj: string = passedUser.uCreds; //Feel free to change this to the passed in object for testing. Make sure its of type string.
   const [userPage, setUserPage] = useState<any>();
   const [userProfPic, setUserProfPic] = useState("");
   const [userCoverPic, setUserCoverPic] = useState("");
   const [spotifyUser, setSpotifyUser] = useState<User | undefined>(undefined);
 
-  if(uid == null){
+  if (uid == null) {
     uid = passedUserObj;
   }
   const docRef = doc(db, "Users", uid!);
@@ -64,8 +63,14 @@ function ProfilePage(passedUser: any) {
       });
   }, []);
 
+  // Required to keep the DOM happy.
   if (!userPage || !userProfPic || !userCoverPic) {
-    return <div hidden>{EditPage(userPage, docRef, passedUserObj)}</div>;
+    return (
+      <div hidden>
+        {EditPage(userPage, docRef, passedUserObj)}
+        <Forum passedUser={uid} />
+      </div>
+    );
   }
 
   console.log(userPage.profile.firstName);
@@ -116,6 +121,7 @@ function ProfilePage(passedUser: any) {
       ) : (
         <div></div>
       )}
+      <Forum passedUser={uid} />
     </>
   );
 }

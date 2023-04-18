@@ -9,6 +9,9 @@ import {
   query,
   startAfter,
   startAt,
+  DocumentData,
+  Query,
+  where,
 } from "firebase/firestore";
 import Post from "../../data/Post";
 import PostView from "../Post/PostView";
@@ -34,43 +37,43 @@ function Forum(props: any) {
   const [pageSize, setPageSize] = useState(10);
   const [totalDocs, setTotalDocs] = useState(0);
 
-  const userID = props.uCreds.uid;
+  // const fetchPosts = () => {
+  //   setLoading(true);
 
-  const fetchPosts = () => {
-    setLoading(true);
+  //   getTotalDocs();
 
-    getTotalDocs();
+  //   const q = query(
+  //     collection(db, "Posts"),
+  //     orderBy("postDate", "desc"),
+  //     limit(pageSize)
 
-    const q = query(
-      collection(db, "Posts"),
-      orderBy("postDate", "desc"),
-      limit(pageSize)
-
-      // startAt((page - 1) * pageSize)
-    );
-    getDocs(q)
-      .then((querySnapshot) => {
-        const tempPosts: Post[] = querySnapshot.docs.map((doc) => {
-          console.log("DB CALL");
-          return new Post(
-            doc.id,
-            doc.data().postDate.toDate(),
-            doc.data().userID,
-            doc.data().description,
-            doc.data().interest,
-            doc.data().imageURL,
-            new Map(Object.entries(doc.data().ratings))
-          );
-        });
-        setPosts(tempPosts);
-      })
-      .finally(() => setLoading(false));
-  };
+  //     // startAt((page - 1) * pageSize)
+  //   );
+  //   getDocs(q)
+  //     .then((querySnapshot) => {
+  //       const tempPosts: Post[] = querySnapshot.docs.map((doc) => {
+  //         console.log("DB CALL");
+  //         return new Post(
+  //           doc.id,
+  //           doc.data().postDate.toDate(),
+  //           doc.data().userID,
+  //           doc.data().description,
+  //           doc.data().interest,
+  //           doc.data().imageURL,
+  //           new Map(Object.entries(doc.data().ratings))
+  //         );
+  //       });
+  //       setPosts(tempPosts);
+  //     })
+  //     .finally(() => setLoading(false));
+  // };
 
   const getTotalDocs = async () => {
     const snap = await getCountFromServer(collection(db, "Posts"));
     setTotalDocs(snap.data().count);
   };
+
+  let q: Query<DocumentData>;
 
   /**
    * Makes a call to the db, grabbing every document
@@ -79,28 +82,32 @@ function Forum(props: any) {
    * so that the forum will reload when a new post is made
    */
   useEffect(() => {
-    // setLoading(true);
-    // console.log(props.uCreds);
-    // const q = query(collection(db, "Posts"), orderBy("postDate", "desc"));
-    // getDocs(q).then((querySnapshot) => {
-    //   const tempPosts: Post[] = querySnapshot.docs.map((doc) => {
-    //     console.log("DB CALL");
-    //     return new Post(
-    //       doc.id,
-    //       doc.data().postDate.toDate(),
-    //       doc.data().userID,
-    //       doc.data().description,
-    //       doc.data().interest,
-    //       doc.data().imageURL,
-    //       new Map(Object.entries(doc.data().ratings))
-    //     );
-    //   });
-    //   setPosts(tempPosts);
-    // });
+    if (!props.passedUser) {
+      q = query(collection(db, "Posts"), orderBy("postDate", "desc"));
+    } else if (props.passedUser) {
+      q = query(
+        collection(db, "Posts"),
+        where("userID", "==", props.passedUser),
+        orderBy("postDate", "desc")
+      );
+    }
 
-    // setLoading(false);
-    fetchPosts();
-  }, [pageSize]);
+    getDocs(q).then((querySnapshot) => {
+      const tempPosts: Post[] = querySnapshot.docs.map((doc) => {
+        console.log("DB CALL");
+        return new Post(
+          doc.id,
+          doc.data().postDate.toDate(),
+          doc.data().userID,
+          doc.data().description,
+          doc.data().interest,
+          doc.data().imageURL,
+          new Map(Object.entries(doc.data().ratings))
+        );
+      });
+      setPosts(tempPosts);
+    });
+  }, []);
 
   const handlePrevPage = () => {
     setPage((prevPage) => prevPage - 1);
@@ -141,7 +148,11 @@ function Forum(props: any) {
   return (
     <div className="forum-container">
       {/* <PostInput reloadPosts={reloadPosts} /> */}
-      <PostInput userID={userID} reloadForum={reloadForum} />
+      {!props.passedUser ? (
+        <PostInput reloadForum={reloadForum} userID={props.userID} />
+      ) : (
+        <></>
+      )}
       {!loading ? (
         <>
           {posts.map((post: Post, index) => {
