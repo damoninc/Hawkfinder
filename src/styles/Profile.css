@@ -32,16 +32,19 @@
   object-fit: cover;
   z-index: 1;
 }
+.pic-n-name{
+  display: inline-flex;
+}
 .profile-name {
   left: 317px;
-  bottom: 30px;
+  bottom: 25px;
   position: absolute;
-  padding-right: 0px;
+  padding-right: 0px; 
   font-weight: bold;
 }
 .friend-count {
   left: 317px;
-  bottom: 10px;
+  bottom: 5px;
   position: absolute;
   padding-right: 0px;
 }
@@ -52,8 +55,8 @@
 }
 .profile-photo {
   left: 144px;
-  width: 164px;
-  bottom: 1px;
+  bottom: 5px;
+  width: 157px;
   height: 157px;
   margin: auto;
   z-index: 100;
@@ -70,6 +73,7 @@
 
 .body-inner{
   display: flex;
+  
   justify-content: center;
 }
 .about {
@@ -82,9 +86,6 @@
   margin-top: 20px;
   margin-bottom: 20px;
 }
-.about-title {
-  align-self: center;
-}
 .interests {
   margin-right: 40px;
   margin-top: 20px;
@@ -95,7 +96,7 @@
   align-items: flex-start;
   flex-direction: column;
 }
-.My-Interests {
+.My-Interests, .about-title {
   align-self: center;
 }
 @media (max-width: 768px) {

@@ -74,7 +74,6 @@ function ProfilePage(passedUser: any) {
   console.log(userPage.profile.firstName);
   console.log(userProfPic);
   return (
-    <>
     <div className="body">
       <Paper className="profile-info" sx ={{ mt:'10px'}}> 
         <img src={`${userCoverPic}`} alt="image" className="cover-photo" />
@@ -112,7 +111,7 @@ function ProfilePage(passedUser: any) {
           <Typography sx={{ fontWeight: "bold" }}>My Interests</Typography>
           <br></br>
         </Box>
-        <Box sx={{overflowY: 'scroll'}}>
+        <Box sx={{overflowY: 'scroll', width: '100%'}}>
         <ul className="list">
           {userPage?.profile.interests.map((interest: any) => (
             <li key={interest}>{interest}</li>
@@ -130,7 +129,7 @@ function ProfilePage(passedUser: any) {
       <br/>
       <Forum uCreds={uid} />
     </div>
-    </>
+    
   );
 }
 export default ProfilePage;

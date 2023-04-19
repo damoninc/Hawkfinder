@@ -11,6 +11,7 @@ import {
   ImageListItem,
   Chip,
   InputAdornment,
+  Paper,
 } from "@mui/material";
 import PortraitIcon from "@mui/icons-material/Portrait";
 import PanoramaIcon from "@mui/icons-material/Panorama";
@@ -346,7 +347,6 @@ function EditPage(
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
-          sx={{overflow:"scroll"}}
         >
           <Box
             sx={{
@@ -355,6 +355,7 @@ function EditPage(
               left: "50%",
               transform: "translate(-50%, -50%)",
               width: 400,
+              maxHeight: 700,
               bgcolor: "background.paper",
               border: "2px solid #000",
               boxShadow: 24,
@@ -364,6 +365,8 @@ function EditPage(
             <Typography id="modal-modal-title" variant="h6" component="h2">
               Edit your profile
             </Typography>
+            <Box sx={{overflow: 'scroll', maxHeight: 500}}>
+              <Paper sx={{p:3}}>
 
             <Box
               id="picture icons box"
@@ -496,6 +499,8 @@ function EditPage(
             />
 
             <InterestHook />
+              </Paper>
+            </Box>
             {EscapeButtons(handleClose, handleSave)}
           </Box>
         </Modal>
