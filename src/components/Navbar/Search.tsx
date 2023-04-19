@@ -57,7 +57,6 @@ export default class SearchPage extends React.Component<IProps, IState> {
     }
     return (
       <div>
-        <Navbar />
         <Box
           className="search"
           sx={{

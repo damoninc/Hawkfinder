@@ -74,7 +74,6 @@ export default function FriendPage(props: { uCreds: string; page: string }) {
 
   return (
     <div>
-      <Navbar />
       <div>
         <Grid
           container
@@ -165,6 +164,7 @@ function checkNullList(friends: User[] | null) {
                   onClick={() => {
                     handleOpen(friend.userid);
                   }}
+                  sx={{ textTransform: "none" }}
                 >
                   <FriendBox friend={friend} />
                 </Button>
@@ -425,16 +425,18 @@ async function callDB(signedUser: string, setFriends: any) {
       dbPulled = true;
 
       user.friendsList.forEach((friendId) => {
-        if(!friends.find(friend => friend.userid === friendId)) {
+        if (!friends.find((friend) => friend.userid === friendId)) {
           const index = user.friendsList.indexOf(friendId, 0);
           if (index > -1) {
             user.friendsList.splice(index, 1);
-            updateDoc(doc(db, "Users", user.userid),
-            "friendsList",
-            user.friendsList)
+            updateDoc(
+              doc(db, "Users", user.userid),
+              "friendsList",
+              user.friendsList
+            );
           }
         }
-      })
+      });
     }
   });
 }

@@ -14,7 +14,7 @@ import MailIcon from "@mui/icons-material/Mail";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { Button, InputAdornment, TextField } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { auth, db } from "../../firebase/config";
 import PeopleIcon from "@mui/icons-material/People";
 import { useFormik } from "formik";

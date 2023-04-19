@@ -44,10 +44,13 @@ export default class FriendBox extends React.Component<IProps, IState> {
     return (
       <Box
         sx={{
+          display: "grid",
           width: 150,
           height: 200,
-          border: "2px solid black",
+          border: "4px solid teal",
           borderRadius: "25px",
+          gridTemplateRows: "80% 20%",
+          background: "#424242",
         }}
       >
         <Stack justifyContent="center" alignItems="center" spacing={0.5}>

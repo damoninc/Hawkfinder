@@ -2,9 +2,10 @@ import React from "react";
 import User from "../../data/User";
 import axios from "axios";
 import "../../styles/spotify.css";
-import { LinearProgress, Stack } from "@mui/material";
+import { LinearProgress, Stack, Typography } from "@mui/material";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/config";
+import Marquee from "react-fast-marquee";
 
 const api_uri = "https://api.spotify.com/v1";
 const spotifyLogo =
@@ -92,14 +93,22 @@ function DisplaySong(song: Song, times?: number[]) {
 }
 
 function DisplaySongSmall(song: Song, scrolling: boolean) {
+  const text = `Listening to: ${song.name} by ${
+    song.artists.length == 1
+      ? song.artists[0].name
+      : song.artists[0].name + " and others"
+  }`;
   if (scrolling) {
     return (
-      <marquee style={{ color: "black", fontSize: "1em" }}>
-        Listening to: <b>{song.name}</b> by{" "}
-        {song.artists.length == 1
-          ? song.artists[0].name
-          : song.artists[0].name + " and others"}
-      </marquee>
+      <Marquee gradient={false} style={{ width: "120px" }}>
+        <Typography>
+          Listening to: <b>{song.name}</b> by{" "}
+          {song.artists.length == 1
+            ? song.artists[0].name
+            : song.artists[0].name + " and others"}
+          {"   "}
+        </Typography>
+      </Marquee>
     );
   } else {
     return (

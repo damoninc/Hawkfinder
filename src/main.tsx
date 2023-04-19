@@ -18,7 +18,7 @@ export const screecherTheme = createTheme({
       light: "#ed6f6a",
       dark: "#79000e",
     },
-    mode: "dark",
+    mode: "light",
   },
 });
 
@@ -27,7 +27,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ThemeProvider theme={screecherTheme}>
       <CssBaseline />
-        <App />
+      <App />
     </ThemeProvider>
   </React.StrictMode>
 );
