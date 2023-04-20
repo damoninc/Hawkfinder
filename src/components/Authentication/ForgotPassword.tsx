@@ -1,8 +1,12 @@
-import { Button, Container, Grid, Link, Paper, TextField } from "@mui/material";
+import { Button, Container, Grid, Paper, TextField } from "@mui/material";
 import React, { useState } from "react";
-
+import { Link } from "react-router-dom";
 function ResetPasswordEmail() {
   const [emailThing, setEmailThing] = useState("");
+
+  function sentResetLink() {
+    console.log(emailThing);
+  }
 
   return (
     <div className="centered">
@@ -25,9 +29,26 @@ function ResetPasswordEmail() {
             </Container>
             <Container>
               <Grid item>
-                <Button variant="contained" color="primary">
-                  Login
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={sentResetLink}
+                >
+                  Send Reset Email
                 </Button>
+              </Grid>
+            </Container>
+            <Container>
+              <Grid item>
+                <Link to="/"
+                style={{
+                    color: "#1ed5db",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Sign up now!
+                </Link>
               </Grid>
             </Container>
           </Grid>
