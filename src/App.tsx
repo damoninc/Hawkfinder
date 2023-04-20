@@ -22,6 +22,14 @@ import isUserLoggin from "./components/Authentication/TestAuth";
 import AccountSettingsPage from "./components/ProfileSystem/AccountSettingsPage";
 import ReAuth from "./components/Authentication/Reauth";
 import Navbar from "./components/Navbar/Navbar";
+import { useTheme } from "@mui/material";
+
+export const boxTheme = {
+  backgroundSecondary: "#FAFAFA",
+  backgroundPrimary: "#E5E5E5",
+  borderColor: "#EEEEEE",
+  border: "4px solid",
+};
 
 /**
  * The top level of our App. Our routes are declared here, and use these routes
@@ -30,6 +38,14 @@ import Navbar from "./components/Navbar/Navbar";
  */
 function App() {
   const [user] = useAuthState(auth);
+  const theme = useTheme();
+
+  boxTheme.backgroundPrimary =
+    theme.palette.mode == "dark" ? "#5A5A5A" : "#E5E5E5";
+  boxTheme.backgroundSecondary =
+    theme.palette.mode == "dark" ? "#454545" : "#F6F6F6";
+  boxTheme.borderColor = theme.palette.primary.dark;
+
   return (
     <div className="app">
       {/* <h3>All the pages we are working on</h3>

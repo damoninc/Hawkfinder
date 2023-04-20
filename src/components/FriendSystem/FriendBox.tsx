@@ -5,6 +5,7 @@ import CurrentSong from "../SpotifyIntegration/SpotifyComponents";
 import { Stack, Box } from "@mui/material";
 import { storage } from "../../firebase/config";
 import { getDownloadURL, ref } from "firebase/storage";
+import { boxTheme } from "../../App";
 
 interface IProps {
   friend: User;
@@ -47,10 +48,11 @@ export default class FriendBox extends React.Component<IProps, IState> {
           display: "grid",
           width: 150,
           height: 200,
-          border: "4px solid teal",
+          border: "4px solid",
+          borderColor: boxTheme.borderColor,
           borderRadius: "25px",
           gridTemplateRows: "80% 20%",
-          background: "#424242",
+          background: boxTheme.backgroundPrimary,
         }}
       >
         <Stack justifyContent="center" alignItems="center" spacing={0.5}>

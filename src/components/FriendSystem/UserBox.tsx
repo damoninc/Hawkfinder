@@ -15,6 +15,7 @@ import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutli
 import HeadphonesIcon from "@mui/icons-material/Headphones";
 import Modal from "@mui/material/Modal";
 import CurrentSong from "../SpotifyIntegration/SpotifyComponents";
+import { boxTheme } from "../../App";
 
 const buttonStyle = {
   width: "100%",
@@ -48,7 +49,7 @@ interface IState {
   mainClicked: boolean;
   smallClick: boolean;
   modalClick: boolean;
-  refresh: number
+  refresh: number;
 }
 
 export default class UserBox extends React.Component<IProps, IState> {
@@ -59,7 +60,7 @@ export default class UserBox extends React.Component<IProps, IState> {
       mainClicked: false,
       smallClick: false,
       modalClick: false,
-      refresh: 1
+      refresh: 1,
     };
   }
 
@@ -79,7 +80,6 @@ export default class UserBox extends React.Component<IProps, IState> {
       width: "50%",
       height: "100%",
       textTransform: "none",
-      borderRadius: "0",
     };
     return (
       <Stack
@@ -95,7 +95,9 @@ export default class UserBox extends React.Component<IProps, IState> {
           color="success"
           onClick={() => {
             func(this.props.currentUser!, this.props.user);
-            setTimeout( () => { this.setState({smallClick: false}) }, 1000 );
+            setTimeout(() => {
+              this.setState({ smallClick: false });
+            }, 1000);
           }}
         >
           <CheckIcon />
@@ -226,9 +228,11 @@ export default class UserBox extends React.Component<IProps, IState> {
             display: "grid",
             width: 150,
             height: 200,
-            border: "4px solid teal",
+            border: "4px solid",
+            borderColor: boxTheme.borderColor,
             borderRadius: "25px",
             overflow: "hidden",
+            backgroundColor: boxTheme.backgroundPrimary,
             gridTemplateRows: "80% 20%",
           }}
         >
@@ -276,11 +280,12 @@ export default class UserBox extends React.Component<IProps, IState> {
               left: "50%",
               minWidth: "300px",
               maxWidth: "400px",
-              border: "6px solid teal",
+              border: "6px solid",
+              borderColor: boxTheme.borderColor,
               borderRadius: "25px",
               overflow: "hidden",
               gridTemplateRows: "80% 20%",
-              backgroundColor: "white",
+              backgroundColor: boxTheme.backgroundPrimary,
               transform: "translate(-50%, -50%)",
             }}
           >

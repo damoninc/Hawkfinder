@@ -5,7 +5,7 @@ import { db } from "../../firebase/config";
 import { collection, query, getDocs, doc, getDoc } from "firebase/firestore";
 import { Box, CircularProgress } from "@mui/material";
 import UserBox from "../FriendSystem/UserBox";
-import Navbar from "./Navbar";
+import { boxTheme } from "../../App";
 
 /**
  * Generates a HTML block that displays a list of Users based
@@ -60,8 +60,11 @@ export default class SearchPage extends React.Component<IProps, IState> {
         <Box
           className="search"
           sx={{
-            border: "4px solid teal",
-            borderRadius: "25px",
+            border: "4px solid",
+            borderTop: "none",
+            borderColor: boxTheme.borderColor,
+            borderBottomLeftRadius: "25px",
+            borderBottomRightRadius: "25px",
             overflow: "hidden",
             gridTemplateRows: "75px 100%",
             justifyItems: "center",
@@ -126,7 +129,7 @@ export default class SearchPage extends React.Component<IProps, IState> {
     if (this.state.dbCall.length == 0) {
       return (
         <div>
-          <h2>This user does not exist :(</h2>
+          <h2>No users match this search :(</h2>
         </div>
       );
     } else {

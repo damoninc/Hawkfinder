@@ -21,6 +21,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Navigate, useNavigate } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
 import LoadingPage from "../Navbar/Loading";
+import { boxTheme } from "../../App";
 
 export let user: User;
 
@@ -49,6 +50,7 @@ export default function FriendPage(props: { uCreds: string; page: string }) {
         overflow: "hidden",
         gridTemplateRows: "75px 100%",
         justifyItems: "center",
+        background: boxTheme.backgroundSecondary,
       }}
     >
       <Typography variant="h4" align="center" padding={"10px"}>
@@ -173,6 +175,9 @@ function checkNullList(friends: User[] | null) {
                 anchor={"right"}
                 open={open == friend.userid}
                 onClose={handleClose}
+                PaperProps={{
+                  sx: { backgroundColor: boxTheme.backgroundSecondary },
+                }}
               >
                 <Button
                   onClick={handleClose}

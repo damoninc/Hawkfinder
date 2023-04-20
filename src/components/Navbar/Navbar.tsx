@@ -14,7 +14,7 @@ import MailIcon from "@mui/icons-material/Mail";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, useTheme } from "@mui/material";
 import { auth, db } from "../../firebase/config";
 import PeopleIcon from "@mui/icons-material/People";
 import { useFormik } from "formik";
@@ -83,6 +83,7 @@ let pulled = false;
 export default function Navbar() {
   const [authUser] = useAuthState(auth);
   const [currUser, setUser] = React.useState(user);
+  const theme = useTheme();
 
   if (!user && !loggedUser && !pulled) {
     console.log();
@@ -271,7 +272,10 @@ export default function Navbar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ backgroundColor: "teal" }}>
+      <AppBar
+        position="static"
+        sx={{ backgroundColor: theme.palette.primary.dark }}
+      >
         <Toolbar>
           <Typography
             variant="h6"

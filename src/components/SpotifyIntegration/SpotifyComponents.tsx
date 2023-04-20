@@ -6,6 +6,7 @@ import { LinearProgress, Stack, Typography } from "@mui/material";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/config";
 import Marquee from "react-fast-marquee";
+import { boxTheme } from "../../App";
 
 const api_uri = "https://api.spotify.com/v1";
 const spotifyLogo =
@@ -16,7 +17,9 @@ function DisplaySong(song: Song, times?: number[]) {
     <div
       style={{
         display: "block",
-        border: "1px solid black",
+        border: boxTheme.border,
+        borderColor: boxTheme.borderColor,
+        background: boxTheme.backgroundPrimary,
         maxWidth: "400px",
         minWidth: "250px",
         padding: "10px",
