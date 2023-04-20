@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { db, storage } from "../../firebase/config";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } from "react-router-dom";
 import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
 import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
 import { IconButton } from "@mui/material";
@@ -83,6 +83,7 @@ function ForumPost(props: any) {
   const [documentRef, setDocumentRef] = useState<any>(
     doc(db, "Posts", props.id)
   );
+  const navigate = useNavigate();
 
   /**
    * Grabs the appropriate image URL for the
@@ -239,7 +240,19 @@ function ForumPost(props: any) {
     // {props.ratings}
     <div className="post-container">
       <div className="pic-crop">
-        <img className="profile-pic" src={profilePic} />
+        <img className="profile-pic" src={profilePic} onClick={() => {
+          console.log("prof clicked ", props.userID);
+          if (props.userID == props.loggedUser) {
+            console.log('your profile')
+            navigate("/components/Profile");
+            // return (<Navigate to={`/components/Profile`} />)
+          } else {
+            console.log("not your profile")
+            navigate(`/components/Profile#userid=${props.userID}`)
+            // return (<Navigate to={`/components/Profile#userid=${props.userID}`} />)
+          }
+          
+        }}/>
       </div>
       <div className="post-img-container">
         {props.imageURL !== "" ? (

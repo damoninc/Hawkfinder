@@ -105,6 +105,7 @@ function Forum(props: any) {
                 <ForumPost
                   id={post.postID}
                   userID={post.userID}
+                  loggedUser={props.userID}
                   postDate={post.postDate}
                   description={post.description}
                   interest={post.interest}
@@ -115,18 +116,22 @@ function Forum(props: any) {
               </div>
             );
           })}
-          <div className="pagination">
-            {/* Determines whether the forum can load any more posts */}
-            {pageSize <= totalDocs ? (
-              <Button className="load-more" variant="outlined" onClick={handleLoadMore}>
-                Load more...
-              </Button>
-            ) : (
-              <Button className="load-more" variant="outlined" onClick={handleLoadMore} disabled>
-                Load more...
-              </Button>
-            )}
-          </div>
+          {!props.passedUser ? (
+            <div className="pagination">
+              {/* Determines whether the forum can load any more posts */}
+              {pageSize <= totalDocs ? (
+                <Button className="load-more" variant="outlined" onClick={handleLoadMore}>
+                  Load more...
+                </Button>
+              ) : (
+                <Button className="load-more" variant="outlined" onClick={handleLoadMore} disabled>
+                  Load more...
+                </Button>
+              )}
+            </div>
+          ) : (
+            <></>
+          )}
         </>
       ) : (
         <>
