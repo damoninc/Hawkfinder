@@ -23,6 +23,7 @@ import AccountSettingsPage from "./components/ProfileSystem/AccountSettingsPage"
 import ReAuth from "./components/Authentication/Reauth";
 import Navbar from "./components/Navbar/Navbar";
 import NotFound from "./components/Authentication/NotFoundScreen";
+import ResetPasswordEmail from "./components/Authentication/ForgotPassword";
 
 /**
  * The top level of our App. Our routes are declared here, and use these routes
@@ -133,6 +134,16 @@ function App() {
                 <Navigate to="/components/Forum" />
               ) : (
                 <SignUpScreen />
+              )
+            }
+          />
+          <Route
+            path="/components/ResetPassword"
+            element={
+              isUserLoggin(user) ? (
+                <Navigate to="/components/Forum" />
+              ) : (
+                <ResetPasswordEmail />
               )
             }
           />
