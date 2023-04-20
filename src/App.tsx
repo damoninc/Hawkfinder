@@ -22,6 +22,7 @@ import isUserLoggin from "./components/Authentication/TestAuth";
 import AccountSettingsPage from "./components/ProfileSystem/AccountSettingsPage";
 import ReAuth from "./components/Authentication/Reauth";
 import Navbar from "./components/Navbar/Navbar";
+import NotFound from "./components/Authentication/NotFoundScreen";
 
 /**
  * The top level of our App. Our routes are declared here, and use these routes
@@ -180,6 +181,7 @@ function App() {
             }
           />
           <Route path="/components/Reauth" element={<ReAuth />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </div>
