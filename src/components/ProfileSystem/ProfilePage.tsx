@@ -73,18 +73,14 @@ function ProfilePage(passedUser: any) {
 
   return (
     <div className="body">
-      <Paper className="profile-info" sx={{ mt: "10px", borderRadius: 10 }}>
+      <Paper className="first-row" sx={{ mt: "10px", borderRadius: 10 }}>
         <img src={`${userCoverPic}`} alt="image" className="cover-photo" />
-        <span className="profile-name">
-          <span>
-            {userPage?.profile.firstName + " " + userPage?.profile.lastName}
-          </span>
-          <br></br>
-        </span>
-        <span className="friend-count">
-          <span>{userPage?.friendsList.length + " Friends"}</span>
-          <br />
-        </span>
+        <Typography className="profile-name" sx={{ fontWeight: "bold" }}>
+          {userPage?.profile.firstName + " " + userPage?.profile.lastName}
+        </Typography>
+        <Typography className="friend-count">
+          {userPage?.friendsList.length + " Friends"}
+        </Typography>
         <img
           src={`${userProfPic}`}
           alt="image"
@@ -94,17 +90,23 @@ function ProfilePage(passedUser: any) {
         {EditPage(userPage, docRef, passedUserObj)}
       </Paper>
       <Box className="second-row" sx={{ flexWrap: "wrap" }}>
-        {spotifyUser != undefined ? (
+        {spotifyUser?.spotify.accessToken != "null" ? (
           <Paper className="spotify-info" sx={{ borderRadius: 10 }}>
-            <Box className="spotify-box" sx={{ padding: 3 }}>
-              <CurrentSong user={spotifyUser} small={false} />
+            <Box className="spotify-box" sx={{ padding: 1, flexWrap: "wrap" }}>
+              <Box className="current-song">
+                <CurrentSong user={spotifyUser!} small={false} />
+              </Box>
+              <Box className="top-songs">
+                <TopSongs user={spotifyUser!} small={true} />
+              </Box>
             </Box>
           </Paper>
-        ) : (
-          <p> we've gone silent</p>
-        )}
+        ) : null}
         <Paper className="about-and-info" sx={{ borderRadius: 10 }}>
-          <Box className="body-inner" sx={{ flexWrap: "wrap" }}>
+          <Box
+            className="about-and-info-box"
+            sx={{ padding: 1, flexWrap: "wrap" }}
+          >
             <Paper
               className="about"
               elevation={10}
@@ -123,7 +125,7 @@ function ProfilePage(passedUser: any) {
               elevation={10}
               sx={{ borderRadius: "12px" }}
             >
-              <Box className="My-Interests">
+              <Box className="interests-title">
                 <Typography sx={{ fontWeight: "bold" }}>
                   My Interests
                 </Typography>
@@ -141,7 +143,7 @@ function ProfilePage(passedUser: any) {
         </Paper>
       </Box>
       <br />
-      <Forum uCreds={uid} />
+      {/* <Forum uCreds={uid} /> */}
     </div>
   );
 }
