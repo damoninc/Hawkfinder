@@ -92,7 +92,7 @@ function ResetPasswordEmail() {
                     fontWeight: "bold",
                   }}
                 >
-                  Sign up now!
+                  Back to login
                 </Link>
               </Grid>
             </Container>
