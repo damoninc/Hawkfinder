@@ -3,9 +3,30 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 function ResetPasswordEmail() {
   const [emailThing, setEmailThing] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   function sentResetLink() {
-    console.log(emailThing);
+    if (checkValidEmail()) {
+        console.log("LGTM")
+        console.log(emailThing);
+    }
+    
+  }
+
+  function checkValidEmail() {
+    if (!emailThing) {
+        setErrorMessage("You must put your email")
+        return false
+    }
+    else if (!emailThing.includes('@')) {
+        setErrorMessage("Emails must contain @")
+        return false
+    }
+    else {
+        setErrorMessage("");
+        return true
+    }
+
   }
 
   return (
@@ -23,6 +44,12 @@ function ResetPasswordEmail() {
                   value={emailThing}
                   onChange={(changedText) =>
                     setEmailThing(changedText.target.value)
+                  }
+                  error={
+                    Boolean(errorMessage)
+                  }
+                  helperText={
+                    errorMessage
                   }
                 />
               </Grid>
