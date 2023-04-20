@@ -5,7 +5,7 @@
   width: 100%;
   gap: 2%;
   align-items: center;
-  border: 2px solid gray;
+  border: 2px solid teal;
   border-radius: 5px;
   padding: 1% 2%;
 }
@@ -26,7 +26,9 @@
 }
 
 .post-img-container {
+  display: flex;
   margin: 0;
+  justify-content: center;
 }
 
 .post-img {

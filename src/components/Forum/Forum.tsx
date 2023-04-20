@@ -7,8 +7,6 @@ import {
   limit,
   orderBy,
   query,
-  startAfter,
-  startAt,
   DocumentData,
   Query,
   where,
@@ -31,42 +29,9 @@ function Forum(props: any) {
   const [open, setOpen] = useState(false);
   // Shows loading while fetchPosts() is running
   const [loading, setLoading] = useState(false);
-  // Current page number of the forum
-  const [page, setPage] = useState(1);
   // Number of posts per page
   const [pageSize, setPageSize] = useState(10);
   const [totalDocs, setTotalDocs] = useState(0);
-
-  // const fetchPosts = () => {
-  //   setLoading(true);
-
-  //   getTotalDocs();
-
-  //   const q = query(
-  //     collection(db, "Posts"),
-  //     orderBy("postDate", "desc"),
-  //     limit(pageSize)
-
-  //     // startAt((page - 1) * pageSize)
-  //   );
-  //   getDocs(q)
-  //     .then((querySnapshot) => {
-  //       const tempPosts: Post[] = querySnapshot.docs.map((doc) => {
-  //         console.log("DB CALL");
-  //         return new Post(
-  //           doc.id,
-  //           doc.data().postDate.toDate(),
-  //           doc.data().userID,
-  //           doc.data().description,
-  //           doc.data().interest,
-  //           doc.data().imageURL,
-  //           new Map(Object.entries(doc.data().ratings))
-  //         );
-  //       });
-  //       setPosts(tempPosts);
-  //     })
-  //     .finally(() => setLoading(false));
-  // };
 
   const getTotalDocs = async () => {
     const snap = await getCountFromServer(collection(db, "Posts"));
@@ -82,8 +47,10 @@ function Forum(props: any) {
    * so that the forum will reload when a new post is made
    */
   useEffect(() => {
+    setLoading(true);
+    getTotalDocs()
     if (!props.passedUser) {
-      q = query(collection(db, "Posts"), orderBy("postDate", "desc"), limit(5));
+      q = query(collection(db, "Posts"), orderBy("postDate", "desc"), limit(pageSize));
     } else if (props.passedUser) {
       q = query(
         collection(db, "Posts"),
@@ -107,15 +74,8 @@ function Forum(props: any) {
       });
       setPosts(tempPosts);
     });
-  }, []);
-
-  const handlePrevPage = () => {
-    setPage((prevPage) => prevPage - 1);
-  };
-
-  const handleNextPage = () => {
-    setPage((prevPage) => prevPage + 1);
-  };
+    setLoading(false);
+  }, [pageSize]);
 
   /**
    * Forcefully reloads the forum by reloading the page
@@ -135,7 +95,7 @@ function Forum(props: any) {
    * to show on the modal
    * @param p index number
    */
-  const handleOpen = (p: any) => {
+  const handleOpen = (p: number) => {
     console.log("Post Clicked...", p);
     setPostIndex(p);
     setOpen(true);
@@ -178,11 +138,11 @@ function Forum(props: any) {
           <div className="pagination">
             {/* Determines whether the forum can load any more posts */}
             {pageSize <= totalDocs ? (
-              <Button variant="outlined" onClick={handleLoadMore}>
+              <Button className="load-more" variant="outlined" onClick={handleLoadMore}>
                 Load more...
               </Button>
             ) : (
-              <Button variant="outlined" onClick={handleLoadMore} disabled>
+              <Button className="load-more" variant="outlined" onClick={handleLoadMore} disabled>
                 Load more...
               </Button>
             )}

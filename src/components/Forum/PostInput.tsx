@@ -123,9 +123,10 @@ const PostInput = (props: any) => {
           imageURL: imgName,
         });
         uploadImage(newFile);
+      } else {
+        // This line only runs if no image was uploaded
+        props.reloadForum();
       }
-      // This line only runs if no image was uploaded
-      props.reloadForum();
     } else {
       console.log(
         "Post not sent, you must select an interest and enter text input!"
@@ -157,6 +158,7 @@ const PostInput = (props: any) => {
         variant="outlined"
         multiline
         rows={4}
+        sx={{ borderColor: 'teal'}}
         onChange={(e) => {
           if (e.target.value.length < 120) {
             setPostText(e.target.value);
