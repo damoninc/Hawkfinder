@@ -7,7 +7,7 @@ import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
 import { IconButton } from "@mui/material";
 import "../../styles/forumpost.css";
 import { getDownloadURL, ref } from "firebase/storage";
-import { doc, getDoc } from "@firebase/firestore";
+import { doc, getDoc, updateDoc, deleteField } from "@firebase/firestore";
 
 function ForumPost(props: any) {
   // HOOKS ----------------------------------------------------------------
@@ -22,7 +22,6 @@ function ForumPost(props: any) {
   // The profile pic of the poster
   const [profilePic, setProfilePic] = useState("");
   // The document of the post used for ratings
-  const [documentSnap, setDocumentSnap] = useState<any>(null);
   const [documentRef, setDocumentRef] = useState<any>(
     doc(db, "Posts", props.id)
   );
@@ -33,7 +32,33 @@ function ForumPost(props: any) {
    */
   useEffect(() => {
     // Grab the document snapshot for the post
-    fetchDoc();
+    const docR = doc(db, "Posts", props.id);
+    setDocumentRef(docR);
+    const docS = getDoc(documentRef);
+
+    docS
+      .then((documentSnap) => {
+        const data: any = documentSnap.data();
+        // if (typeof data === "object") {
+        if (Object.keys(data.ratings).length > 0) {
+          const ratingsMap = new Map(Object.entries(data.ratings));
+          for (const [k, v] of ratingsMap) {
+            if (k == props.userID) {
+              if (v == "upvote") {
+                setUpvoted(true);
+                return;
+              } else {
+                setDownvoted(true);
+                return;
+              }
+            }
+          }
+        }
+        // }
+      })
+      .catch(() => {
+        console.log("An error occurred...");
+      });
 
     // Grab the document snapshot for the user
     const docRef = doc(db, "Users", props.userID);
@@ -56,7 +81,6 @@ function ForumPost(props: any) {
      * the profile picture for the post
      */
     docSnap.then((doc: any) => {
-      userRating();
       if (doc.exists()) {
         const profilePicPath: string = doc.data().profile.profilePicture;
         const profileImageRef = ref(storage, profilePicPath);
@@ -73,55 +97,40 @@ function ForumPost(props: any) {
         console.log("Error gettin user doc...");
       }
     });
-
-    // userRating();
   }, []);
-
-  const fetchDoc = async () => {
-    const docRef = doc(db, "Posts", props.id);
-    setDocumentRef(docRef);
-    const docSnap = await getDoc(documentRef);
-    setDocumentSnap(docSnap);
-  };
-
-  /**
-   * Determines if the signed in user has upvoted the post
-   */
-  const userRating = () => {
-    if (documentSnap && Object.keys(documentSnap.data().ratings).length > 0) {
-      const ratingsMap = new Map(Object.entries(documentSnap.data().ratings));
-      for (const [k, v] of ratingsMap) {
-        if (k == props.userID) {
-          if (v == "upvote") {
-            setUpvoted(true);
-            return;
-          } else {
-            setDownvoted(false);
-            return;
-          }
-        }
-      }
-    }
-  };
 
   /**
    * Handles the logic for upvoting
    * @param e: MouseEvent
    */
-  const upvote = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const upvote = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     /**
      * stopPropgation prevents events from bubbling and only runs
      * this function (instead of this function AND showing the modal)
      */
+    const uid = props.userID;
+    const field = `ratings.${uid}`;
     e.stopPropagation();
     if (!upvoted && !downvoted) {
+      // Case where downvote and upvote are not set
+      await updateDoc(documentRef, {
+        [field]: "upvote",
+      });
       setRatings(ratings + 1);
       setUpvoted(true);
     } else if (!upvoted && downvoted) {
+      // Case where post is downvoted
+      await updateDoc(documentRef, {
+        [field]: "upvote",
+      });
       setRatings(ratings + 2);
       setDownvoted(false);
       setUpvoted(true);
     } else {
+      // Case where post is upvoted
+      await updateDoc(documentRef, {
+        [field]: deleteField(),
+      });
       setRatings(ratings - 1);
       setUpvoted(false);
     }
@@ -131,19 +140,32 @@ function ForumPost(props: any) {
    * Handles the logic for downvoting
    * @param e: MouseEvent
    */
-  const downvote = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const downvote = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     e.stopPropagation();
+    const uid = props.userID;
+    const field = `ratings.${uid}`;
     if (!downvoted && !upvoted) {
       // Case where downvote and upvote are not set
+      await updateDoc(documentRef, {
+        [field]: "downvote",
+      });
       setRatings(ratings - 1);
       setDownvoted(true);
     } else if (!downvoted && upvoted) {
       // Case where post is upvoted
+      await updateDoc(documentRef, {
+        [field]: "downvote",
+      });
       setRatings(ratings - 2);
       setUpvoted(false);
       setDownvoted(true);
     } else {
       // Case where post is downvoted
+      await updateDoc(documentRef, {
+        [field]: deleteField(),
+      });
       setRatings(ratings + 1);
       setDownvoted(false);
     }

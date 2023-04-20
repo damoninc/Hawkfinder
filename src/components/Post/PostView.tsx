@@ -20,12 +20,49 @@ function PostView(props: any) {
   const [image, setImage] = useState("");
   // The profile pic of the user that created the post
   const [profilePic, setProfilePic] = useState("");
+  // The document of the post used for ratings
+  const [documentRef, setDocumentRef] = useState<any>(
+    doc(db, "Posts", props.id)
+  );
 
   /**
    * Grabs the appropriate image URL for the
    * specific post that is rendered
    */
   useEffect(() => {
+    // Grab the document snapshot for the post
+    const docR = doc(db, "Posts", props.id);
+    setDocumentRef(docR);
+    const docS = getDoc(documentRef);
+
+    docS
+      .then((documentSnap) => {
+        const data: any = documentSnap.data();
+        // if (typeof data === "object") {
+        if (Object.keys(data.ratings).length > 0) {
+          const ratingsMap = new Map(Object.entries(data.ratings));
+          for (const [k, v] of ratingsMap) {
+            if (k == props.userID) {
+              if (v == "upvote") {
+                setUpvoted(true);
+                return;
+              } else {
+                setDownvoted(true);
+                return;
+              }
+            }
+          }
+        }
+        // }
+      })
+      .catch(() => {
+        console.log("An error occurred...");
+      });
+
+    // Grab the document snapshot for the user
+    const docRef = doc(db, "Users", props.userID);
+    const docSnap = getDoc(docRef);
+
     // Creates a pointer reference to the image of the post
     // TODO: Pass the URL from ForumPost to PostView
     const imageRef = ref(storage, "Posts/" + props.imageURL);
@@ -39,10 +76,6 @@ function PostView(props: any) {
           console.log("Error fetching image");
         });
     }
-
-    // Grab the document snapshot
-    const docRef = doc(db, "Users", props.userID);
-    const docSnap = getDoc(docRef);
 
     /**
      * This block is responsible for getting
