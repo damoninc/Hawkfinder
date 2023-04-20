@@ -176,50 +176,84 @@ function checkNullList(friends: User[] | null) {
                 open={open == friend.userid}
                 onClose={handleClose}
                 PaperProps={{
-                  sx: { backgroundColor: boxTheme.backgroundSecondary },
+                  sx: {
+                    backgroundColor: boxTheme.backgroundSecondary,
+                    width: { xs: "100%", sm: "400px" },
+                    padding: "0 5px",
+                  },
                 }}
               >
                 <Button
                   onClick={handleClose}
                   variant="contained"
                   style={{
-                    marginTop: "30px",
+                    marginTop: "15px",
                     marginLeft: "20px",
                     marginRight: "20px",
                   }}
                 >
                   <ArrowBackIcon />
                 </Button>
-                <div
-                  style={{
-                    minWidth: "25vw",
-                    maxWidth: "50vw",
-                    paddingLeft: "20px",
-                    paddingRight: "20px",
-                    justifyContent: "space-evenly",
-                  }}
-                >
+                <Stack justifyContent="flex-start" alignItems="flex-start">
                   <Stack
-                    justifyContent="flex-start"
-                    alignItems="flex-start"
+                    justifyContent="center"
+                    alignItems="center"
                     spacing={2}
+                    paddingTop="10px"
                   >
-                    <h1>
+                    <Typography variant="h4" sx={{ textAlign: "center" }}>
                       {friend.profile.firstName} {friend.profile.lastName}
-                    </h1>
+                    </Typography>
                     <RemoveButton user={friend} />
-                    <h3>Bio</h3>
+                    <Box
+                      width="100%"
+                      sx={{
+                        borderBottom: "3px solid gray",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Typography variant="h5" align="center">
+                        Bio
+                      </Typography>
+                    </Box>
                     <p>{friend.profile.bio}</p>
-                    <CurrentSong user={friend} small={false} />
-                    <h3>Interests</h3>
-                    <ul>
-                      {friend.profile.interests.map((interest) => (
-                        <li key={interest}>{interest}</li>
-                      ))}
-                    </ul>
+                    <CurrentSong
+                      user={friend}
+                      small={false}
+                      sx={{ width: "350px" }}
+                    />
+                    <Box
+                      width="100%"
+                      sx={{
+                        borderBottom: "3px solid gray",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Typography variant="h5" align="center">
+                        Interests
+                      </Typography>
+                    </Box>{" "}
+                    <Box width="100%">
+                      <ul>
+                        {friend.profile.interests.map((interest) => (
+                          <li key={interest}>{interest}</li>
+                        ))}
+                      </ul>
+                    </Box>
+                    <Box
+                      width="100%"
+                      sx={{
+                        borderBottom: "3px solid gray",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Typography variant="h6" align="center">
+                        Recent Songs
+                      </Typography>
+                    </Box>
                     <RecentSongs user={friend} small={false} limit={10} />
                   </Stack>
-                </div>
+                </Stack>
               </Drawer>
             </div>
           );
@@ -254,7 +288,7 @@ class RemoveButton extends React.Component<IProps, IState> {
         justifyContent="center"
         alignItems="left"
         spacing={2}
-        style={{ paddingLeft: "15px", width: "100%" }}
+        style={{ width: "100%" }}
       >
         <Button
           variant="contained"
@@ -273,8 +307,6 @@ class RemoveButton extends React.Component<IProps, IState> {
           <Button
             variant="contained"
             style={{
-              marginLeft: "10px",
-              marginRight: "5px",
               width: "100%",
               textTransform: "none",
             }}
@@ -291,8 +323,6 @@ class RemoveButton extends React.Component<IProps, IState> {
             alignItems="center"
             spacing={0}
             style={{
-              marginLeft: "5px",
-              marginRight: "5px",
               width: "100%",
               textTransform: "none",
             }}
@@ -300,8 +330,6 @@ class RemoveButton extends React.Component<IProps, IState> {
             <Button
               style={{
                 width: "50%",
-                marginRight: "2px",
-                marginLeft: "2px",
                 textTransform: "none",
               }}
               variant="contained"
@@ -317,7 +345,6 @@ class RemoveButton extends React.Component<IProps, IState> {
               variant="contained"
               style={{
                 width: "50%",
-                marginRight: "2px",
                 textTransform: "none",
                 marginLeft: "2px",
               }}

@@ -18,7 +18,7 @@ export const screecherTheme = createTheme({
       light: "#ed6f6a",
       dark: "#79000e",
     },
-    mode: "light",
+    mode: "dark",
   },
 });
 

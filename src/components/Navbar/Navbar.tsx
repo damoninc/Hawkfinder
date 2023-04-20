@@ -303,17 +303,16 @@ export default function Navbar() {
             variant="h6"
             noWrap
             component="a"
+            href="/components/Forum"
             sx={{
               display: { xs: "flex", md: "none" },
               paddingRight: { xs: "20px", md: "0" },
             }}
           >
-            <a href="/components/Forum">
-              <img
-                src="https://firebasestorage.googleapis.com/v0/b/csc-450-project.appspot.com/o/HAWKFINDER%2FMy_project.png?alt=media&token=9c88ec23-9c4e-46b7-8eb9-a907be7b2cfc"
-                height="35px"
-              />
-            </a>
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/csc-450-project.appspot.com/o/HAWKFINDER%2FMy_project.png?alt=media&token=9c88ec23-9c4e-46b7-8eb9-a907be7b2cfc"
+              height="35px"
+            />
           </Typography>
           <Search>
             <form onSubmit={formik.handleSubmit}>
