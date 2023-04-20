@@ -119,7 +119,7 @@ function App() {
             path="/"
             element={
               isUserLoggin(user) ? (
-                <Navigate to="/components/SignedIn" />
+                <Navigate to="/components/Forum" />
               ) : (
                 <LoginScreen />
               )
@@ -129,7 +129,7 @@ function App() {
             path="/components/Signup"
             element={
               isUserLoggin(user) ? (
-                <Navigate to="/components/SignedIn" />
+                <Navigate to="/components/Forum" />
               ) : (
                 <SignUpScreen />
               )
