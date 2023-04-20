@@ -22,6 +22,8 @@ import isUserLoggin from "./components/Authentication/TestAuth";
 import AccountSettingsPage from "./components/ProfileSystem/AccountSettingsPage";
 import ReAuth from "./components/Authentication/Reauth";
 import Navbar from "./components/Navbar/Navbar";
+import NotFound from "./components/Authentication/NotFoundScreen";
+import ResetPasswordEmail from "./components/Authentication/ForgotPassword";
 
 /**
  * The top level of our App. Our routes are declared here, and use these routes
@@ -119,7 +121,7 @@ function App() {
             path="/"
             element={
               isUserLoggin(user) ? (
-                <Navigate to="/components/SignedIn" />
+                <Navigate to="/components/Forum" />
               ) : (
                 <LoginScreen />
               )
@@ -129,9 +131,19 @@ function App() {
             path="/components/Signup"
             element={
               isUserLoggin(user) ? (
-                <Navigate to="/components/SignedIn" />
+                <Navigate to="/components/Forum" />
               ) : (
                 <SignUpScreen />
+              )
+            }
+          />
+          <Route
+            path="/components/ResetPassword"
+            element={
+              isUserLoggin(user) ? (
+                <Navigate to="/components/Forum" />
+              ) : (
+                <ResetPasswordEmail />
               )
             }
           />
@@ -180,6 +192,7 @@ function App() {
             }
           />
           <Route path="/components/Reauth" element={<ReAuth />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </div>

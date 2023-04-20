@@ -9,10 +9,16 @@
 }
 
 .formGaps .MuiContainer-root {
-    margin: 30px auto;
+    margin: 30px 0;
 }
 
 .errorMessage {
     color: red;
     font-size: 16px;
+}
+
+.screechlink {
+    color: "#1ed5db";
+    font-size: "12px";
+    font-weight: "bold";
 }

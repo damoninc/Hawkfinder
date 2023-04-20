@@ -161,8 +161,29 @@ function LoginScreen() {
                   />
                 </Grid>
               </Container>
+              <Container style={{
+                position: "relative",
+                left: "60px",
+                bottom: "25px",
+                margin: "0px"
+              }}>
+                <Grid item>
+                  <Link
+                    to="/components/ResetPassword"
+                    style={{
+                      color: "#1ed5db",
+                      fontSize: "12px",
+                      fontWeight: "bold"
+                    }}
+                  >
+                    Forgot Password?
+                  </Link>
+                </Grid>
+              </Container>
               {loadingUserMessage()}
-              <Container>
+              <Container style={{
+                margin: "0px"
+              }}>
                 <Grid item>
                   <Button variant="contained" color="primary" type="submit">
                     Login
