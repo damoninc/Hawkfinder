@@ -66,7 +66,7 @@ function ProfilePage(passedUser: any) {
     return (
       <div hidden>
         {EditPage(userPage, docRef, passedUserObj)}
-        <Forum uCreds={uid} />
+        <Forum passedUser={uid} />
       </div>
     );
   }

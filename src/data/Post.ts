@@ -13,6 +13,7 @@
 class Post {
   readonly _postID: string;
   readonly _postDate: Date;
+  readonly _userID: string;
   private _description: string;
   private _interest: string;
   private _imageURL: string;
@@ -22,6 +23,7 @@ class Post {
   constructor(
     postID: string,
     postDate: Date,
+    userID: string,
     description: string,
     interest: string,
     imageURL = "",
@@ -30,6 +32,7 @@ class Post {
   ) {
     this._postID = postID;
     this._postDate = postDate;
+    this._userID = userID;
     this._description = description;
     this._interest = interest;
     this._imageURL = imageURL;
@@ -43,6 +46,10 @@ class Post {
 
   public get postDate(): Date {
     return this._postDate;
+  }
+
+  public get userID(): string {
+    return this._userID;
   }
 
   public get description(): string {

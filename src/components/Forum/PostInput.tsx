@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import { db, storage } from "../../firebase/config";
 import {
@@ -9,26 +9,50 @@ import {
   InputLabel,
   Popover,
   Typography,
+  Autocomplete,
+  Stack,
 } from "@mui/material";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import {
   addDoc,
   collection,
+  doc,
+  getDoc,
+  getDocs,
   serverTimestamp,
   updateDoc,
 } from "@firebase/firestore";
-import { ref, uploadBytes } from "firebase/storage";
+import { ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
 import "../../styles/postinput.css";
 
-const PostInput = ({ reloadForum }: any) => {
+const PostInput = (props: any) => {
   // HOOKS ----------------------------------------------------------------
-  // These hooks keep track of user input
+  // Keep track of user input
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [interest, setInterest] = useState("");
   const [postText, setPostText] = useState("");
-  // This hook will be used for the popover
+  // Will be used for the popover
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  // Stores the interests from Firestore
+  const [interests, setInterests] = useState([]);
+
+  useEffect(() => {
+    getInterests();
+  }, []);
+
+  /**
+   * Gets all the interests from Firestore
+   */
+  const getInterests = async () => {
+    const interestRef = doc(db, "Interests", "Interests");
+    const interestSnap = await getDoc(interestRef);
+    if (interestSnap.exists()) {
+      setInterests(interestSnap.data().Interests);
+    } else {
+      console.log("Doc does not exist...");
+    }
+  };
 
   /**
    * Renames the user's image input filename to the
@@ -51,13 +75,24 @@ const PostInput = ({ reloadForum }: any) => {
     const metadata = {
       contentType: image.type,
     };
-    uploadBytes(postsRef, image, metadata)
-      .then(() => {
-        console.log("Uploaded image! File: " + image);
-      })
-      .catch(() => {
-        console.log("error uploading to firebase");
-      });
+
+    const uploadTask = uploadBytesResumable(postsRef, image, metadata);
+
+    // This makes sure that the upload completes before the Forum is reloaded
+    uploadTask.on("state_changed", {
+      error: (error) => {
+        console.log("Error occurred while uploading: ", error);
+      },
+      complete: () => {
+        // Once the upload is complete, reset the hooks
+        // and reload the Forum
+        setSelectedImage(null);
+        setInterest("");
+        setPostText("");
+        console.log("Upload complete!");
+        props.reloadForum();
+      },
+    });
   }
 
   /**
@@ -73,7 +108,7 @@ const PostInput = ({ reloadForum }: any) => {
         interest: interest,
         postDate: serverTimestamp(),
         ratings: Object.fromEntries(new Map<string, string>()),
-        userID: "sq0kklKJQLYTuFQ6IQf6fzxi4Iu1",
+        userID: props.userID,
       });
       // Using the doc.id generated above to use as a unique reference
       // that the post will use to get the image from storage
@@ -83,20 +118,15 @@ const PostInput = ({ reloadForum }: any) => {
         const imgName = imgID + "." + imgExt;
         // UPLOADING IMG TO FIREBASE STORAGE
         const newFile: File = renameFile(selectedImage, imgName);
-        setTimeout(() => {
-          // Lets the app upload the file before reloading the page
-          // so that the upload does not get interrupted
-          uploadImage(newFile);
-        }, 1500);
         // UPDATING POST DOCUMENT WITH POINTER TO FIREBASE STORAGE
         await updateDoc(docRef, {
           imageURL: imgName,
         });
+        uploadImage(newFile);
+      } else {
+        // This line only runs if no image was uploaded
+        props.reloadForum();
       }
-      setSelectedImage(null);
-      setInterest("");
-      setPostText("");
-      reloadForum();
     } else {
       console.log(
         "Post not sent, you must select an interest and enter text input!"
@@ -128,6 +158,7 @@ const PostInput = ({ reloadForum }: any) => {
         variant="outlined"
         multiline
         rows={4}
+        sx={{ borderColor: 'teal'}}
         onChange={(e) => {
           if (e.target.value.length < 120) {
             setPostText(e.target.value);
@@ -150,18 +181,25 @@ const PostInput = ({ reloadForum }: any) => {
         </div>
       )}
       <FormControl className="interest-input">
-        <InputLabel>Interest</InputLabel>
-        <Select
-          label="Interest"
-          value={interest}
-          onChange={(event: React.ChangeEvent<HTMLInputElement> | any) => {
-            setInterest(event.target.value);
+        <Autocomplete
+          onChange={(e, value) => {
+            if (value) {
+              console.log("setting interest: ", value);
+              setInterest(value);
+            }
           }}
-        >
-          <MenuItem value={"Music"}>Music</MenuItem>
-          <MenuItem value={"Food"}>Food</MenuItem>
-          <MenuItem value={"Film"}>Film</MenuItem>
-        </Select>
+          options={interests}
+          getOptionLabel={(option) => option}
+          renderInput={(params) => (
+            <TextField
+              sx={{ width: "100%" }}
+              {...params}
+              variant="outlined"
+              label="Interests"
+              placeholder="Choose any"
+            />
+          )}
+        />
       </FormControl>
       <Button variant="outlined" component="label" className="upload-image">
         <FileUploadIcon style={{ fill: "teal" }} />
