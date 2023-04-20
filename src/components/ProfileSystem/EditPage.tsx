@@ -27,6 +27,7 @@ import { db, storage } from "../../firebase/config";
 import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
 import * as filter from "leo-profanity";
 import { MuiChipsInput } from "mui-chips-input";
+import { BorderStyle } from "@mui/icons-material";
 const interestRef = doc(db, "Interests", "Interests");
 const interestSnap = await getDoc(interestRef);
 const baseInterests = interestSnap.data();
@@ -284,15 +285,52 @@ function EditPage(
     );
   };
 
+  const breakpoints = {
+    xs: 0,
+    sm: 600,
+    md: 960,
+    lg: 1280,
+    xl: 1920
+}
+
+const getColumns = (width:any) => {
+  if (width < breakpoints.sm){
+    return {colCount: 3,
+      rowPixels: 82}
+  }
+    else if (width < breakpoints.sm) {
+        return {colCount: 3,
+        rowPixels: 120}
+    } else if (width < breakpoints.md) {
+        return {colCount: 3, rowPixels: 164}
+    } else if (width < breakpoints.lg) {
+        return {colCount: 4, rowPixels: 164}
+    } else if (width < breakpoints.xl) {
+        return {colCount: 5, rowPixels: 164}
+    } 
+}
+
+const [columns, setColumns] = useState(getColumns(window.innerWidth))
+const updateDimensions = () => {
+    setColumns(getColumns(window.innerWidth))
+}
+
+useEffect(() => {
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+}, []);
+
+
   function ImageLoader() {
+    
     return (
       <>
-        <ImageList sx={{ width: 1000, height: 450 }} cols={6} rowHeight={164}>
+        <ImageList sx={{ width: '100%', height: 400, borderStyle:'solid', columnGap:'noraml'}} cols={columns?.colCount} rowHeight={columns?.rowPixels}>
           {imageURLs.map((item, index) => (
             <ImageListItem
               sx={{
-                width: "164px",
-                height: "164px",
+                width: columns?.rowPixels,
+                height: columns?.rowPixels,
               }}
               key={item}
             >
@@ -303,7 +341,6 @@ function EditPage(
                 style={{
                   width: "100%",
                   height: "100%",
-                  padding: 0,
                 }}
                 onClick={() => handleInnerSelectPhoto(index)}
               >
@@ -428,17 +465,17 @@ function EditPage(
                 </Box>
               </IconButton>
               <Modal open={innerOpen} onClose={handleInnerClose}>
-                <Box
+                <Box className = 'profile-cover-modal'
                   sx={{
-                    position: "absolute",
+                    position: "relative",
                     top: "50%",
                     left: "50%",
                     transform: "translate(-50%, -50%)",
-                    width: 1000,
+                    maxWidth: '1000px',
                     bgcolor: "background.paper",
                     border: "2px solid #000",
                     boxShadow: 24,
-                    p: 4,
+                    p: 6,
                   }}
                 >
                   <ImageLoader />
