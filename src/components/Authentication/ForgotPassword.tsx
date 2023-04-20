@@ -1,32 +1,53 @@
-import { Button, Container, Grid, Paper, TextField } from "@mui/material";
+import {
+  Button,
+  Container,
+  Grid,
+  Paper,
+  Snackbar,
+  TextField,
+} from "@mui/material";
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { auth } from "../../firebase/config";
+import { FirebaseError } from "firebase/app";
 function ResetPasswordEmail() {
   const [emailThing, setEmailThing] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   function sentResetLink() {
     if (checkValidEmail()) {
-        console.log("LGTM")
-        console.log(emailThing);
+      sendPasswordResetEmail(auth, emailThing)
+        .then(() => {
+          alert("Email sent!");
+        })
+        .catch((error: FirebaseError) => {
+          switch (error.code) {
+            case "auth/user-not-found":
+              alert("User not found!");
+              break;
+            case "auth/invalid-email":
+              alert("That's not a real email!");
+              break;
+            default:
+              alert(`UH OH! Unknown error: ${error.code}.`);
+              break;
+          }
+        });
     }
-    
   }
 
   function checkValidEmail() {
     if (!emailThing) {
-        setErrorMessage("You must put your email")
-        return false
+      setErrorMessage("You must put your email");
+      return false;
+    } else if (!emailThing.includes("@")) {
+      setErrorMessage("Emails must contain @");
+      return false;
+    } else {
+      setErrorMessage("");
+      return true;
     }
-    else if (!emailThing.includes('@')) {
-        setErrorMessage("Emails must contain @")
-        return false
-    }
-    else {
-        setErrorMessage("");
-        return true
-    }
-
   }
 
   return (
@@ -45,12 +66,8 @@ function ResetPasswordEmail() {
                   onChange={(changedText) =>
                     setEmailThing(changedText.target.value)
                   }
-                  error={
-                    Boolean(errorMessage)
-                  }
-                  helperText={
-                    errorMessage
-                  }
+                  error={Boolean(errorMessage)}
+                  helperText={errorMessage}
                 />
               </Grid>
             </Container>
@@ -67,8 +84,9 @@ function ResetPasswordEmail() {
             </Container>
             <Container>
               <Grid item>
-                <Link to="/"
-                style={{
+                <Link
+                  to="/"
+                  style={{
                     color: "#1ed5db",
                     fontSize: "20px",
                     fontWeight: "bold",
