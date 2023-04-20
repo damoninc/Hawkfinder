@@ -1,32 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../../firebase/config";
 import {
-  DocumentData,
-  Query,
   collection,
+  getCountFromServer,
   getDocs,
+  limit,
   orderBy,
   query,
+  DocumentData,
+  Query,
   where,
 } from "firebase/firestore";
 import Post from "../../data/Post";
-import PostView from "../Post/PostView";
 import ForumPost from "./ForumPost";
 import PostInput from "./PostInput";
-import { Modal, Box, CircularProgress } from "@mui/material";
+import { CircularProgress, Button } from "@mui/material";
 import "../../styles/forum.css";
 
-function Forum(passedUser: any = "") {
+function Forum(props: any) {
   // HOOKS ----------------------------------------------------------------
   // State for posts must be set with any so the modal knows
   // which component to render without having to use .map()
   const [posts, setPosts] = useState<Post[]>([]);
-  // For the modal to determine which post was clicked
-  const [postIndex, setPostIndex] = useState(0);
-  // Boolean to show the modal or not
-  const [open, setOpen] = useState(false);
   // Shows loading while fetchPosts() is running
   const [loading, setLoading] = useState(false);
+  // Number of posts per page
+  const [pageSize, setPageSize] = useState(10);
+  const [totalDocs, setTotalDocs] = useState(0);
+
+  const getTotalDocs = async () => {
+    const snap = await getCountFromServer(collection(db, "Posts"));
+    setTotalDocs(snap.data().count);
+  };
 
   let q: Query<DocumentData>;
 
@@ -38,13 +43,13 @@ function Forum(passedUser: any = "") {
    */
   useEffect(() => {
     setLoading(true);
-
-    if (!passedUser.uCreds) {
-      q = query(collection(db, "Posts"), orderBy("postDate", "desc"));
-    } else if (passedUser.uCreds) {
+    getTotalDocs()
+    if (!props.passedUser) {
+      q = query(collection(db, "Posts"), orderBy("postDate", "desc"), limit(pageSize));
+    } else if (props.passedUser) {
       q = query(
         collection(db, "Posts"),
-        where("userID", "==", passedUser.uCreds),
+        where("userID", "==", props.passedUser),
         orderBy("postDate", "desc")
       );
     }
@@ -55,6 +60,7 @@ function Forum(passedUser: any = "") {
         return new Post(
           doc.id,
           doc.data().postDate.toDate(),
+          doc.data().userID,
           doc.data().description,
           doc.data().interest,
           doc.data().imageURL,
@@ -63,9 +69,8 @@ function Forum(passedUser: any = "") {
       });
       setPosts(tempPosts);
     });
-
     setLoading(false);
-  }, []);
+  }, [pageSize]);
 
   /**
    * Forcefully reloads the forum by reloading the page
@@ -80,32 +85,27 @@ function Forum(passedUser: any = "") {
     window.location.reload();
   };
 
-  /**
-   * Determines the post that was clicked on
-   * to show on the modal
-   * @param p index number
-   */
-  const handleOpen = (p: any) => {
-    console.log("Post Clicked...", p);
-    setPostIndex(p);
-    setOpen(true);
+  const handleLoadMore = () => {
+    setPageSize(pageSize + 10);
   };
 
   return (
     <div className="forum-container">
       {/* <PostInput reloadPosts={reloadPosts} /> */}
-      {!passedUser.uCreds ? <PostInput reloadForum={reloadForum} /> : null}
+      {!props.passedUser ? (
+        <PostInput reloadForum={reloadForum} userID={props.userID} />
+      ) : (
+        <></>
+      )}
       {!loading ? (
         <>
           {posts.map((post: Post, index) => {
             return (
-              <div
-                key={index}
-                onClick={() => handleOpen(index)}
-                className="post-handler"
-              >
+              <div key={index}>
                 <ForumPost
                   id={post.postID}
+                  userID={post.userID}
+                  loggedUser={props.userID}
                   postDate={post.postDate}
                   description={post.description}
                   interest={post.interest}
@@ -116,39 +116,22 @@ function Forum(passedUser: any = "") {
               </div>
             );
           })}
-          <Modal open={open} onClose={() => setOpen(false)}>
-            <Box
-              sx={{
-                display: "flex",
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                width: 0.6,
-                bgcolor: "background.paper",
-                border: "2px solid #000",
-                boxShadow: 24,
-                p: 4,
-              }}
-            >
-              {/* This expression is required or else this code will somehow
-                run before the db call is made and return an typeerror */}
-              {posts.length > 0 ? (
-                <PostView
-                  key={postIndex}
-                  id={posts[postIndex].postID}
-                  postDate={posts[postIndex].postDate}
-                  description={posts[postIndex].description}
-                  interest={posts[postIndex].interest}
-                  imageURL={posts[postIndex].imageURL}
-                  ratings={posts[postIndex].ratings}
-                  rating={posts[postIndex].calculateRating()}
-                />
+          {!props.passedUser ? (
+            <div className="pagination">
+              {/* Determines whether the forum can load any more posts */}
+              {pageSize <= totalDocs ? (
+                <Button className="load-more" variant="outlined" onClick={handleLoadMore}>
+                  Load more...
+                </Button>
               ) : (
-                <></>
+                <Button className="load-more" variant="outlined" onClick={handleLoadMore} disabled>
+                  Load more...
+                </Button>
               )}
-            </Box>
-          </Modal>
+            </div>
+          ) : (
+            <></>
+          )}
         </>
       ) : (
         <>
