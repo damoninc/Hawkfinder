@@ -6,7 +6,7 @@ import { db, storage } from "../../firebase/config";
 import { ref, getDownloadURL } from "firebase/storage";
 import { Box, Paper, Typography } from "@mui/material";
 import EditPage from "./EditPage";
-import CurrentSong from "../SpotifyIntegration/SpotifyComponents";
+import CurrentSong, { TopSongs } from "../SpotifyIntegration/SpotifyComponents";
 import Forum from "../Forum/Forum";
 
 /**
@@ -71,11 +71,9 @@ function ProfilePage(passedUser: any) {
     );
   }
 
-  console.log(userPage.profile.firstName);
-  console.log(userProfPic);
   return (
     <div className="body">
-      <Paper className="profile-info" sx ={{ mt:'10px'}}> 
+      <Paper className="profile-info" sx={{ mt: "10px", borderRadius: 10 }}>
         <img src={`${userCoverPic}`} alt="image" className="cover-photo" />
         <span className="profile-name">
           <span>
@@ -95,41 +93,56 @@ function ProfilePage(passedUser: any) {
         />
         {EditPage(userPage, docRef, passedUserObj)}
       </Paper>
-      <Paper className="profile-info2">
-        <Box className="body-inner" sx={{flexWrap:'wrap'}}>
-      <Paper className="about" elevation={10} sx={{borderRadius: '12px'}}>
-        <Box className="about-title">
-          <Typography sx={{ fontWeight: "bold" }}> About Me</Typography>
-          <br></br>
-        </Box>
-        <Box sx={{overflowY: 'scroll'}}>
-        <Typography sx={{ m: 2 }}>{userPage?.profile.bio}</Typography>
-        </Box>
-      </Paper>
-      <Paper className="interests" elevation={10} sx={{borderRadius: '12px'}}>
-        <Box className="My-Interests">
-          <Typography sx={{ fontWeight: "bold" }}>My Interests</Typography>
-          <br></br>
-        </Box>
-        <Box sx={{overflowY: 'scroll', width: '100%'}}>
-        <ul className="list">
-          {userPage?.profile.interests.map((interest: any) => (
-            <li key={interest}>{interest}</li>
-          ))}
-        </ul>
-        </Box>
-      </Paper>
-      {spotifyUser !== undefined ? (
-        <CurrentSong user={spotifyUser} small={false} />
-      ) : (
-        <div>We've gone silent...</div>
-      )}
+      <Box className="second-row" sx={{ flexWrap: "wrap" }}>
+        {spotifyUser != undefined ? (
+          <Paper className="spotify-info" sx={{ borderRadius: 10 }}>
+            <Box className="spotify-box" sx={{ padding: 3 }}>
+              <CurrentSong user={spotifyUser} small={false} />
+            </Box>
+          </Paper>
+        ) : (
+          <p> we've gone silent</p>
+        )}
+        <Paper className="about-and-info" sx={{ borderRadius: 10 }}>
+          <Box className="body-inner" sx={{ flexWrap: "wrap" }}>
+            <Paper
+              className="about"
+              elevation={10}
+              sx={{ borderRadius: "12px" }}
+            >
+              <Box className="about-title">
+                <Typography sx={{ fontWeight: "bold" }}> About Me</Typography>
+                <br></br>
+              </Box>
+              <Box sx={{ overflowY: "scroll" }}>
+                <Typography sx={{ m: 2 }}>{userPage?.profile.bio}</Typography>
+              </Box>
+            </Paper>
+            <Paper
+              className="interests"
+              elevation={10}
+              sx={{ borderRadius: "12px" }}
+            >
+              <Box className="My-Interests">
+                <Typography sx={{ fontWeight: "bold" }}>
+                  My Interests
+                </Typography>
+                <br></br>
+              </Box>
+              <Box sx={{ overflowY: "scroll", width: "100%" }}>
+                <ul className="list">
+                  {userPage?.profile.interests.map((interest: any) => (
+                    <li key={interest}>{interest}</li>
+                  ))}
+                </ul>
+              </Box>
+            </Paper>
+          </Box>
+        </Paper>
       </Box>
-      </Paper>
-      <br/>
+      <br />
       <Forum uCreds={uid} />
     </div>
-    
   );
 }
 export default ProfilePage;

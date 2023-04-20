@@ -10,7 +10,7 @@
 }
 
 .profile-info {
-  margin:auto;
+  margin: auto;
   max-width: 2000px;
   height: 600px;
   display: flex;
@@ -32,14 +32,14 @@
   object-fit: cover;
   z-index: 1;
 }
-.pic-n-name{
+.pic-n-name {
   display: inline-flex;
 }
 .profile-name {
   left: 317px;
   bottom: 25px;
   position: absolute;
-  padding-right: 0px; 
+  padding-right: 0px;
   font-weight: bold;
 }
 .friend-count {
@@ -65,28 +65,39 @@
   object-fit: cover;
   border-radius: 50%;
 }
-.profile-info2{
-  margin:auto;
-  margin-top: 10px;
+.second-row {
   max-width: 2000px;
-}
-
-.body-inner{
   display: flex;
-  
+  margin: auto;
+  margin-top: 10px;
   justify-content: center;
 }
-.about {
-  width: 400px;
-  height: 266px;
-  display: inline-flex;
-  align-items: flex-start;
-  flex-direction: column;
-  margin-right: 40px;
-  margin-top: 20px;
-  margin-bottom: 20px;
+.spotify-info {
+  max-width: 1000px;
+  margin-top: 10px;
+  height: 300px;
+  margin-left: 30px;
+  margin-right: 30px;
 }
+.spotify-box {
+  display: flex;
+  justify-content: center;
+}
+.about-and-info {
+  margin-left: 30px;
+  margin-right: 30px;
+  margin-top: 10px;
+  max-width: 1000px;
+}
+
+.body-inner {
+  display: flex;
+  justify-content: center;
+}
+
+.about,
 .interests {
+  margin-left: 40px;
   margin-right: 40px;
   margin-top: 20px;
   margin-bottom: 20px;
@@ -96,7 +107,8 @@
   align-items: flex-start;
   flex-direction: column;
 }
-.My-Interests, .about-title {
+.My-Interests,
+.about-title {
   align-self: center;
 }
 @media (max-width: 768px) {
@@ -104,4 +116,3 @@
     max-height: 400px; /* change max-height for smaller screens */
   }
 }
-
