@@ -15,11 +15,13 @@ import ProfilePage from "./components/ProfileSystem/ProfilePage";
 import SpotifyPage from "./components/SpotifyIntegration/SpotifyPage";
 import InterceptorScreen from "./components/Authentication/InterceptorScreen";
 import SignedIn from "./components/Authentication/SignedInScreen";
+import SearchPage from "./components/Navbar/Search";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase/config";
 import isUserLoggin from "./components/Authentication/TestAuth";
 import AccountSettingsPage from "./components/ProfileSystem/AccountSettingsPage";
 import ReAuth from "./components/Authentication/Reauth";
+import Navbar from "./components/Navbar/Navbar";
 
 /**
  * The top level of our App. Our routes are declared here, and use these routes
@@ -30,47 +32,48 @@ function App() {
   const [user] = useAuthState(auth);
   return (
     <div className="app">
-      <h3>All the pages we are working on</h3>
-      {/* <h3>John</h3> */}
-      <Router>
+      {/* <h3>All the pages we are working on</h3>
         <nav className="navbar">
-          <ul>
-            John
-            <li>
-              <Link to="/components/Forum">Forum</Link>
-            </li>
-          </ul>
-          <ul>
-            Nicholaus
-            <li>
-              <Link to="/components/Friends">Friends List</Link>
-            </li>
-            <li>
-              <Link to="/components/Spotify">Spotify Int</Link>
-            </li>
-          </ul>
-          <ul>
-            Octavio
-            <li>
-              <Link to="/">Login</Link>
-            </li>
-            <li>
-              <Link to="/components/Signup">Signup</Link>
-            </li>
-            <li>
-              <Link to="/components/SignedIn">SignedInPage</Link>
-            </li>
-          </ul>
-          <ul>
-            Damon
-            <li>
-              <Link to="/components/Profile">Profile</Link>
-            </li>
-            <li>
-              <Link to="/components/AccountSettings">Account Settings</Link>
-            </li>
-          </ul>
-        </nav>
+        <ul>
+        John
+        <li>
+        <Link to="/components/Forum">Forum</Link>
+        </li>
+        </ul>
+        <ul>
+        Nicholaus
+        <li>
+        <Link to="/components/Friends">Friends List</Link>
+        </li>
+        <li>
+        <Link to="/components/Spotify">Spotify Int</Link>
+        </li>
+        </ul>
+        <ul>
+        Octavio
+        <li>
+        <Link to="/">Login</Link>
+        </li>
+        <li>
+        <Link to="/components/Signup">Signup</Link>
+        </li>
+        <li>
+        <Link to="/components/SignedIn">SignedInPage</Link>
+        </li>
+        </ul>
+        <ul>
+        Damon
+        <li>
+        <Link to="/components/Profile">Profile</Link>
+        </li>
+        <li>
+        <Link to="/components/AccountSettings">Account Settings</Link>
+        </li>
+        </ul>
+        </nav> 
+      Comment out temporarily */}
+      <Router>
+        {user ? <Navbar /> : null}
         <Routes>
           <Route
             path="/components/Forum"
@@ -86,7 +89,17 @@ function App() {
             path="/components/Friends"
             element={
               isUserLoggin(user) ? (
-                <FriendPage uCreds={user!.uid} />
+                <FriendPage uCreds={user!.uid} page="list" />
+              ) : (
+                <Navigate to="/components/Interceptor" />
+              )
+            }
+          />
+          <Route
+            path="/components/Friends/requests"
+            element={
+              isUserLoggin(user) ? (
+                <FriendPage uCreds={user!.uid} page="requests" />
               ) : (
                 <Navigate to="/components/Interceptor" />
               )
@@ -151,6 +164,16 @@ function App() {
             element={
               isUserLoggin(user) ? (
                 <AccountSettingsPage uCreds={user} />
+              ) : (
+                <Navigate to="/components/Interceptor" />
+              )
+            }
+          />
+          <Route
+            path="/components/Search"
+            element={
+              isUserLoggin(user) ? (
+                <SearchPage uCreds={user?.uid} />
               ) : (
                 <Navigate to="/components/Interceptor" />
               )

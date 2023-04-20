@@ -14,7 +14,7 @@ function SignedIn(props : any) {
     signOut(auth);
   };
   return (
-    <div>
+    <div className="centered">
       <h1>You are signed in as {props.uCreds.email}. Yay!</h1>
       <Button variant="contained" onClick={logout}>
         Sign out

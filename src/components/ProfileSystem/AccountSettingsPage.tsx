@@ -1,18 +1,21 @@
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import User from "../../data/User";
-import { updateEmail, updatePassword } from "firebase/auth";
+import { deleteUser, updateEmail, updatePassword } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+import "../../styles/accountsettings.css";
 import { db } from "../../firebase/config";
 import {
   Button,
+  ButtonGroup,
   Container,
   Grid,
   Link,
   List,
   ListItem,
   ListItemButton,
+  Paper,
   TextField,
   Typography,
 } from "@mui/material";
@@ -29,6 +32,7 @@ function AccountSettingsPage(passedUser: any) {
   const [signupMessage, setSignupMessage] = useState("");
   const [userData, setUserData] = useState<any>();
   const [selectItem, setSelectedItem] = useState("");
+  const [deleteClicked, setDeleteClicked] = useState(false);
 
   const docRef = doc(db, "Users", passedUser.uCreds.uid);
   useEffect(() => {
@@ -79,13 +83,52 @@ function AccountSettingsPage(passedUser: any) {
    * Uses FireBase changeUserPassword function to change the current password.
    * If the user needs to reauth, will redirect to another page.
    * @param passwordInput : string - The user inputed password they want to change
-  */
+   */
   //TODO:
   function changeUserPassword(passwordInput: string) {
     console.log("You're in the function!");
     updatePassword(passedUser.uCreds, passwordInput)
       .then(() => {
         alert("Password Changed");
+      })
+      .catch((error: FirebaseError) => {
+        alert("Error! " + error);
+        switch (error.code) {
+          case "auth/requires-recent-login":
+            alert("You need to sign in again to do this change!");
+            navigate("/components/Reauth");
+            break;
+          default:
+            setSignupMessage(
+              `Man, I don't even know what happened... ${error.code}`
+            );
+            break;
+        }
+      });
+  }
+
+  function order66() {
+    alert("Account has been deleted!");
+    deleteUser(passedUser.uCreds)
+      .then(() => {
+        deleteDoc(doc(db, "Users", passedUser.uCreds.uid))
+          .then(() => alert("Profile is a gone!"))
+          .catch((error: FirebaseError) => {
+            alert("Error! " + error);
+            switch (error.code) {
+              case "auth/requires-recent-login":
+                alert("You need to sign in again to do this change!");
+                navigate("/components/Reauth");
+                break;
+              default:
+                setSignupMessage(
+                  `Man, I don't even know what happened... ${error.code}`
+                );
+                break;
+            }
+          });
+        alert("Rip bozo!");
+        navigate("/");
       })
       .catch((error: FirebaseError) => {
         alert("Error! " + error);
@@ -110,11 +153,35 @@ function AccountSettingsPage(passedUser: any) {
   //TODO: Maybe add reauthentication to this page.
   function displayItem() {
     if (selectItem == "1") {
-      return <h1>Holy Chungus, welcome to account settings!</h1>;
+      return (
+        <div>
+          <h1 style={{ textAlign: "center" }}>
+            Welcome to the account settings! If your session has been active for
+            a while, you may need to reauthenticate!
+          </h1>
+        </div>
+      );
     } else if (selectItem == "2") {
-      return <ChangeEmailComponent />;
+      return (
+        <div className="centered" style={{ height: "100%" }}>
+          <ChangeEmailComponent />
+        </div>
+      );
     } else if (selectItem == "3") {
-      return <ChangePasswordComponent />;
+      return (
+        <div className="centered" style={{ height: "100%" }}>
+          <ChangePasswordComponent />
+        </div>
+      );
+    } else if (selectItem == "4") {
+      return (
+        <div
+          className="centered"
+          style={{ height: "100%", textAlign: "center" }}
+        >
+          <DeleteAccountComponent />
+        </div>
+      );
     } else {
       return null;
     }
@@ -160,7 +227,7 @@ function AccountSettingsPage(passedUser: any) {
       },
     });
     return (
-      <fieldset className="loginSquare">
+      <Paper variant="outlined" className="loginSquare">
         <h1>Change Email</h1>
         <form onSubmit={formikEmail.handleSubmit}>
           <Container className="formGaps">
@@ -212,7 +279,7 @@ function AccountSettingsPage(passedUser: any) {
             </Grid>
           </Container>
         </form>
-      </fieldset>
+      </Paper>
     );
   }
 
@@ -258,7 +325,7 @@ function AccountSettingsPage(passedUser: any) {
     });
 
     return (
-      <fieldset className="loginSquare">
+      <Paper variant="outlined" className="loginSquare">
         <h1>Change Password</h1>
         <form onSubmit={formikPassword.handleSubmit}>
           <Container className="formGaps">
@@ -311,38 +378,91 @@ function AccountSettingsPage(passedUser: any) {
             </Grid>
           </Container>
         </form>
-      </fieldset>
+      </Paper>
+    );
+  }
+
+  function DeleteAccountComponent() {
+    return <div>{deleteClicked ? <ClickDaButton /> : <NoClickDaButton />}</div>;
+  }
+
+  function ClickDaButton() {
+    return (
+      <div>
+        <h1>Are you absolutely sure?</h1>
+        <p>I'm not joking, it's really going to be completely gone.</p>
+        <ButtonGroup>
+          <Button variant="contained" onClick={() => order66()}>
+            Yes
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => setDeleteClicked(!deleteClicked)}
+          >
+            No
+          </Button>
+        </ButtonGroup>
+      </div>
+    );
+  }
+
+  function NoClickDaButton() {
+    return (
+      <div>
+        <h1>The nuclear button...</h1>
+        <Button
+          variant="contained"
+          onClick={() => setDeleteClicked(!deleteClicked)}
+        >
+          Delete Account?
+        </Button>
+        <p>Once you press this button there's no going back.</p>
+      </div>
     );
   }
 
   return (
     <div>
-      <Navbar />
-      <Typography fontSize={30}>
-        Hi, {userData?.profile.firstName + " " + userData?.profile.lastName}!
-      </Typography>
-      <Typography>Welcome to Account Settings!</Typography>
-      <List>
-        <ListItemButton
-          selected={selectItem == "1"}
-          onClick={() => setSelectedItem("1")}
-        >
-          <ListItem>Info</ListItem>
-        </ListItemButton>
-        <ListItemButton
-          selected={selectItem == "2"}
-          onClick={() => setSelectedItem("2")}
-        >
-          <ListItem>Change Email</ListItem>
-        </ListItemButton>
-        <ListItemButton
-          selected={selectItem == "3"}
-          onClick={() => setSelectedItem("3")}
-        >
-          <ListItem>Change Password</ListItem>
-        </ListItemButton>
-      </List>
-      <Container>{displayItem()}</Container>
+      <div style={{ textAlign: "center", marginBottom: "20px" }}>
+        <Typography fontSize={30}>
+          Hi, {userData?.profile.firstName + " " + userData?.profile.lastName}!
+        </Typography>
+        <Typography>Welcome to Account Settings!</Typography>
+      </div>
+      <hr />
+      <div className="account-wrapper">
+        <List className="account-box">
+          <ListItemButton
+            selected={selectItem == "1"}
+            onClick={() => setSelectedItem("1")}
+          >
+            <ListItem>Info</ListItem>
+          </ListItemButton>
+          <ListItemButton
+            selected={selectItem == "2"}
+            onClick={() => setSelectedItem("2")}
+          >
+            <ListItem>Change Email</ListItem>
+          </ListItemButton>
+          <ListItemButton
+            selected={selectItem == "3"}
+            onClick={() => setSelectedItem("3")}
+          >
+            <ListItem>Change Password</ListItem>
+          </ListItemButton>
+          <ListItemButton
+            selected={selectItem == "4"}
+            onClick={() => {
+              setSelectedItem("4");
+              setDeleteClicked(false);
+            }}
+          >
+            <ListItem>Delete Account</ListItem>
+          </ListItemButton>
+        </List>
+        <Container className="account-settings">{displayItem()}</Container>
+      </div>
     </div>
   );
 }

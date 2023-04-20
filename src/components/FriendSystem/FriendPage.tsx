@@ -2,33 +2,25 @@ import React, { useState } from "react";
 import User, { userConverter } from "../../data/User";
 import "../../styles/friendpage.css";
 import FriendBox from "./FriendBox";
-import FriendSearch from "./FriendSearch";
 import {
   Badge,
+  Box,
   Button,
-  CircularProgress,
   Drawer,
   Grid,
   Stack,
+  Typography,
 } from "@mui/material";
 import { db } from "../../firebase/config";
-import {
-  doc,
-  collection,
-  query,
-  where,
-  getDoc,
-  getDocs,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, collection, query, getDocs, updateDoc } from "firebase/firestore";
 import FriendRequests from "./FriendRequests";
 import CurrentSong, {
   RecentSongs,
-  TopSongs,
 } from "../SpotifyIntegration/SpotifyComponents";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import SpotifyAuthDeauth from "../SpotifyIntegration/SpotifyLogin";
 import { Navigate, useNavigate } from "react-router-dom";
+import Navbar from "../Navbar/Navbar";
+import LoadingPage from "../Navbar/Loading";
 
 export let user: User;
 
@@ -41,28 +33,48 @@ let dbPulled = false;
  * @param signedUser : string
  * @return {*} - FriendPage HTML
  */
-export default function FriendPage(currUser: { uCreds: string }) {
+export default function FriendPage(props: { uCreds: string; page: string }) {
   const [dbCall, setFriends] = useState(null);
-  const [pageSwitch, setSwitch] = useState(0);
   const navigate = useNavigate();
 
-  if (!dbPulled || dbCall == null) {
-    callDB(currUser.uCreds, setFriends);
+  if (!dbPulled || !dbCall) {
+    callDB(props.uCreds, setFriends);
   }
 
   const friendList = (
-    <div className="friends-list">
-      <h1>Friends List</h1>
-      {checkNullList(dbCall)}
-    </div>
+    <Grid
+      sx={{
+        border: "4px solid teal",
+        borderRadius: "25px",
+        overflow: "hidden",
+        gridTemplateRows: "75px 100%",
+        justifyItems: "center",
+      }}
+    >
+      <Typography variant="h4" align="center" padding={"10px"}>
+        <b>Friends List</b>
+      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          width: "100%",
+          height: "100%",
+          overflow: "hidden",
+          justifyContent: "center",
+          borderTop: "4px solid gray",
+          paddingTop: "1%",
+        }}
+      >
+        {checkNullList(dbCall)}
+      </Box>
+    </Grid>
   );
 
   const friendRequests = FriendRequests(user);
 
-  const search = <FriendSearch />;
-
   return (
     <div>
+      <Navbar />
       <div>
         <Grid
           container
@@ -72,7 +84,9 @@ export default function FriendPage(currUser: { uCreds: string }) {
         >
           <Button
             variant="contained"
-            onClick={() => setSwitch(0)}
+            onClick={() => {
+              navigate("/components/Friends");
+            }}
             style={{ margin: "15px" }}
           >
             Friends
@@ -81,20 +95,24 @@ export default function FriendPage(currUser: { uCreds: string }) {
             badgeContent={user !== undefined ? user.incomingRequests.length : 0}
             color="success"
           >
-            <Button variant="contained" onClick={() => setSwitch(1)}>
+            <Button
+              variant="contained"
+              onClick={() => {
+                navigate("/components/Friends/requests");
+              }}
+            >
               Requests
             </Button>
           </Badge>
-          <Button
-            variant="contained"
-            onClick={() => setSwitch(2)}
-            style={{ margin: "15px" }}
-          >
-            Search
-          </Button>
         </Grid>
       </div>
-      {pageSwitch == 0 ? friendList : pageSwitch == 1 ? friendRequests : search}
+      {props.page == "list" ? (
+        friendList
+      ) : props.page == "requests" ? (
+        friendRequests
+      ) : (
+        <div></div>
+      )}
     </div>
   );
 }
@@ -113,10 +131,14 @@ function checkNullList(friends: User[] | null) {
   // Returns a list of FriendBox if the user's friends list is not empty
   if (friends == null) {
     return (
-      <div className="loadFriend">
-        <h2>Loading Friends...</h2>
-        <CircularProgress />
-      </div>
+      <Stack
+        direction="column"
+        justifyItems="center"
+        alignItems="center"
+        spacing={2}
+      >
+        {LoadingPage("Loading Friends")}
+      </Stack>
     );
   }
   if (friends.length == 0) {
@@ -127,7 +149,14 @@ function checkNullList(friends: User[] | null) {
     );
   } else {
     return (
-      <div className="friendBlock">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          flexWrap: "wrap",
+          width: "100%",
+        }}
+      >
         {friends.map((friend) => {
           return (
             <div className="friend" key={friend.username}>
@@ -183,16 +212,7 @@ function checkNullList(friends: User[] | null) {
                         <li key={interest}>{interest}</li>
                       ))}
                     </ul>
-                    <Stack
-                      direction="row"
-                      justifyContent="center"
-                      alignItems="left"
-                      spacing={2}
-                      style={{ paddingLeft: "15px" }}
-                    >
-                      <TopSongs user={friend} small={true} limit={10} />
-                      <RecentSongs user={friend} small={true} limit={10} />
-                    </Stack>
+                    <RecentSongs user={friend} small={false} limit={10} />
                   </Stack>
                 </div>
               </Drawer>
@@ -220,9 +240,7 @@ class RemoveButton extends React.Component<IProps, IState> {
   render() {
     if (this.state.profileClicked) {
       return (
-        <Navigate
-          to={`/components/Profile#userid=${this.props.user.userid}`}
-        />
+        <Navigate to={`/components/Profile#userid=${this.props.user.userid}`} />
       );
     }
     return (
@@ -299,8 +317,7 @@ class RemoveButton extends React.Component<IProps, IState> {
                 marginLeft: "2px",
               }}
               onClick={() => {
-                // this.setState({ clicked: false });
-                console.log("changed for linting")
+                this.setState({ removeClicked: false });
               }}
             >
               Cancel
@@ -312,56 +329,31 @@ class RemoveButton extends React.Component<IProps, IState> {
   }
 }
 
-/**
- * When called, sends a friend request to the given user
- *
- * @export
- * @param {string} [friendUsername] - username of the friend to send a request to
- */
-export async function addFriend(friendUsername?: string) {
-  if (confirm("Add Friend " + friendUsername + "?")) {
-    if (friendUsername !== undefined) {
-      await getDocs(
-        query(
-          collection(db, "Users"),
-          where("profile.username", "==", friendUsername)
-        )
-      ).then(async (id) => {
-        if (id.docs[0] !== undefined) {
-          const friend: User | undefined = userConverter.fromFirestore(
-            id.docs[0]
-          );
+// TODO Document this
+export async function addFriend(currUser: User, friend: User) {
+  if (friend && currUser) {
+    if (!currUser.friendsList.includes(friend.userid)) {
+      currUser.outgoingRequests.push(friend.userid);
+      friend.incomingRequests.push(currUser.userid);
 
-          if (friend !== undefined) {
-            if (!user.friendsList.includes(friend.userid)) {
-              user.outgoingRequests.push(friend.userid);
-              friend.incomingRequests.push(user.userid);
+      // update outgoing requests in FireStore
+      await updateDoc(
+        doc(db, "Users", currUser.userid),
+        "outgoingRequests",
+        currUser.outgoingRequests
+      );
 
-              // update outgoing requests in FireStore
-              await updateDoc(
-                doc(db, "Users", user.userid),
-                "outgoingRequests",
-                user.outgoingRequests
-              );
+      // update incoming requests in FireStore
+      await updateDoc(
+        doc(db, "Users", friend.userid),
+        "incomingRequests",
+        friend.incomingRequests
+      );
 
-              // update incoming requests in FireStore
-              await updateDoc(
-                doc(db, "Users", friend.userid),
-                "incomingRequests",
-                friend.incomingRequests
-              );
-
-              dbPulled = false;
-              alert("Added " + friend.profile.userName);
-              window.location.reload();
-            } else {
-              alert("This user is already your friend");
-            }
-          }
-        } else {
-          alert("This user does not exist");
-        }
-      });
+      dbPulled = false;
+      alert("Added " + friend.profile.userName);
+    } else {
+      alert("This user is already your friend");
     }
   }
 }
@@ -373,86 +365,76 @@ export async function addFriend(friendUsername?: string) {
  * @param {User} friend - friend to be removed
  */
 export async function removeFriend(friend: User) {
-  if (
-    confirm("Are you sure you want to remove " + friend.profile.userName + "?")
-  ) {
-    if (friend !== undefined) {
-      // get indicies and remove friend from user's friends list
-      // and and user from friend's friend list
-      const indexFriend = user.friendsList.indexOf(friend.userid, 0);
-      const indexUser = friend.friendsList.indexOf(user.userid, 0);
+  if (friend !== undefined) {
+    // get indicies and remove friend from user's friends list
+    // and and user from friend's friend list
+    const indexFriend = user.friendsList.indexOf(friend.userid, 0);
+    const indexUser = friend.friendsList.indexOf(user.userid, 0);
 
-      if (indexFriend < 0 || indexUser < 0) {
-        alert("You are not friends");
-        return;
-      }
-
-      indexUser > -1 ? user.friendsList.splice(indexFriend, 1) : null;
-      indexFriend > -1 ? friend.friendsList.splice(indexUser, 1) : null;
-
-      // Update User's and friend's friends list to reflect the removal
-      await updateDoc(
-        doc(db, "Users", user.userid),
-        "friendsList",
-        user.friendsList
-      ).then(async () => {
-        await updateDoc(
-          doc(db, "Users", friend.userid),
-          "friendsList",
-          friend.friendsList
-        ).then(() => {
-          dbPulled = false;
-          alert("Removed " + friend.profile.userName);
-          window.location.reload();
-        });
-      });
+    if (indexFriend < 0 || indexUser < 0) {
+      alert("You are not friends");
+      return;
     }
-  }
-}
 
-/**
- * When called and sent a user object, the page will redirect to that user's profile
- *
- * @export
- * @param {User} friend - friend whose profile you want to navigate
- */
-export function goToProfile(friend: User) {
-  // Dummy function for navigating to user's profile
-  alert("Cannot go to " + friend.username + "'s Profile");
+    indexUser > -1 ? user.friendsList.splice(indexFriend, 1) : null;
+    indexFriend > -1 ? friend.friendsList.splice(indexUser, 1) : null;
+
+    // Update User's and friend's friends list to reflect the removal
+    await updateDoc(
+      doc(db, "Users", user.userid),
+      "friendsList",
+      user.friendsList
+    ).then(async () => {
+      await updateDoc(
+        doc(db, "Users", friend.userid),
+        "friendsList",
+        friend.friendsList
+      ).then(() => {
+        dbPulled = false;
+        alert("Removed " + friend.profile.userName);
+      });
+    });
+  }
 }
 
 async function callDB(signedUser: string, setFriends: any) {
   // Query Firestore for information from currently logged in user
-  const querySnapshot = await getDoc(
-    doc(db, "Users", signedUser).withConverter(userConverter)
-  );
-  console.log("Grabbing User Object");
 
-  const dbUser = querySnapshot.data();
-  if (dbUser !== undefined) {
-    user = dbUser;
-    console.log(user);
-  }
-
+  // Friends list query from FireStore\
   const friends = new Array<User>();
-  // Friends list query from FireStore
-  if (user.friendsList.length > 0) {
-    await getDocs(
-      query(collection(db, "Users"), where("userid", "in", user.friendsList))
-    ).then((friendList) => {
-      friendList.forEach((user) => {
-        console.log("Getting Friends");
-        const data: User | undefined = userConverter.fromFirestore(user);
-        if (data !== undefined) {
-          friends.push(data);
+  await getDocs(query(collection(db, "Users"))).then((friendList) => {
+    console.log("Pulling users for friends list");
+    const users = new Array<User>();
+    friendList.forEach((user) => {
+      const data: User | undefined = userConverter.fromFirestore(user);
+      if (data !== undefined) {
+        users.push(data);
+      }
+    });
+
+    const tmpUser = users.find((usr) => usr.userid === signedUser);
+
+    if (tmpUser !== undefined) {
+      user = tmpUser;
+      users.forEach((friend) => {
+        if (friend !== undefined && user.friendsList.includes(friend.userid)) {
+          friends.push(friend);
         }
       });
-      dbPulled = true;
       setFriends(friends);
-    });
-  } else {
-    // set friends to be an empty list if friends list is empty
-    setFriends(friends);
-    dbPulled = true;
-  }
+      dbPulled = true;
+
+      user.friendsList.forEach((friendId) => {
+        if(!friends.find(friend => friend.userid === friendId)) {
+          const index = user.friendsList.indexOf(friendId, 0);
+          if (index > -1) {
+            user.friendsList.splice(index, 1);
+            updateDoc(doc(db, "Users", user.userid),
+            "friendsList",
+            user.friendsList)
+          }
+        }
+      })
+    }
+  });
 }
