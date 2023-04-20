@@ -12,10 +12,9 @@ import {
   where,
 } from "firebase/firestore";
 import Post from "../../data/Post";
-import PostView from "../Post/PostView";
 import ForumPost from "./ForumPost";
 import PostInput from "./PostInput";
-import { Modal, Box, CircularProgress, Button } from "@mui/material";
+import { CircularProgress, Button } from "@mui/material";
 import "../../styles/forum.css";
 
 function Forum(props: any) {
@@ -23,10 +22,6 @@ function Forum(props: any) {
   // State for posts must be set with any so the modal knows
   // which component to render without having to use .map()
   const [posts, setPosts] = useState<Post[]>([]);
-  // For the modal to determine which post was clicked
-  const [postIndex, setPostIndex] = useState(0);
-  // Boolean to show the modal or not
-  const [open, setOpen] = useState(false);
   // Shows loading while fetchPosts() is running
   const [loading, setLoading] = useState(false);
   // Number of posts per page
@@ -90,17 +85,6 @@ function Forum(props: any) {
     window.location.reload();
   };
 
-  /**
-   * Determines the post that was clicked on
-   * to show on the modal
-   * @param p index number
-   */
-  const handleOpen = (p: number) => {
-    console.log("Post Clicked...", p);
-    setPostIndex(p);
-    setOpen(true);
-  };
-
   const handleLoadMore = () => {
     setPageSize(pageSize + 10);
   };
@@ -117,11 +101,7 @@ function Forum(props: any) {
         <>
           {posts.map((post: Post, index) => {
             return (
-              <div
-                key={index}
-                onClick={() => handleOpen(index)}
-                className="post-handler"
-              >
+              <div key={index}>
                 <ForumPost
                   id={post.postID}
                   userID={post.userID}
@@ -147,40 +127,6 @@ function Forum(props: any) {
               </Button>
             )}
           </div>
-          <Modal open={open} onClose={() => setOpen(false)}>
-            <Box
-              sx={{
-                display: "flex",
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                width: 0.6,
-                bgcolor: "background.paper",
-                border: "2px solid #000",
-                boxShadow: 24,
-                p: 4,
-              }}
-            >
-              {/* This expression is required or else this code will somehow
-                run before the db call is made and return an typeerror */}
-              {posts.length > 0 ? (
-                <PostView
-                  key={postIndex}
-                  id={posts[postIndex].postID}
-                  userID={posts[postIndex].userID}
-                  postDate={posts[postIndex].postDate}
-                  description={posts[postIndex].description}
-                  interest={posts[postIndex].interest}
-                  imageURL={posts[postIndex].imageURL}
-                  ratings={posts[postIndex].ratings}
-                  rating={posts[postIndex].calculateRating()}
-                />
-              ) : (
-                <></>
-              )}
-            </Box>
-          </Modal>
         </>
       ) : (
         <>
