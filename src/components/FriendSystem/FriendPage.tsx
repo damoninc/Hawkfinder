@@ -19,13 +19,13 @@ import CurrentSong, {
 } from "../SpotifyIntegration/SpotifyComponents";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Navigate, useNavigate } from "react-router-dom";
-import Navbar from "../Navbar/Navbar";
 import LoadingPage from "../Navbar/Loading";
 import { boxTheme } from "../../App";
 
 export let user: User;
 
 let dbPulled = false;
+export let friends = null;
 
 /**
  * Generates a HTML block that displays a user's friend list by creating
@@ -41,6 +41,7 @@ export default function FriendPage(props: { uCreds: string; page: string }) {
   if (!dbPulled || !dbCall) {
     callDB(props.uCreds, setFriends);
   }
+  friends = dbCall;
 
   const friendList = (
     <Grid
@@ -67,58 +68,75 @@ export default function FriendPage(props: { uCreds: string; page: string }) {
           paddingTop: "1%",
         }}
       >
-        {checkNullList(dbCall)}
+        {checkNullList(dbCall, props.page)}
       </Box>
     </Grid>
   );
 
   const friendRequests = FriendRequests(user);
-
-  return (
-    <div>
+  if (props.page == "sidebar") {
+    return (
+      <Box
+        width={"100%"}
+        height={"100%"}
+        sx={{
+          border: boxTheme.border,
+          borderColor: boxTheme.borderColor,
+          background: boxTheme.backgroundSecondary,
+        }}
+      >
+        <Typography>Sidebar</Typography>
+      </Box>
+    );
+  } else {
+    return (
       <div>
-        <Grid
-          container
-          direction="row"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Button
-            variant="contained"
-            onClick={() => {
-              navigate("/components/Friends");
-            }}
-            style={{ margin: "15px" }}
-          >
-            Friends
-          </Button>
-          <Badge
-            badgeContent={user !== undefined ? user.incomingRequests.length : 0}
-            color="success"
+        <div>
+          <Grid
+            container
+            direction="row"
+            justifyContent="center"
+            alignItems="center"
           >
             <Button
               variant="contained"
               onClick={() => {
-                navigate("/components/Friends/requests");
+                navigate("/components/Friends");
               }}
+              style={{ margin: "15px" }}
             >
-              Requests
+              Friends
             </Button>
-          </Badge>
-        </Grid>
+            <Badge
+              badgeContent={
+                user !== undefined ? user.incomingRequests.length : 0
+              }
+              color="success"
+            >
+              <Button
+                variant="contained"
+                onClick={() => {
+                  navigate("/components/Friends/requests");
+                }}
+              >
+                Requests
+              </Button>
+            </Badge>
+          </Grid>
+        </div>
+        {props.page == "list" ? (
+          friendList
+        ) : props.page == "requests" ? (
+          friendRequests
+        ) : (
+          <div></div>
+        )}
       </div>
-      {props.page == "list" ? (
-        friendList
-      ) : props.page == "requests" ? (
-        friendRequests
-      ) : (
-        <div></div>
-      )}
-    </div>
-  );
+    );
+  }
 }
 
-function checkNullList(friends: User[] | null) {
+function checkNullList(friends: User[] | null, page: string) {
   const [open, setOpen] = React.useState("");
 
   function handleOpen(userid: string) {
@@ -148,6 +166,8 @@ function checkNullList(friends: User[] | null) {
         <h2>No Friends Found :(</h2>
       </div>
     );
+  } else if (page == "sidebar") {
+    return <div></div>;
   } else {
     return (
       <div
@@ -429,7 +449,7 @@ export async function removeFriend(friend: User) {
   }
 }
 
-async function callDB(signedUser: string, setFriends: any) {
+export async function callDB(signedUser: string, setFriends: any) {
   // Query Firestore for information from currently logged in user
 
   // Friends list query from FireStore\

@@ -22,7 +22,7 @@ import isUserLoggin from "./components/Authentication/TestAuth";
 import AccountSettingsPage from "./components/ProfileSystem/AccountSettingsPage";
 import ReAuth from "./components/Authentication/Reauth";
 import Navbar from "./components/Navbar/Navbar";
-import { useTheme } from "@mui/material";
+import { Box, Grid, Stack, useTheme } from "@mui/material";
 
 export const boxTheme = {
   backgroundSecondary: "#FAFAFA",
@@ -105,7 +105,14 @@ function App() {
             path="/components/Friends"
             element={
               isUserLoggin(user) ? (
-                <FriendPage uCreds={user!.uid} page="list" />
+                <Grid container width="100%">
+                  <Grid item width="100%">
+                    <FriendPage uCreds={user!.uid} page="list" />
+                  </Grid>
+                  <Grid item width="300px">
+                    <FriendPage uCreds={user!.uid} page="sidebar" />
+                  </Grid>
+                </Grid>
               ) : (
                 <Navigate to="/components/Interceptor" />
               )
