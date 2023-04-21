@@ -288,8 +288,8 @@
   .about-and-info {
     max-width: 1000px;
     margin-top: 10px;
-    margin-left: 15px;
-    margin-right: 15px;
+    margin-left: 2px;
+    margin-right: 2px;
   }
   .spotify-box,
   .about-and-info-box {
@@ -297,19 +297,21 @@
     justify-content: center;
   }
   .current-song {
-    margin-right: 10px;
-    margin-left: 10px;
+    margin-right: 5px;
+    margin-left: 5px;
+    max-width: 18em;
   }
 
   .top-songs {
     margin-right: 10px;
     margin-left: 10px;
+    max-width: 15em;
   }
   .about {
-    margin-left: 15px;
-    margin-right: 15px;
+    margin-left: 6px;
+    margin-right: 6px;
     margin-top: 55px;
-    width: 400px;
+    max-width: 290px;
     height: 266px;
     display: inline-flex;
     align-items: flex-start;
@@ -317,11 +319,11 @@
   }
 
   .interests {
-    margin-left: 15px;
-    margin-right: 15px;
+    margin-left: 6px;
+    margin-right: 6px;
     margin-top: 55px;
     margin-bottom: 55px;
-    width: 400px;
+    max-width: 290px;
     height: 266px;
     display: inline-flex;
     align-items: flex-start;

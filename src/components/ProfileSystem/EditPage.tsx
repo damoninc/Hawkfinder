@@ -325,12 +325,12 @@ useEffect(() => {
     
     return (
       <>
-        <ImageList sx={{ width: '100%', height: 400, borderStyle:'solid', columnGap:'noraml'}} cols={columns?.colCount} rowHeight={columns?.rowPixels}>
+        <ImageList sx={{ width: '100%', height: 400, rowGap:'0'}} cols={columns?.colCount} rowHeight={columns?.rowPixels}>
           {imageURLs.map((item, index) => (
             <ImageListItem
               sx={{
                 width: columns?.rowPixels,
-                height: columns?.rowPixels,
+                height: columns?.rowPixels
               }}
               key={item}
             >

@@ -143,7 +143,7 @@ function ProfilePage(passedUser: any) {
         </Paper>
       </Box>
       <br />
-      {/* <Forum uCreds={uid} /> */}
+      {/* <Forum passedUser={uid} /> */}
     </div>
   );
 }
