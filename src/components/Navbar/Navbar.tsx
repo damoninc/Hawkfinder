@@ -14,7 +14,7 @@ import MailIcon from "@mui/icons-material/Mail";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { Button, TextField, useTheme } from "@mui/material";
+import { Button, TextField, useMediaQuery, useTheme } from "@mui/material";
 import { auth } from "../../firebase/config";
 import PeopleIcon from "@mui/icons-material/People";
 import { useFormik } from "formik";
@@ -373,14 +373,6 @@ export default function Navbar() {
             >
               <AccountCircle />
             </IconButton>
-            <IconButton               
-              size="large"
-              aria-label="open drawer"
-              aria-haspopup="true"
-              onClick={() => {openFriendBar(!open)}}
-              color="inherit">
-              <MenuOpenIcon />
-            </IconButton>
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -397,7 +389,9 @@ export default function Navbar() {
               size="large"
               aria-label="show more"
               aria-haspopup="true"
-              onClick={() => {openFriendBar(!open)}}
+              onClick={() => {
+                console.log("clickcing", open)
+                openFriendBar(!open)}}
               color="inherit">
               <MenuOpenIcon />
             </IconButton>

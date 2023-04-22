@@ -49,7 +49,6 @@ interface IState {
   mainClicked: boolean;
   smallClick: boolean;
   modalClick: boolean;
-  refresh: number;
 }
 
 export default class UserBox extends React.Component<IProps, IState> {
@@ -60,7 +59,6 @@ export default class UserBox extends React.Component<IProps, IState> {
       mainClicked: false,
       smallClick: false,
       modalClick: false,
-      refresh: 1,
     };
   }
 

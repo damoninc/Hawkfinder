@@ -133,22 +133,23 @@ function DisplaySong(
 }
 
 function DisplaySongSmall(song: Song, scrolling: boolean) {
-  const text = `Listening to: ${song.name} by ${
-    song.artists.length == 1
-      ? song.artists[0].name
-      : song.artists[0].name + " and others"
-  }`;
   if (scrolling) {
     return (
-      <Marquee gradient={false} style={{ width: "120px" }}>
-        <Typography>
-          Listening to: <b>{song.name}</b> by{" "}
+      <Marquee
+      play={
+        scrolling
+      }
+      speed={20}
+      gradient={false}
+      style={{ width: screen.width < 600 ? "100%" : "150px" }}
+    >
+      <Typography variant="body2" sx={{ marginRight: "15px" }}>
+      Listening to: <b>{song.name}</b> by{" "}
           {song.artists.length == 1
             ? song.artists[0].name
             : song.artists[0].name + " and others"}
-          {"   "}
-        </Typography>
-      </Marquee>
+      </Typography>
+    </Marquee>
     );
   } else {
     return (
@@ -326,7 +327,7 @@ export default class CurrentSong extends spotifyComponent {
         this.state.result.item.duration_ms,
       ];
       return (
-        <div style={{ padding: "10px" }}>
+        <div style={{ padding: this.props.small ? "0px" : "10px" }}>
           {!this.props.small ? (
             <div>
               <h3 style={{ fontSize: "12px" }}>Listening to on Spotify</h3>

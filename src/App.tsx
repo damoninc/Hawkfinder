@@ -12,7 +12,6 @@ import React from "react";
 import LoginScreen from "./components/Authentication/LoginScreen";
 import SignUpScreen from "./components/Authentication/SignUpScreen";
 import ProfilePage from "./components/ProfileSystem/ProfilePage";
-import SpotifyPage from "./components/SpotifyIntegration/SpotifyPage";
 import InterceptorScreen from "./components/Authentication/InterceptorScreen";
 import SignedIn from "./components/Authentication/SignedInScreen";
 import SearchPage from "./components/Navbar/Search";
@@ -47,6 +46,8 @@ function App() {
   boxTheme.backgroundSecondary =
     theme.palette.mode == "dark" ? "#454545" : "#F6F6F6";
   boxTheme.borderColor = theme.palette.primary.dark;
+
+  const gridTheme = {marginLeft: "20px"}
 
   return (
     <div className="app">
@@ -97,7 +98,14 @@ function App() {
             path="/components/Forum"
             element={
               isUserLoggin(user) ? (
-                <Forum passedUser={""} userID={user?.uid} />
+                <Grid container>
+                  <Grid item xs={12} md={8} lg={9} xl={10} sx={gridTheme}>
+                    <Forum passedUser={""} userID={user?.uid} />
+                  </Grid>
+                  <Grid item xs={0} md={4} lg={3} xl={2}>
+                    <FriendPage uCreds={user!.uid} page="sidebar" />
+                  </Grid>
+                </Grid>
               ) : (
                 <Navigate to="/components/Interceptor" />
               )
@@ -117,17 +125,16 @@ function App() {
             path="/components/Friends/requests"
             element={
               isUserLoggin(user) ? (
-                <FriendPage uCreds={user!.uid} page="requests" />
-              ) : (
-                <Navigate to="/components/Interceptor" />
-              )
-            }
-          />
-          <Route
-            path="/components/Spotify"
-            element={
-              isUserLoggin(user) ? (
-                <SpotifyPage uCreds={user!.uid} />
+              <Grid
+                container
+              >
+                  <Grid item xs={12} md={8} lg={9} xl={10} sx={gridTheme}>
+                  <FriendPage uCreds={user!.uid} page="requests" />
+                </Grid>
+                <Grid item xs={0} md={4} lg={3} xl={2}>
+                  <FriendPage uCreds={user!.uid} page="sidebar" />
+                </Grid>
+              </Grid>
               ) : (
                 <Navigate to="/components/Interceptor" />
               )
@@ -167,15 +174,11 @@ function App() {
             path="/components/Profile"
             element={
               isUserLoggin(user) ? (
-                <Grid
-                  container
-                  width={screen.width}
-                  gridTemplateColumns={"100%px 300px"}
-                >
-                  <Grid item>
+                <Grid container>
+                  <Grid item xs={12} md={8} lg={9} xl={10} sx={gridTheme}>
                     <ProfilePage uCreds={user?.uid} />
                   </Grid>
-                  <Grid item>
+                  <Grid item xs={0} md={4} lg={3} xl={2}>
                     <FriendPage uCreds={user!.uid} page="sidebar" />
                   </Grid>
                 </Grid>
@@ -212,7 +215,14 @@ function App() {
             path="/components/Search"
             element={
               isUserLoggin(user) ? (
-                <SearchPage uCreds={user?.uid} />
+                <Grid container>
+                  <Grid item xs={12} md={8} lg={9} xl={10} sx={gridTheme}>
+                    <SearchPage uCreds={user?.uid} />
+                  </Grid>
+                  <Grid item xs={0} md={4} lg={3} xl={2}>
+                    <FriendPage uCreds={user!.uid} page="sidebar" />
+                  </Grid>
+                </Grid>
               ) : (
                 <Navigate to="/components/Interceptor" />
               )
@@ -225,5 +235,17 @@ function App() {
     </div>
   );
 }
+
+function componentWithSidebar(component: any, props : any) {
+  <Grid container>
+    <Grid item xs={12} md={8} lg={9}>
+      {component(props)}
+    </Grid>
+    <Grid item xs={0} md={4} lg={3}>
+      <FriendPage uCreds={props.user!.uid} page="sidebar" />
+    </Grid>
+</Grid>
+}
+
 
 export default App;

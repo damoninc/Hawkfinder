@@ -10,6 +10,8 @@ import {
   Grid,
   Stack,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { db } from "../../firebase/config";
 import { doc, collection, query, getDocs, updateDoc } from "firebase/firestore";
@@ -25,16 +27,18 @@ import { boxTheme } from "../../App";
 export let user: User;
 
 let dbPulled = false;
+
 export let openFriendBar: React.Dispatch<React.SetStateAction<boolean>>;
 export let open: boolean;
-export let friends: User[] | null = null;
+export let friends: User[] | null = null; 
 
-window.addEventListener("resize", (event) => {
-  if (screen.width < 900) {
-    console.log("resizing");
-    openFriendBar(false);
+window.addEventListener("resize", function (event) {
+  if (screen.width > 900 && open) {
+    console.log(open)
+    console.log("resizing")
+    openFriendBar(false)
   }
-});
+})
 
 /**
  * Generates a HTML block that displays a user's friend list by creating
@@ -45,15 +49,17 @@ window.addEventListener("resize", (event) => {
  */
 export default function FriendPage(props: { uCreds: string; page: string }) {
   const [dbCall, setFriends] = useState(null);
-  const [sidebarOpen, setSidebar] = useState(!(screen.width < 900));
+  const [sidebarOpen, setSidebar] = useState(false);
   const navigate = useNavigate();
-  openFriendBar = setSidebar;
+  const theme = useTheme();
+  const md = useMediaQuery(theme.breakpoints.up("md"))
+
   open = sidebarOpen
+  openFriendBar = setSidebar;
 
   if (!dbPulled || !dbCall) {
     callDB(props.uCreds, setFriends);
   }
-
   const friendList = (
     <Grid
       sx={{
@@ -87,7 +93,8 @@ export default function FriendPage(props: { uCreds: string; page: string }) {
   const friendRequests = FriendRequests(user);
 
   if (props.page == "sidebar") {
-    console.log("sidebar");
+    console.log(sidebarOpen)
+  
     let drawer = <div></div>;
     if (!friends) {
       drawer = LoadingPage("loading friends");
@@ -118,11 +125,11 @@ export default function FriendPage(props: { uCreds: string; page: string }) {
         </Box>
       );
     }
-    const drawerOverlay = screen.width < 900 ? "temporary" : "persistent";
+    const drawerDisplay = md ? "persistent" : "temporary" 
     return (
       <Drawer
-        variant={drawerOverlay}
-        open={sidebarOpen}
+        variant={drawerDisplay}
+        open={sidebarOpen || md}
         onClose={() => {
           setSidebar(false);
         }}
@@ -139,6 +146,8 @@ export default function FriendPage(props: { uCreds: string; page: string }) {
             width: "270px",
             paddingTop: "75px",
             background: boxTheme.backgroundSecondary,
+            borderLeft: boxTheme.border,
+            borderColor: boxTheme.borderColor
           },
         }}
       >

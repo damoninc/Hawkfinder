@@ -60,11 +60,10 @@ export default class SearchPage extends React.Component<IProps, IState> {
         <Box
           className="search"
           sx={{
-            border: "4px solid",
-            borderTop: "none",
+            border: boxTheme.border,
             borderColor: boxTheme.borderColor,
-            borderBottomLeftRadius: "25px",
-            borderBottomRightRadius: "25px",
+            borderRadius: "25px",
+            background: boxTheme.backgroundSecondary,
             overflow: "hidden",
             gridTemplateRows: "75px 100%",
             justifyItems: "center",

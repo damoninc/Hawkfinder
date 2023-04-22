@@ -75,12 +75,7 @@ export default class FriendBox extends React.Component<IProps, IState> {
             <Typography variant="body1" sx={{ textAlign: "left" }}>
               <b>{`${this.props.friend.profile.firstName} ${this.props.friend.profile.lastName}`}</b>
             </Typography>
-            <Typography
-              variant="body2"
-              sx={{ textAlign: "left", paddingLeft: "10px" }}
-            >
-              {`@${this.props.friend.profile.userName.toLocaleLowerCase()}`}
-            </Typography>
+              <CurrentSong user={this.props.friend} small={true} />
           </Stack>
         </div>
       );
@@ -92,11 +87,13 @@ export default class FriendBox extends React.Component<IProps, IState> {
             width: 150,
             height: 200,
             border: "4px solid",
+            overflow:"hidden",
             borderColor: boxTheme.borderColor,
             borderRadius: "25px",
             gridTemplateRows: "80% 20%",
             background: boxTheme.backgroundPrimary,
             justifyContent:"center",
+            justifyItems: "center",
             alignItems:"center"
           }}
         >
@@ -115,8 +112,9 @@ export default class FriendBox extends React.Component<IProps, IState> {
               {this.props.friend.profile.lastName}
             </h3>
           </Stack>
-          <CurrentSong user={this.props.friend} small={true} />
-
+          <Box width={"95%"} overflow="hidden">
+            <CurrentSong user={this.props.friend} small={true} />
+          </Box>
         </Box>
       );
     }
