@@ -32,15 +32,14 @@
 }
 
 .post-img-container {
-  display: flex;
-  margin: 0;
+  display: block;
   justify-content: center;
+  margin-bottom: 30px;
 }
 
 .post-img {
-  height: 140px;
-  max-width: 250px;
-  border-radius: 5px;
+  width: 100%;
+  object-fit: contain;
 }
 
 .post-description {
@@ -53,8 +52,8 @@
   align-items: center;
   width: 80px;
   /* margin-right: auto; */
-  position: absolute;
-  bottom: 10%;
+  position: relative;
+  margin-bottom: 15px;
 }
 
 .ratings > button {
@@ -64,10 +63,9 @@
 }
 
 .post-interest {
-  position: absolute;
+  display: inline-block;
+  position: relative;
   font-weight: bold;
-  bottom: 1%;
-  left: 1%;
 }
 
 .rating-button {
@@ -89,9 +87,8 @@
 }
 
 .post-date {
-  position: absolute;
+  display: inline-block;
+  position: relative;
   font-size: 0.85em;
   font-weight: bold;
-  bottom: 1%;
-  right: 1%;
 }

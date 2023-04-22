@@ -289,6 +289,7 @@ function ForumPost(props: any) {
                 bottom: 0,
                 position: "absolute",
                 color: "turquoise",
+                fontVariant: "",
               }}
             >
               {fullName}
@@ -301,14 +302,12 @@ function ForumPost(props: any) {
         >
           {props.description}
         </Typography>
-        <Box sx={{ border: "red", mb: "60px", pb: "10px" }}>
-          <div className="post-img-container">
-            {props.imageURL !== "" ? (
-              <img className="post-img" src={image} />
-            ) : (
-              <></>
-            )}
-          </div>
+        <Box className="post-img-container" sx={{}}>
+          {props.imageURL !== "" ? (
+            <img className="post-img" src={image} />
+          ) : (
+            <></>
+          )}
         </Box>
 
         <Box className="ratings" sx={{}}>
@@ -350,10 +349,14 @@ function ForumPost(props: any) {
             )}
           </div>
         </Box>
-        <span className="post-interest">{props.interest}</span>
-        {/* TODO: Consider changing the format of post date to something else */}
-        {/* <span className="post-date">{props.postDate.toDateString()}</span> */}
-        <span className="post-date">{timeSince(props.postDate) + " ago"}</span>
+        <Box sx={{ justifyContent: "space-between", display: "flex" }}>
+          <span className="post-interest">{props.interest}</span>
+          {/* TODO: Consider changing the format of post date to something else */}
+          {/* <span className="post-date">{props.postDate.toDateString()}</span> */}
+          <span className="post-date">
+            {timeSince(props.postDate) + " ago"}
+          </span>
+        </Box>
       </Box>
     </Paper>
   );
