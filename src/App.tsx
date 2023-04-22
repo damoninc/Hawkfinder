@@ -24,6 +24,7 @@ import Navbar from "./components/Navbar/Navbar";
 import NotFound from "./components/Authentication/NotFoundScreen";
 import ResetPasswordEmail from "./components/Authentication/ForgotPassword";
 import { Box, Grid, Stack, useTheme } from "@mui/material";
+import FriendRequests from "./components/FriendSystem/FriendRequests";
 
 export const boxTheme = {
   backgroundSecondary: "#FAFAFA",
@@ -47,7 +48,7 @@ function App() {
     theme.palette.mode == "dark" ? "#454545" : "#F6F6F6";
   boxTheme.borderColor = theme.palette.primary.dark;
 
-  const gridTheme = {marginLeft: "20px"}
+  const gridTheme = {marginLeft: "0px"}
 
   return (
     <div className="app">
@@ -129,7 +130,7 @@ function App() {
                 container
               >
                   <Grid item xs={12} md={8} lg={9} xl={10} sx={gridTheme}>
-                  <FriendPage uCreds={user!.uid} page="requests" />
+                  <FriendRequests />
                 </Grid>
                 <Grid item xs={0} md={4} lg={3} xl={2}>
                   <FriendPage uCreds={user!.uid} page="sidebar" />

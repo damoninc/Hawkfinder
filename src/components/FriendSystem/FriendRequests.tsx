@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import User, { userConverter } from "../../data/User";
 import "../../styles/friendrequest.css";
-import * as fp from "./FriendPage";
-import { Box, CircularProgress, Grid, Stack, Typography } from "@mui/material";
+import { Box, CircularProgress, Grid, Stack, Typography, Button, Badge } from "@mui/material";
 import { db } from "../../firebase/config";
 import {
   doc,
@@ -14,8 +13,12 @@ import {
 } from "firebase/firestore";
 import UserBox from "./UserBox";
 import { boxTheme } from "../../App";
+import { user } from "./FriendPage";
+import { useNavigate } from "react-router-dom";
+import LoadingPage from "../Navbar/Loading";
 
 let dbPulled = false;
+let currUser: User;
 
 /**
  * Generates a HTML block that displays a user's friend list by creating
@@ -24,21 +27,24 @@ let dbPulled = false;
  *
  * @return {*} - FriendPage HTML
  */
-function FriendRequests(user: User) {
+export default function FriendRequests() {
   const [incoming, setIncoming] = useState(null);
   const [outgoing, setOutgoing] = useState(null);
-  if (!dbPulled || (!incoming && !outgoing)) {
-    callDB(user, setIncoming, setOutgoing);
-    return (
-      <div className="page">
-        <h1>Friend Requests</h1>
-        <div className="requests">
-          <CircularProgress />
-        </div>
-      </div>
-    );
+  const [refresh, setRefresh] = useState(false);
+  const navigate = useNavigate()
+  if (user) {
+    currUser = user
+  } else {
+    setTimeout(function() {
+      setRefresh(!refresh)
+    }, 1000)
   }
-  return (
+  if (currUser && (!dbPulled || (!incoming && !outgoing))) {
+    dbPulled = true
+    callDB(currUser, setIncoming, setOutgoing);
+  }
+
+  const requests = (    
     <Grid
       sx={{
         border: "4px solid teal",
@@ -66,7 +72,7 @@ function FriendRequests(user: User) {
           paddingTop: "1%",
           paddingLeft: "5%",
           paddingRight: "5%",
-          paddingBottom: "1%",
+          paddingBottom: "5%",
           alignItems: "top",
         }}
       >
@@ -84,23 +90,78 @@ function FriendRequests(user: User) {
         >
           <b>Outgoing Requests</b>
         </Typography>
-        {IncomingRequests(user, incoming)}
-        {OutgoingRequests(user, outgoing)}
+        {IncomingRequests(currUser, incoming)}
+        {OutgoingRequests(currUser, outgoing)}
       </Box>
     </Grid>
-  );
+  ) 
+
+  return (
+    <div>
+      <div>
+        <Grid
+          container
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Button
+            variant="contained"
+            onClick={() => {
+              navigate("/components/Friends");
+            }}
+            style={{ margin: "15px" }}
+          >
+            Friends
+          </Button>
+          <Badge
+            badgeContent={
+              currUser !== undefined ? currUser.incomingRequests.length : 0
+            }
+            color="success"
+          >
+            <Button
+              variant="contained"
+              onClick={() => {
+                navigate("/components/Friends/requests");
+              }}
+            >
+              Requests
+            </Button>
+          </Badge>
+        </Grid>
+      </div>
+      {dbPulled ? requests :       
+      <Box
+        sx={{
+          border: boxTheme.border,
+          borderColor: boxTheme.borderColor,
+          background: boxTheme.backgroundSecondary,
+          borderRadius: "25px",
+          
+        }}
+      >
+        {LoadingPage("Loading Requests")}
+      </Box>}
+    </div>)
 }
 
 // Returns HTML of UserBoxes for incoming requests
 function IncomingRequests(currUser: User, incoming: Array<User> | null) {
   if (incoming == null) {
     return (
-      <div className="loadUser">
+      <Stack
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        spacing={3}
+        width="100%"
+      >       
         <Typography variant="h6" textAlign="center">
-          Loading Requests
+          Loading
         </Typography>
         <CircularProgress />
-      </div>
+      </Stack>
     );
   }
   const users =
@@ -142,12 +203,18 @@ function IncomingRequests(currUser: User, incoming: Array<User> | null) {
 function OutgoingRequests(currUser: User, outgoing: Array<User> | null) {
   if (outgoing == null) {
     return (
-      <div className="loadUser">
+      <Stack
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        spacing={3}
+        width="100%"
+      >       
         <Typography variant="h6" textAlign="center">
-          Loading Friends...
+          Loading
         </Typography>
         <CircularProgress />
-      </div>
+      </Stack>
     );
   }
   const users =
@@ -313,7 +380,7 @@ async function callDB(user: User, setIncoming: any, setOutgoing: any) {
     return;
   }
   if (user.incomingRequests.length > 0 || user.outgoingRequests.length > 0) {
-    console.log("DB Call");
+    console.log("db call: pulling friend requests");
     await getDocs(query(collection(db, "Users"))).then(async (inrequest) => {
       inrequest.forEach((indata) => {
         const data: User | undefined = userConverter.fromFirestore(indata);
@@ -365,8 +432,6 @@ async function callDB(user: User, setIncoming: any, setOutgoing: any) {
           newOutgoing
         );
       }
-      console.log(newOutgoing);
-      console.log(user.outgoingRequests);
       if (
         !newIncoming.every(
           (val, index) => val === user.incomingRequests[index]
@@ -392,5 +457,3 @@ async function callDB(user: User, setIncoming: any, setOutgoing: any) {
   }
   dbPulled = true;
 }
-
-export default FriendRequests;

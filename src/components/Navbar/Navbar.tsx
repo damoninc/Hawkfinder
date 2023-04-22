@@ -389,9 +389,7 @@ export default function Navbar() {
               size="large"
               aria-label="show more"
               aria-haspopup="true"
-              onClick={() => {
-                console.log("clickcing", open)
-                openFriendBar(!open)}}
+              onClick={() => {openFriendBar(!open)}}
               color="inherit">
               <MenuOpenIcon />
             </IconButton>

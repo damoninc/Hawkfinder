@@ -34,8 +34,6 @@ export let friends: User[] | null = null;
 
 window.addEventListener("resize", function (event) {
   if (screen.width > 900 && open) {
-    console.log(open)
-    console.log("resizing")
     openFriendBar(false)
   }
 })
@@ -60,7 +58,7 @@ export default function FriendPage(props: { uCreds: string; page: string }) {
   if (!dbPulled || !dbCall) {
     callDB(props.uCreds, setFriends);
   }
-  const friendList = (
+  const friendList = props.page == "list" ? (
     <Grid
       sx={{
         border: "4px solid teal",
@@ -88,17 +86,14 @@ export default function FriendPage(props: { uCreds: string; page: string }) {
         {checkNullList(dbCall, props.page)}
       </Box>
     </Grid>
-  );
-
-  const friendRequests = FriendRequests(user);
+  ) : <div></div>;
 
   if (props.page == "sidebar") {
-    console.log(sidebarOpen)
-  
     let drawer = <div></div>;
     if (!friends) {
-      drawer = LoadingPage("loading friends");
-    } else if (friends.length < 1) {
+      drawer = (LoadingPage("Loading Friends"))
+    }
+    else if (friends.length < 1) {
       drawer = (
         <Typography variant="h6" sx={{ textAlign: "center" }}>
           No Friends :(
@@ -195,11 +190,9 @@ export default function FriendPage(props: { uCreds: string; page: string }) {
         </div>
         {props.page == "list" ? (
           friendList
-        ) : props.page == "requests" ? (
-          friendRequests
-        ) : (
+        ) : 
           <div></div>
-        )}
+        }
       </div>
     );
   }
@@ -218,16 +211,7 @@ function checkNullList(friends: User[] | null, page: string) {
 
   // Returns a list of FriendBox if the user's friends list is not empty
   if (friends == null) {
-    return (
-      <Stack
-        direction="column"
-        justifyItems="center"
-        alignItems="center"
-        spacing={2}
-      >
-        {LoadingPage("Loading Friends")}
-      </Stack>
-    );
+    return (LoadingPage("Loading Friends"));
   }
   if (friends.length == 0) {
     return (
@@ -518,7 +502,6 @@ export async function removeFriend(friend: User) {
 
 export async function callDB(signedUser: string, setFriends: any) {
   // Query Firestore for information from currently logged in user
-
   // Friends list query from FireStore\
   const newfriends = new Array<User>();
   await getDocs(query(collection(db, "Users"))).then((friendList) => {

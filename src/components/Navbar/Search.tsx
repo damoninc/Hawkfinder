@@ -77,14 +77,6 @@ export default class SearchPage extends React.Component<IProps, IState> {
   }
 
   async callDB() {
-    const querySnapshot = await getDoc(
-      doc(db, "Users", this.props.uCreds!).withConverter(userConverter)
-    );
-    const dbUser = querySnapshot.data();
-    if (dbUser !== undefined) {
-      this.setState({ loggedUser: dbUser });
-    }
-
     let msg = this.state.search;
     const users: User[] = [];
 
@@ -100,6 +92,9 @@ export default class SearchPage extends React.Component<IProps, IState> {
       usersData.forEach((user) => {
         const data: User | undefined = userConverter.fromFirestore(user);
         if (data !== undefined) {
+          if (data.userid == this.props.uCreds) {
+            this.setState({ loggedUser: data });
+          }
           if (
             data.profile.userName.toLocaleLowerCase().includes(msg!) ||
             data.profile.firstName.toLocaleLowerCase().includes(msg!) ||
@@ -113,7 +108,7 @@ export default class SearchPage extends React.Component<IProps, IState> {
         }
       });
       this.setState({ dbCall: users });
-      console.log("db call");
+      console.log("db call: grabbing all users")
     });
   }
 

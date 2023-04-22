@@ -8,8 +8,8 @@ export default function LoadingPage(text: string) {
       justifyContent="center"
       alignItems="center"
       spacing={3}
-      sx={{ padding: "10%" }}
-      width="300px"
+      sx={{ padding: "30px" }}
+      width="100%"
     >
       <Typography variant="h5">
         <b>{text}</b>

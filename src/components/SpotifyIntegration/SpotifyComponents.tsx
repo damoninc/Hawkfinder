@@ -251,7 +251,6 @@ class spotifyComponent extends React.Component<IProps, IState> {
     }
   }
   async refreshToken() {
-    console.log("bad access token, refreshing");
     await axios
       .get("/api/spotify/refresh_token", {
         method: "GET",
