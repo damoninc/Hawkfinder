@@ -24,6 +24,14 @@ import ReAuth from "./components/Authentication/Reauth";
 import Navbar from "./components/Navbar/Navbar";
 import NotFound from "./components/Authentication/NotFoundScreen";
 import ResetPasswordEmail from "./components/Authentication/ForgotPassword";
+import { Box, Grid, Stack, useTheme } from "@mui/material";
+
+export const boxTheme = {
+  backgroundSecondary: "#FAFAFA",
+  backgroundPrimary: "#E5E5E5",
+  borderColor: "#EEEEEE",
+  border: "4px solid",
+};
 
 /**
  * The top level of our App. Our routes are declared here, and use these routes
@@ -32,6 +40,14 @@ import ResetPasswordEmail from "./components/Authentication/ForgotPassword";
  */
 function App() {
   const [user] = useAuthState(auth);
+  const theme = useTheme();
+
+  boxTheme.backgroundPrimary =
+    theme.palette.mode == "dark" ? "#5A5A5A" : "#E5E5E5";
+  boxTheme.backgroundSecondary =
+    theme.palette.mode == "dark" ? "#454545" : "#F6F6F6";
+  boxTheme.borderColor = theme.palette.primary.dark;
+
   return (
     <div className="app">
       {/* <h3>All the pages we are working on</h3>
@@ -75,7 +91,7 @@ function App() {
         </nav> 
       Comment out temporarily */}
       <Router>
-        {user ? <Navbar /> : null}
+        {user ? <div style={{height: "60px"}}><Navbar /></div> : null}
         <Routes>
           <Route
             path="/components/Forum"
@@ -151,7 +167,18 @@ function App() {
             path="/components/Profile"
             element={
               isUserLoggin(user) ? (
-                <ProfilePage uCreds={user?.uid} />
+                <Grid
+                  container
+                  width={screen.width}
+                  gridTemplateColumns={"100%px 300px"}
+                >
+                  <Grid item>
+                    <ProfilePage uCreds={user?.uid} />
+                  </Grid>
+                  <Grid item>
+                    <FriendPage uCreds={user!.uid} page="sidebar" />
+                  </Grid>
+                </Grid>
               ) : (
                 <Navigate to="/components/Interceptor" />
               )

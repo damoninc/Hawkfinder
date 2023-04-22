@@ -14,14 +14,12 @@ import MailIcon from "@mui/icons-material/Mail";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { Button, InputAdornment, TextField } from "@mui/material";
-import { auth, db } from "../../firebase/config";
+import { Button, TextField, useTheme } from "@mui/material";
+import { auth } from "../../firebase/config";
 import PeopleIcon from "@mui/icons-material/People";
 import { useFormik } from "formik";
 import { user } from "../FriendSystem/FriendPage";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { doc, getDoc } from "firebase/firestore";
-import User, { userConverter } from "../../data/User";
+import { openFriendBar } from "../FriendSystem/FriendPage";
 
 /**
  * The stylization for the searchbar
@@ -73,22 +71,12 @@ const StyledInputBase = styled(TextField)(({ theme }) => ({
   },
 }));
 
-let loggedUser: User;
-let pulled = false;
-
 /**
  * This is a universal navigation bar that will be implemented in all webpages for a given signed in user.
  * @returns Navigation bar
  */
 export default function Navbar() {
-  const [authUser] = useAuthState(auth);
-  const [currUser, setUser] = React.useState(user);
-
-  if (!user && !loggedUser && !pulled) {
-    console.log();
-    callDB(authUser?.uid, setUser);
-    pulled = true;
-  }
+  const theme = useTheme();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
@@ -215,19 +203,29 @@ export default function Navbar() {
           }}
         >
           <Badge
-            badgeContent={
-              user
-                ? user.incomingRequests.length
-                : currUser
-                ? currUser.incomingRequests.length
-                : 0
-            }
+            badgeContent={user ? user.incomingRequests.length : 0}
             color="error"
           >
             <MailIcon />
           </Badge>
         </IconButton>
         <p>Requests</p>
+      </MenuItem>
+      <MenuItem
+        onClick={() => {
+          navigate("/components/Friends");
+        }}
+      >
+        <IconButton
+          size="large"
+          aria-label="account of current user"
+          aria-controls="primary-search-account-menu"
+          aria-haspopup="true"
+          color="inherit"
+        >
+          <PeopleIcon />
+        </IconButton>
+        <p>Friends</p>
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
@@ -271,7 +269,10 @@ export default function Navbar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ backgroundColor: "teal" }}>
+      <AppBar
+        position="fixed"
+        sx={{ backgroundColor: theme.palette.primary.dark }}
+      >
         <Toolbar>
           <Typography
             variant="h6"
@@ -299,17 +300,16 @@ export default function Navbar() {
             variant="h6"
             noWrap
             component="a"
+            href="/components/Forum"
             sx={{
               display: { xs: "flex", md: "none" },
               paddingRight: { xs: "20px", md: "0" },
             }}
           >
-            <a href="/components/Forum">
-              <img
-                src="https://firebasestorage.googleapis.com/v0/b/csc-450-project.appspot.com/o/HAWKFINDER%2FMy_project.png?alt=media&token=9c88ec23-9c4e-46b7-8eb9-a907be7b2cfc"
-                height="35px"
-              />
-            </a>
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/csc-450-project.appspot.com/o/HAWKFINDER%2FMy_project.png?alt=media&token=9c88ec23-9c4e-46b7-8eb9-a907be7b2cfc"
+              height="35px"
+            />
           </Typography>
           <Search>
             <form onSubmit={formik.handleSubmit}>
@@ -345,13 +345,7 @@ export default function Navbar() {
               href="/components/Friends/requests"
             >
               <Badge
-                badgeContent={
-                  user
-                    ? user.incomingRequests.length
-                    : loggedUser
-                    ? loggedUser.incomingRequests.length
-                    : 0
-                }
+                badgeContent={user ? user.incomingRequests.length : 0}
                 color="error"
               >
                 <MailIcon />
@@ -397,21 +391,4 @@ export default function Navbar() {
       {renderMenu}
     </Box>
   );
-}
-
-async function callDB(refreshUser: string | undefined, setUser: any) {
-  if (user || !refreshUser) {
-    return;
-  }
-  // Query Firestore for information from currently logged in user
-  const querySnapshot = await getDoc(
-    doc(db, "Users", refreshUser).withConverter(userConverter)
-  );
-  console.log("Pulling user for Navbar notifs");
-
-  const dbUser = querySnapshot.data();
-  if (dbUser !== undefined) {
-    loggedUser = dbUser;
-    setUser(loggedUser);
-  }
 }
