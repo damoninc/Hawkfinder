@@ -89,7 +89,7 @@ function App() {
         </nav> 
       Comment out temporarily */}
       <Router>
-        {user ? <Navbar /> : null}
+        {user ? <div style={{height: "60px"}}><Navbar /></div> : null}
         <Routes>
           <Route
             path="/components/Forum"
@@ -105,14 +105,7 @@ function App() {
             path="/components/Friends"
             element={
               isUserLoggin(user) ? (
-                <Grid container width="100%">
-                  <Grid item width="100%">
-                    <FriendPage uCreds={user!.uid} page="list" />
-                  </Grid>
-                  <Grid item width="300px">
-                    <FriendPage uCreds={user!.uid} page="sidebar" />
-                  </Grid>
-                </Grid>
+                <FriendPage uCreds={user!.uid} page="list" />
               ) : (
                 <Navigate to="/components/Interceptor" />
               )
@@ -162,7 +155,18 @@ function App() {
             path="/components/Profile"
             element={
               isUserLoggin(user) ? (
-                <ProfilePage uCreds={user?.uid} />
+                <Grid
+                  container
+                  width={screen.width}
+                  gridTemplateColumns={"100%px 300px"}
+                >
+                  <Grid item>
+                    <ProfilePage uCreds={user?.uid} />
+                  </Grid>
+                  <Grid item>
+                    <FriendPage uCreds={user!.uid} page="sidebar" />
+                  </Grid>
+                </Grid>
               ) : (
                 <Navigate to="/components/Interceptor" />
               )

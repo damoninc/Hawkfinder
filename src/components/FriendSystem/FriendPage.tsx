@@ -25,7 +25,15 @@ import { boxTheme } from "../../App";
 export let user: User;
 
 let dbPulled = false;
-export let friends = null;
+export let openFriendBar: React.Dispatch<React.SetStateAction<boolean>>;
+export let friends: User[] | null = null;
+
+window.addEventListener("resize", (event) => {
+  if (screen.width < 900) {
+    console.log("resizing");
+    openFriendBar(false);
+  }
+});
 
 /**
  * Generates a HTML block that displays a user's friend list by creating
@@ -36,12 +44,13 @@ export let friends = null;
  */
 export default function FriendPage(props: { uCreds: string; page: string }) {
   const [dbCall, setFriends] = useState(null);
+  const [sidebarOpen, setSidebar] = useState(!(screen.width < 900));
   const navigate = useNavigate();
+  openFriendBar = setSidebar;
 
   if (!dbPulled || !dbCall) {
     callDB(props.uCreds, setFriends);
   }
-  friends = dbCall;
 
   const friendList = (
     <Grid
@@ -74,19 +83,67 @@ export default function FriendPage(props: { uCreds: string; page: string }) {
   );
 
   const friendRequests = FriendRequests(user);
+
   if (props.page == "sidebar") {
+    console.log("sidebar");
+    let drawer = <div></div>;
+    if (!friends) {
+      drawer = LoadingPage("loading friends");
+    } else if (friends.length < 1) {
+      drawer = (
+        <Typography variant="h6" sx={{ textAlign: "center" }}>
+          No Friends :(
+        </Typography>
+      );
+    } else {
+      drawer = (
+        <Box>
+          {friends.map((friend) => {
+            return (
+              <Box key={friend.userid}>
+                <Button
+                  onClick={() => {
+                    navigate(`/components/Profile#userid=${friend.userid}`);
+                    window.location.reload();
+                  }}
+                  sx={{ textTransform: "none", borderRadius: "50px" }}
+                >
+                  <FriendBox friend={friend} smol={true} />
+                </Button>
+              </Box>
+            );
+          })}
+        </Box>
+      );
+    }
+    const drawerOverlay = screen.width < 900 ? "temporary" : "persistent";
     return (
-      <Box
-        width={"100%"}
-        height={"100%"}
+      <Drawer
+        variant={drawerOverlay}
+        open={sidebarOpen}
+        onClose={() => {
+          setSidebar(false);
+        }}
+        anchor="right"
+        ModalProps={{
+          keepMounted: true, // Better open performance on mobile.
+        }}
         sx={{
-          border: boxTheme.border,
-          borderColor: boxTheme.borderColor,
-          background: boxTheme.backgroundSecondary,
+          display: "block",
+          position: "sticky",
+          "& .MuiDrawer-paper": {
+            boxSizing: "border-box",
+            width: "270px",
+            paddingTop: "75px",
+            background: boxTheme.backgroundSecondary,
+          },
         }}
       >
-        <Typography>Sidebar</Typography>
-      </Box>
+        <Typography variant="h4" sx={{ textAlign: "center" }}>
+          <b>Friends</b>
+        </Typography>
+        {drawer}
+      </Drawer>
     );
   } else {
     return (
@@ -166,8 +223,6 @@ function checkNullList(friends: User[] | null, page: string) {
         <h2>No Friends Found :(</h2>
       </div>
     );
-  } else if (page == "sidebar") {
-    return <div></div>;
   } else {
     return (
       <div
@@ -453,7 +508,7 @@ export async function callDB(signedUser: string, setFriends: any) {
   // Query Firestore for information from currently logged in user
 
   // Friends list query from FireStore\
-  const friends = new Array<User>();
+  const newfriends = new Array<User>();
   await getDocs(query(collection(db, "Users"))).then((friendList) => {
     console.log("Pulling users for friends list");
     const users = new Array<User>();
@@ -470,14 +525,15 @@ export async function callDB(signedUser: string, setFriends: any) {
       user = tmpUser;
       users.forEach((friend) => {
         if (friend !== undefined && user.friendsList.includes(friend.userid)) {
-          friends.push(friend);
+          newfriends.push(friend);
         }
       });
-      setFriends(friends);
+      setFriends(newfriends);
+      friends = newfriends;
       dbPulled = true;
 
       user.friendsList.forEach((friendId) => {
-        if (!friends.find((friend) => friend.userid === friendId)) {
+        if (!newfriends.find((friend) => friend.userid === friendId)) {
           const index = user.friendsList.indexOf(friendId, 0);
           if (index > -1) {
             user.friendsList.splice(index, 1);
