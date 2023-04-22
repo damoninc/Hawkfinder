@@ -18,8 +18,9 @@ import { Button, TextField, useTheme } from "@mui/material";
 import { auth } from "../../firebase/config";
 import PeopleIcon from "@mui/icons-material/People";
 import { useFormik } from "formik";
-import { user } from "../FriendSystem/FriendPage";
-import { openFriendBar } from "../FriendSystem/FriendPage";
+import FriendPage, { user } from "../FriendSystem/FriendPage";
+import { openFriendBar, open } from "../FriendSystem/FriendPage";
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 
 /**
  * The stylization for the searchbar
@@ -268,10 +269,10 @@ export default function Navbar() {
   });
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1, zIndex:1000, position: "absolute"}}>
       <AppBar
         position="fixed"
-        sx={{ backgroundColor: theme.palette.primary.dark }}
+        sx={{ backgroundColor: theme.palette.primary.dark}}
       >
         <Toolbar>
           <Typography
@@ -372,6 +373,14 @@ export default function Navbar() {
             >
               <AccountCircle />
             </IconButton>
+            <IconButton               
+              size="large"
+              aria-label="open drawer"
+              aria-haspopup="true"
+              onClick={() => {openFriendBar(!open)}}
+              color="inherit">
+              <MenuOpenIcon />
+            </IconButton>
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -383,6 +392,14 @@ export default function Navbar() {
               color="inherit"
             >
               <MoreIcon />
+            </IconButton>
+            <IconButton               
+              size="large"
+              aria-label="show more"
+              aria-haspopup="true"
+              onClick={() => {openFriendBar(!open)}}
+              color="inherit">
+              <MenuOpenIcon />
             </IconButton>
           </Box>
         </Toolbar>

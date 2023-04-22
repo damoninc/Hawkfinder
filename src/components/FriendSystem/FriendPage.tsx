@@ -26,6 +26,7 @@ export let user: User;
 
 let dbPulled = false;
 export let openFriendBar: React.Dispatch<React.SetStateAction<boolean>>;
+export let open: boolean;
 export let friends: User[] | null = null;
 
 window.addEventListener("resize", (event) => {
@@ -47,6 +48,7 @@ export default function FriendPage(props: { uCreds: string; page: string }) {
   const [sidebarOpen, setSidebar] = useState(!(screen.width < 900));
   const navigate = useNavigate();
   openFriendBar = setSidebar;
+  open = sidebarOpen
 
   if (!dbPulled || !dbCall) {
     callDB(props.uCreds, setFriends);
@@ -131,6 +133,7 @@ export default function FriendPage(props: { uCreds: string; page: string }) {
         sx={{
           display: "block",
           position: "sticky",
+          zIndex: 500,
           "& .MuiDrawer-paper": {
             boxSizing: "border-box",
             width: "270px",

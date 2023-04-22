@@ -96,6 +96,8 @@ export default class FriendBox extends React.Component<IProps, IState> {
             borderRadius: "25px",
             gridTemplateRows: "80% 20%",
             background: boxTheme.backgroundPrimary,
+            justifyContent:"center",
+            alignItems:"center"
           }}
         >
           <Stack justifyContent="center" alignItems="center" spacing={0.5}>
@@ -112,8 +114,9 @@ export default class FriendBox extends React.Component<IProps, IState> {
               {this.props.friend.profile.firstName}{" "}
               {this.props.friend.profile.lastName}
             </h3>
-            <CurrentSong user={this.props.friend} small={true} />
           </Stack>
+          <CurrentSong user={this.props.friend} small={true} />
+
         </Box>
       );
     }

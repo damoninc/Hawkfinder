@@ -63,10 +63,11 @@ function DisplaySong(
                   : song.name.length > 10
                 : false
             }
+            speed={20}
             gradient={false}
             style={{ width: screen.width < 600 ? "100%" : "120px" }}
           >
-            <Typography variant="h6" sx={{ marginRight: "20px" }}>
+            <Typography variant="h6" sx={{ marginRight: "25px" }}>
               <b>{song.name}</b>
             </Typography>
           </Marquee>
