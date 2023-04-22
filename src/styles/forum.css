@@ -1,9 +1,6 @@
 .forum-container {
-  width: 50%;
-  display: grid;
+  width: 100%;
   margin: auto;
-  flex-direction: column;
-  align-items: center;
 }
 
 .load-more {

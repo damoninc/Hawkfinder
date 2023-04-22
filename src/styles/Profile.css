@@ -11,6 +11,7 @@
   align-items: center;
   transition: height 0.3s ease; /* add transition property */
   grid-area: overlap;
+  border-style: solid;
 }
 
 .cover-photo {
@@ -55,6 +56,7 @@
   align-self: flex-end;
   object-fit: cover;
   border-radius: 50%;
+  border: 3px solid white;
 }
 .second-row {
   max-width: 2000px;

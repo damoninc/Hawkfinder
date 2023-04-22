@@ -72,79 +72,84 @@ function ProfilePage(passedUser: any) {
   }
 
   return (
-    <div className="body">
-      <Paper className="first-row" sx={{ mt: "10px", borderRadius: 10 }}>
-        <img src={`${userCoverPic}`} alt="image" className="cover-photo" />
-        <Typography className="profile-name" sx={{ fontWeight: "bold" }}>
-          {userPage?.profile.firstName + " " + userPage?.profile.lastName}
-        </Typography>
-        <Typography className="friend-count">
-          {userPage?.friendsList.length + " Friends"}
-        </Typography>
-        <img
-          src={`${userProfPic}`}
-          alt="image"
-          loading="lazy"
-          className="profile-photo"
-        />
-        {EditPage(userPage, docRef, passedUserObj)}
-      </Paper>
-      <Box className="second-row" sx={{ flexWrap: "wrap" }}>
-        {spotifyUser?.spotify.accessToken != "null" ? (
-          <Paper className="spotify-info" sx={{ borderRadius: 10 }}>
-            <Box className="spotify-box" sx={{ padding: 1, flexWrap: "wrap" }}>
-              <Box className="current-song">
-                <CurrentSong user={spotifyUser!} small={false} />
+    <>
+      <div className="body">
+        <Paper className="first-row" sx={{ mt: "10px", borderRadius: 10 }}>
+          <img src={`${userCoverPic}`} alt="image" className="cover-photo" />
+          <Typography className="profile-name" sx={{ fontWeight: "bold" }}>
+            {userPage?.profile.firstName + " " + userPage?.profile.lastName}
+          </Typography>
+          <Typography className="friend-count">
+            {userPage?.friendsList.length + " Friends"}
+          </Typography>
+          <img
+            src={`${userProfPic}`}
+            alt="image"
+            loading="lazy"
+            className="profile-photo"
+          />
+          {EditPage(userPage, docRef, passedUserObj)}
+        </Paper>
+        <Box className="second-row" sx={{ flexWrap: "wrap" }}>
+          {spotifyUser?.spotify.accessToken != "null" ? (
+            <Paper className="spotify-info" sx={{ borderRadius: 10 }}>
+              <Box
+                className="spotify-box"
+                sx={{ padding: 1, flexWrap: "wrap" }}
+              >
+                <Box className="current-song">
+                  <CurrentSong user={spotifyUser!} small={false} />
+                </Box>
+                <Box className="top-songs">
+                  <TopSongs user={spotifyUser!} small={true} />
+                </Box>
               </Box>
-              <Box className="top-songs">
-                <TopSongs user={spotifyUser!} small={true} />
-              </Box>
+            </Paper>
+          ) : null}
+          <Paper className="about-and-info" sx={{ borderRadius: 10 }}>
+            <Box
+              className="about-and-info-box"
+              sx={{ padding: 1, flexWrap: "wrap" }}
+            >
+              <Paper
+                className="about"
+                elevation={10}
+                sx={{ borderRadius: "12px" }}
+              >
+                <Box className="about-title">
+                  <Typography sx={{ fontWeight: "bold" }}> About Me</Typography>
+                  <br></br>
+                </Box>
+                <Box sx={{ overflowY: "scroll" }}>
+                  <Typography sx={{ m: 2 }}>{userPage?.profile.bio}</Typography>
+                </Box>
+              </Paper>
+              <Paper
+                className="interests"
+                elevation={10}
+                sx={{ borderRadius: "12px" }}
+              >
+                <Box className="interests-title">
+                  <Typography sx={{ fontWeight: "bold" }}>
+                    My Interests
+                  </Typography>
+                  <br></br>
+                </Box>
+                <Box sx={{ overflowY: "scroll", width: "100%" }}>
+                  <ul className="list">
+                    {userPage?.profile.interests.map((interest: any) => (
+                      <li key={interest}>{interest}</li>
+                    ))}
+                  </ul>
+                </Box>
+              </Paper>
             </Box>
           </Paper>
-        ) : null}
-        <Paper className="about-and-info" sx={{ borderRadius: 10 }}>
-          <Box
-            className="about-and-info-box"
-            sx={{ padding: 1, flexWrap: "wrap" }}
-          >
-            <Paper
-              className="about"
-              elevation={10}
-              sx={{ borderRadius: "12px" }}
-            >
-              <Box className="about-title">
-                <Typography sx={{ fontWeight: "bold" }}> About Me</Typography>
-                <br></br>
-              </Box>
-              <Box sx={{ overflowY: "scroll" }}>
-                <Typography sx={{ m: 2 }}>{userPage?.profile.bio}</Typography>
-              </Box>
-            </Paper>
-            <Paper
-              className="interests"
-              elevation={10}
-              sx={{ borderRadius: "12px" }}
-            >
-              <Box className="interests-title">
-                <Typography sx={{ fontWeight: "bold" }}>
-                  My Interests
-                </Typography>
-                <br></br>
-              </Box>
-              <Box sx={{ overflowY: "scroll", width: "100%" }}>
-                <ul className="list">
-                  {userPage?.profile.interests.map((interest: any) => (
-                    <li key={interest}>{interest}</li>
-                  ))}
-                </ul>
-              </Box>
-            </Paper>
-          </Box>
-        </Paper>
-      </Box>
-      <br />
-      {/* <Forum passedUser={uid} /> */}
-    </div>
+        </Box>
+        <br />
+      </div>
+      <Forum passedUser={uid} />
+    </>
   );
 }
 export default ProfilePage;
