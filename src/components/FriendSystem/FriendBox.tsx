@@ -2,7 +2,7 @@ import React from "react";
 import "../../styles/userbox.css";
 import User from "../../data/User";
 import CurrentSong from "../SpotifyIntegration/SpotifyComponents";
-import { Stack, Box, Typography, Grid } from "@mui/material";
+import { Stack, Box, Typography} from "@mui/material";
 import { storage } from "../../firebase/config";
 import { getDownloadURL, ref } from "firebase/storage";
 import { boxTheme } from "../../App";

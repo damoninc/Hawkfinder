@@ -14,11 +14,11 @@ import MailIcon from "@mui/icons-material/Mail";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { Button, TextField, useMediaQuery, useTheme } from "@mui/material";
+import { Button, TextField, useTheme } from "@mui/material";
 import { auth } from "../../firebase/config";
 import PeopleIcon from "@mui/icons-material/People";
 import { useFormik } from "formik";
-import FriendPage, { user } from "../FriendSystem/FriendPage";
+import { user } from "../FriendSystem/FriendPage";
 import { openFriendBar, open } from "../FriendSystem/FriendPage";
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 

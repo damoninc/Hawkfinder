@@ -4,7 +4,6 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link,
   Navigate,
 } from "react-router-dom";
 import "./App.css";
@@ -23,7 +22,7 @@ import ReAuth from "./components/Authentication/Reauth";
 import Navbar from "./components/Navbar/Navbar";
 import NotFound from "./components/Authentication/NotFoundScreen";
 import ResetPasswordEmail from "./components/Authentication/ForgotPassword";
-import { Box, Grid, Stack, useTheme } from "@mui/material";
+import { Grid, useTheme } from "@mui/material";
 import FriendRequests from "./components/FriendSystem/FriendRequests";
 
 export const boxTheme = {
@@ -236,17 +235,5 @@ function App() {
     </div>
   );
 }
-
-function componentWithSidebar(component: any, props : any) {
-  <Grid container>
-    <Grid item xs={12} md={8} lg={9}>
-      {component(props)}
-    </Grid>
-    <Grid item xs={0} md={4} lg={3}>
-      <FriendPage uCreds={props.user!.uid} page="sidebar" />
-    </Grid>
-</Grid>
-}
-
 
 export default App;

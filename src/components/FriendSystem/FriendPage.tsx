@@ -15,7 +15,6 @@ import {
 } from "@mui/material";
 import { db } from "../../firebase/config";
 import { doc, collection, query, getDocs, updateDoc } from "firebase/firestore";
-import FriendRequests from "./FriendRequests";
 import CurrentSong, {
   RecentSongs,
 } from "../SpotifyIntegration/SpotifyComponents";
@@ -32,7 +31,7 @@ export let openFriendBar: React.Dispatch<React.SetStateAction<boolean>>;
 export let open: boolean;
 export let friends: User[] | null = null; 
 
-window.addEventListener("resize", function (event) {
+window.addEventListener("resize", function () {
   if (screen.width > 900 && open) {
     openFriendBar(false)
   }
@@ -83,7 +82,7 @@ export default function FriendPage(props: { uCreds: string; page: string }) {
           paddingTop: "1%",
         }}
       >
-        {checkNullList(dbCall, props.page)}
+        {checkNullList(dbCall)}
       </Box>
     </Grid>
   ) : <div></div>;
@@ -198,7 +197,7 @@ export default function FriendPage(props: { uCreds: string; page: string }) {
   }
 }
 
-function checkNullList(friends: User[] | null, page: string) {
+function checkNullList(friends: User[] | null) {
   const [open, setOpen] = React.useState("");
 
   function handleOpen(userid: string) {

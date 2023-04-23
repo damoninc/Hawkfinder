@@ -2,7 +2,7 @@ import React from "react";
 import User, { userConverter } from "../../data/User";
 import "../../styles/friendpage.css";
 import { db } from "../../firebase/config";
-import { collection, query, getDocs, doc, getDoc } from "firebase/firestore";
+import { collection, query, getDocs, } from "firebase/firestore";
 import { Box, CircularProgress } from "@mui/material";
 import UserBox from "../FriendSystem/UserBox";
 import { boxTheme } from "../../App";
@@ -27,7 +27,7 @@ interface IState {
 
 export default class SearchPage extends React.Component<IProps, IState> {
   rerender = false;
-  intervalID: any;
+  intervalID: NodeJS.Timer;
   constructor(props: IProps) {
     super(props);
     this.state = { dbCall: null, search: "", loggedUser: null };
