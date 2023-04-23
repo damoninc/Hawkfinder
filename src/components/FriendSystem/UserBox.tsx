@@ -283,7 +283,7 @@ export default class UserBox extends React.Component<IProps, IState> {
               borderRadius: "25px",
               overflow: "hidden",
               gridTemplateRows: "80% 20%",
-              backgroundColor: boxTheme.backgroundPrimary,
+              backgroundColor: boxTheme.backgroundSecondary,
               transform: "translate(-50%, -50%)",
             }}
           >

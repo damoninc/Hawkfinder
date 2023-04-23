@@ -9,17 +9,19 @@ h3 {
 .songBox {
     box-sizing: border-box;
     display: flex;
-    justify-content: space-evenly;
     width: auto;
     margin: auto;
     height: 100px;
     max-height: 100px;
     min-width: 200px;
     max-width: 400px;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
 }
 
 .songText {
-    margin: auto;
+    margin-right: auto;
     padding:10px;
     text-overflow: ellipsis;
     overflow: hidden; 

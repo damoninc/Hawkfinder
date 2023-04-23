@@ -2,7 +2,7 @@ import React from "react";
 import User from "../../data/User";
 import axios from "axios";
 import "../../styles/spotify.css";
-import { LinearProgress, Stack, Typography } from "@mui/material";
+import { Box, LinearProgress, Stack, Typography, useTheme } from "@mui/material";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/config";
 import Marquee from "react-fast-marquee";
@@ -22,8 +22,21 @@ function DisplaySong(
     fontSize?: string;
     fontStyle?: string;
     imgSize?: string;
-  } = { width: "350px", imgSize: "100px" }
+    imgBorder?: string;
+    scrollLimit?: {xs?: number, sm?: number, md?: number, lg?: number, xl?: number};
+  } = { width: "100%", imgSize: "100px" }
 ) {
+  if (!sx.scrollLimit) {
+    sx.scrollLimit = {xs: 7}
+  }
+  let scrollLimit = 20;
+  if (screen.width < 600) {
+    scrollLimit = sx.scrollLimit.xs ? sx.scrollLimit.xs : 7
+  } else if (screen.width < 900) {
+    scrollLimit = sx.scrollLimit.sm ? sx.scrollLimit.sm : (sx.scrollLimit.xs ? sx.scrollLimit.xs : 10)
+  } else {
+    scrollLimit = sx.scrollLimit.md ? sx.scrollLimit.md : (sx.scrollLimit.sm ? sx.scrollLimit.sm : (sx.scrollLimit.xs ? sx.scrollLimit.xs : 15))
+  }
   return (
     <div
       style={{
@@ -31,17 +44,16 @@ function DisplaySong(
         border: boxTheme.border,
         borderColor: boxTheme.borderColor,
         background: boxTheme.backgroundPrimary,
-        width: screen.width < 600 ? "100%" : sx.width ? sx.width : "100%",
-        maxWidth: `${Number(screen.width * 0.9)}px`,
+        width: sx.width ? sx.width : "100%",
+        maxWidth: sx.maxWidth ? sx.maxWidth : `${Number(screen.width * 0.9)}px`,
+        minWidth: sx.minWidth ? sx.minWidth : "0px",
         padding: "10px",
         borderRadius: "25px",
       }}
     >
-      <div className="songBox">
-        {screen.width < 600 ? (
-          <div></div>
-        ) : (
-          <div>
+      <div className="songBox" style={{justifyItems: "center", alignContent: "center"}}>
+
+          <Box alignItems="center" justifyContent="center"> 
             <img
               src={
                 song.album.images[1].url == null ? "" : song.album.images[1].url
@@ -49,18 +61,15 @@ function DisplaySong(
               style={{
                 width: sx.imgSize ? sx.imgSize : "100px",
                 height: sx.imgSize ? sx.imgSize : "100px",
-                borderRadius: 25,
+                borderRadius: sx.imgBorder ? sx.imgBorder : "25px",
               }}
             />
-          </div>
-        )}
+          </Box>
         <div className="songText">
           <Marquee
             play={
               song.name
-                ? screen.width < 600
-                  ? song.name.length > 20
-                  : song.name.length > 10
+                ? song.name.length > scrollLimit
                 : false
             }
             speed={20}
@@ -97,7 +106,7 @@ function DisplaySong(
         >
           <img
             src={spotifyLogo}
-            style={{ height: "30px", width: "30px", margin: "20px" }}
+            style={{ height: "30px", width: "30px", marginLeft: "10px" }}
           />
         </a>
       </div>
@@ -159,7 +168,7 @@ function DisplaySongSmall(song: Song, scrolling: boolean) {
           overflow: "hidden",
           whiteSpace: "nowrap",
           textOverflow: "ellipsis",
-          marginRight: "15%",
+          marginRight: "15px",
         }}
       >
         <p>
@@ -199,6 +208,9 @@ interface IProps {
     minWidth?: string;
     fontSize?: string;
     fontStyle?: string;
+    imgSize?: string;
+    imgBorder?: string;
+    scrollLimit?: {xs?: number, sm?: number, md?: number, lg?: number, xl?: number}
   };
 }
 

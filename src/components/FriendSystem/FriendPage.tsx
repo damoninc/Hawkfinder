@@ -264,12 +264,13 @@ function checkNullList(friends: User[] | null) {
                 >
                   <ArrowBackIcon />
                 </Button>
-                <Stack justifyContent="flex-start" alignItems="flex-start">
+                <Stack justifyContent="center" alignItems="center" width="100%">
                   <Stack
                     justifyContent="center"
                     alignItems="center"
                     spacing={2}
                     paddingTop="10px"
+                    width="100%"
                   >
                     <Typography variant="h4" sx={{ textAlign: "center" }}>
                       {friend.profile.firstName} {friend.profile.lastName}
@@ -290,7 +291,7 @@ function checkNullList(friends: User[] | null) {
                     <CurrentSong
                       user={friend}
                       small={false}
-                      sx={{ width: "350px" }}
+                      sx={{ maxWidth: "350px", scrollLimit: {xs: 10, sm: 12, md: 12} }}
                     />
                     <Box
                       width="100%"
@@ -321,7 +322,7 @@ function checkNullList(friends: User[] | null) {
                         Recent Songs
                       </Typography>
                     </Box>
-                    <RecentSongs user={friend} small={false} limit={10} />
+                    <RecentSongs user={friend} small={false} limit={10} sx={{ maxWidth: "350px", scrollLimit: {xs: 10, sm: 12, md: 12} }}/>
                   </Stack>
                 </Stack>
               </Drawer>
