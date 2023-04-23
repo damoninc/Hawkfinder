@@ -100,7 +100,6 @@ const PostInput = (props: any) => {
     setSubmitted(true);
 
     if (postText != "" && interest != "") {
-      console.log("DB WRITE");
       const docRef = await addDoc(collection(db, "Posts"), {
         description: postText,
         imageURL: "",
@@ -186,7 +185,6 @@ const PostInput = (props: any) => {
         <Autocomplete
           onChange={(e, value) => {
             if (value) {
-              console.log("setting interest: ", value);
               setInterest(value);
             } else {
               setInterest("");

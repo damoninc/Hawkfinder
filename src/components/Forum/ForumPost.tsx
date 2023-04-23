@@ -272,12 +272,9 @@ function ForumPost(props: Post) {
               className="profile-pic"
               src={profilePic}
               onClick={() => {
-                console.log("prof clicked ", props.userID);
                 if (props.userID == props.loggedUser) {
-                  console.log("your profile");
                   navigate("/components/Profile");
                 } else {
-                  console.log("not your profile");
                   navigate(`/components/Profile#userid=${props.userID}`);
                 }
               }}

@@ -97,7 +97,6 @@ function Forum(props: any) {
 
   return (
     <div className="forum-container">
-      {/* <PostInput reloadPosts={reloadPosts} /> */}
       {!props.passedUser ? (
         <PostInput reloadForum={reloadForum} userID={props.userID} />
       ) : (

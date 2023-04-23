@@ -32,6 +32,7 @@ function ProfilePage(passedUser: any) {
   }
   const docRef = doc(db, "Users", uid!);
   useEffect(() => {
+    console.log("passed user: ", passedUserObj);
     getDoc(docRef)
       .then((docSnap) => {
         const userToSpotify: User | undefined =
@@ -66,7 +67,7 @@ function ProfilePage(passedUser: any) {
     return (
       <div hidden>
         {EditPage(userPage, docRef, passedUserObj)}
-        <Forum passedUser={uid} />
+        <Forum passedUser={uid} userID={uid} />
       </div>
     );
   }
@@ -150,7 +151,7 @@ function ProfilePage(passedUser: any) {
         </Box>
         <br />
       </div>
-      <Forum passedUser={uid} />
+      <Forum passedUser={uid} userID={passedUserObj} />
     </>
   );
 }
