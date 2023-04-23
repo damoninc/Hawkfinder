@@ -4,13 +4,9 @@ import { db, storage } from "../../firebase/config";
 import {
   FormControl,
   Button,
-  MenuItem,
-  Select,
-  InputLabel,
   Popover,
   Typography,
   Autocomplete,
-  Stack,
 } from "@mui/material";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
@@ -19,11 +15,10 @@ import {
   collection,
   doc,
   getDoc,
-  getDocs,
   serverTimestamp,
   updateDoc,
 } from "@firebase/firestore";
-import { ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
+import { ref, uploadBytesResumable } from "firebase/storage";
 import "../../styles/postinput.css";
 
 const PostInput = (props: any) => {
@@ -36,6 +31,7 @@ const PostInput = (props: any) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   // Stores the interests from Firestore
   const [interests, setInterests] = useState([]);
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     getInterests();
@@ -100,6 +96,9 @@ const PostInput = (props: any) => {
    * Also reloads the Forum component when the button is clicked
    */
   async function handlePost() {
+    // Disables the POST button once a post is submitted
+    setSubmitted(true);
+
     if (postText != "" && interest != "") {
       console.log("DB WRITE");
       const docRef = await addDoc(collection(db, "Posts"), {
@@ -158,7 +157,7 @@ const PostInput = (props: any) => {
         variant="outlined"
         multiline
         rows={4}
-        sx={{ borderColor: 'teal'}}
+        sx={{ borderColor: "teal" }}
         onChange={(e) => {
           if (e.target.value.length < 120) {
             setPostText(e.target.value);
@@ -214,9 +213,10 @@ const PostInput = (props: any) => {
       </Button>
       {/* If there is text any post text inputted, 
       then the user can click the post button */}
-      {postText != "" && interest != "" ? (
+      {postText != "" && interest != "" && !submitted ? (
         <Button
           className="post-button"
+          id="post-button-enabled"
           type="submit"
           variant="outlined"
           onClick={handlePost}

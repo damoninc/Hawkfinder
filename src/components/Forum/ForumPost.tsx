@@ -108,7 +108,6 @@ function ForumPost(props: any) {
     docS
       .then((documentSnap) => {
         const data: any = documentSnap.data();
-        // if (typeof data === "object") {
         if (Object.keys(data.ratings).length > 0) {
           const ratingsMap = new Map(Object.entries(data.ratings));
           for (const [k, v] of ratingsMap) {
@@ -123,7 +122,6 @@ function ForumPost(props: any) {
             }
           }
         }
-        // }
       })
       .catch(() => {
         console.log("An error occurred...");
