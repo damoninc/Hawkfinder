@@ -27,7 +27,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ThemeProvider theme={screecherTheme}>
       <CssBaseline />
-        <App />
+      <App />
     </ThemeProvider>
   </React.StrictMode>
 );

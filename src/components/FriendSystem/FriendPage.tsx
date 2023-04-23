@@ -10,21 +10,32 @@ import {
   Grid,
   Stack,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { db } from "../../firebase/config";
 import { doc, collection, query, getDocs, updateDoc } from "firebase/firestore";
-import FriendRequests from "./FriendRequests";
 import CurrentSong, {
   RecentSongs,
 } from "../SpotifyIntegration/SpotifyComponents";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Navigate, useNavigate } from "react-router-dom";
-import Navbar from "../Navbar/Navbar";
 import LoadingPage from "../Navbar/Loading";
+import { boxTheme } from "../../App";
 
 export let user: User;
 
 let dbPulled = false;
+
+export let openFriendBar: React.Dispatch<React.SetStateAction<boolean>>;
+export let open: boolean;
+export let friends: User[] | null = null; 
+
+window.addEventListener("resize", function () {
+  if (screen.width > 900 && open) {
+    openFriendBar(false)
+  }
+})
 
 /**
  * Generates a HTML block that displays a user's friend list by creating
@@ -35,13 +46,18 @@ let dbPulled = false;
  */
 export default function FriendPage(props: { uCreds: string; page: string }) {
   const [dbCall, setFriends] = useState(null);
+  const [sidebarOpen, setSidebar] = useState(false);
   const navigate = useNavigate();
+  const theme = useTheme();
+  const md = useMediaQuery(theme.breakpoints.up("md"))
+
+  open = sidebarOpen
+  openFriendBar = setSidebar;
 
   if (!dbPulled || !dbCall) {
     callDB(props.uCreds, setFriends);
   }
-
-  const friendList = (
+  const friendList = props.page == "list" ? (
     <Grid
       sx={{
         border: "4px solid teal",
@@ -49,6 +65,7 @@ export default function FriendPage(props: { uCreds: string; page: string }) {
         overflow: "hidden",
         gridTemplateRows: "75px 100%",
         justifyItems: "center",
+        background: boxTheme.backgroundSecondary,
       }}
     >
       <Typography variant="h4" align="center" padding={"10px"}>
@@ -68,53 +85,116 @@ export default function FriendPage(props: { uCreds: string; page: string }) {
         {checkNullList(dbCall)}
       </Box>
     </Grid>
-  );
+  ) : <div></div>;
 
-  const friendRequests = FriendRequests(user);
-
-  return (
-    <div>
-      <Navbar />
+  if (props.page == "sidebar") {
+    let drawer = <div></div>;
+    if (!friends) {
+      drawer = (LoadingPage("Loading Friends"))
+    }
+    else if (friends.length < 1) {
+      drawer = (
+        <Typography variant="h6" sx={{ textAlign: "center" }}>
+          No Friends :(
+        </Typography>
+      );
+    } else {
+      drawer = (
+        <Box>
+          {friends.map((friend) => {
+            return (
+              <Box key={friend.userid}>
+                <Button
+                  onClick={() => {
+                    navigate(`/components/Profile#userid=${friend.userid}`);
+                    window.location.reload();
+                  }}
+                  sx={{ textTransform: "none", borderRadius: "50px" }}
+                >
+                  <FriendBox friend={friend} smol={true} />
+                </Button>
+              </Box>
+            );
+          })}
+        </Box>
+      );
+    }
+    const drawerDisplay = md ? "persistent" : "temporary" 
+    return (
+      <Drawer
+        variant={drawerDisplay}
+        open={sidebarOpen || md}
+        onClose={() => {
+          setSidebar(false);
+        }}
+        anchor="right"
+        ModalProps={{
+          keepMounted: true, // Better open performance on mobile.
+        }}
+        sx={{
+          display: "block",
+          position: "sticky",
+          zIndex: 500,
+          "& .MuiDrawer-paper": {
+            boxSizing: "border-box",
+            width: "270px",
+            paddingTop: "75px",
+            background: boxTheme.backgroundSecondary,
+            borderLeft: boxTheme.border,
+            borderColor: boxTheme.borderColor
+          },
+        }}
+      >
+        <Typography variant="h4" sx={{ textAlign: "center" }}>
+          <b>Friends</b>
+        </Typography>
+        {drawer}
+      </Drawer>
+    );
+  } else {
+    return (
       <div>
-        <Grid
-          container
-          direction="row"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Button
-            variant="contained"
-            onClick={() => {
-              navigate("/components/Friends");
-            }}
-            style={{ margin: "15px" }}
-          >
-            Friends
-          </Button>
-          <Badge
-            badgeContent={user !== undefined ? user.incomingRequests.length : 0}
-            color="success"
+        <div>
+          <Grid
+            container
+            direction="row"
+            justifyContent="center"
+            alignItems="center"
           >
             <Button
               variant="contained"
               onClick={() => {
-                navigate("/components/Friends/requests");
+                navigate("/components/Friends");
               }}
+              style={{ margin: "15px" }}
             >
-              Requests
+              Friends
             </Button>
-          </Badge>
-        </Grid>
+            <Badge
+              badgeContent={
+                user !== undefined ? user.incomingRequests.length : 0
+              }
+              color="success"
+            >
+              <Button
+                variant="contained"
+                onClick={() => {
+                  navigate("/components/Friends/requests");
+                }}
+              >
+                Requests
+              </Button>
+            </Badge>
+          </Grid>
+        </div>
+        {props.page == "list" ? (
+          friendList
+        ) : 
+          <div></div>
+        }
       </div>
-      {props.page == "list" ? (
-        friendList
-      ) : props.page == "requests" ? (
-        friendRequests
-      ) : (
-        <div></div>
-      )}
-    </div>
-  );
+    );
+  }
 }
 
 function checkNullList(friends: User[] | null) {
@@ -130,16 +210,7 @@ function checkNullList(friends: User[] | null) {
 
   // Returns a list of FriendBox if the user's friends list is not empty
   if (friends == null) {
-    return (
-      <Stack
-        direction="column"
-        justifyItems="center"
-        alignItems="center"
-        spacing={2}
-      >
-        {LoadingPage("Loading Friends")}
-      </Stack>
-    );
+    return (LoadingPage("Loading Friends"));
   }
   if (friends.length == 0) {
     return (
@@ -165,6 +236,7 @@ function checkNullList(friends: User[] | null) {
                   onClick={() => {
                     handleOpen(friend.userid);
                   }}
+                  sx={{ textTransform: "none" }}
                 >
                   <FriendBox friend={friend} />
                 </Button>
@@ -173,48 +245,85 @@ function checkNullList(friends: User[] | null) {
                 anchor={"right"}
                 open={open == friend.userid}
                 onClose={handleClose}
+                PaperProps={{
+                  sx: {
+                    backgroundColor: boxTheme.backgroundSecondary,
+                    width: { xs: "100%", sm: "400px" },
+                    padding: "0 5px",
+                  },
+                }}
               >
                 <Button
                   onClick={handleClose}
                   variant="contained"
                   style={{
-                    marginTop: "30px",
+                    marginTop: "15px",
                     marginLeft: "20px",
                     marginRight: "20px",
                   }}
                 >
                   <ArrowBackIcon />
                 </Button>
-                <div
-                  style={{
-                    minWidth: "25vw",
-                    maxWidth: "50vw",
-                    paddingLeft: "20px",
-                    paddingRight: "20px",
-                    justifyContent: "space-evenly",
-                  }}
-                >
+                <Stack justifyContent="flex-start" alignItems="flex-start">
                   <Stack
-                    justifyContent="flex-start"
-                    alignItems="flex-start"
+                    justifyContent="center"
+                    alignItems="center"
                     spacing={2}
+                    paddingTop="10px"
                   >
-                    <h1>
+                    <Typography variant="h4" sx={{ textAlign: "center" }}>
                       {friend.profile.firstName} {friend.profile.lastName}
-                    </h1>
+                    </Typography>
                     <RemoveButton user={friend} />
-                    <h3>Bio</h3>
+                    <Box
+                      width="100%"
+                      sx={{
+                        borderBottom: "3px solid gray",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Typography variant="h5" align="center">
+                        Bio
+                      </Typography>
+                    </Box>
                     <p>{friend.profile.bio}</p>
-                    <CurrentSong user={friend} small={false} />
-                    <h3>Interests</h3>
-                    <ul>
-                      {friend.profile.interests.map((interest) => (
-                        <li key={interest}>{interest}</li>
-                      ))}
-                    </ul>
+                    <CurrentSong
+                      user={friend}
+                      small={false}
+                      sx={{ width: "350px" }}
+                    />
+                    <Box
+                      width="100%"
+                      sx={{
+                        borderBottom: "3px solid gray",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Typography variant="h5" align="center">
+                        Interests
+                      </Typography>
+                    </Box>{" "}
+                    <Box width="100%">
+                      <ul>
+                        {friend.profile.interests.map((interest) => (
+                          <li key={interest}>{interest}</li>
+                        ))}
+                      </ul>
+                    </Box>
+                    <Box
+                      width="100%"
+                      sx={{
+                        borderBottom: "3px solid gray",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Typography variant="h6" align="center">
+                        Recent Songs
+                      </Typography>
+                    </Box>
                     <RecentSongs user={friend} small={false} limit={10} />
                   </Stack>
-                </div>
+                </Stack>
               </Drawer>
             </div>
           );
@@ -249,7 +358,7 @@ class RemoveButton extends React.Component<IProps, IState> {
         justifyContent="center"
         alignItems="left"
         spacing={2}
-        style={{ paddingLeft: "15px", width: "100%" }}
+        style={{ width: "100%" }}
       >
         <Button
           variant="contained"
@@ -268,8 +377,6 @@ class RemoveButton extends React.Component<IProps, IState> {
           <Button
             variant="contained"
             style={{
-              marginLeft: "10px",
-              marginRight: "5px",
               width: "100%",
               textTransform: "none",
             }}
@@ -286,8 +393,6 @@ class RemoveButton extends React.Component<IProps, IState> {
             alignItems="center"
             spacing={0}
             style={{
-              marginLeft: "5px",
-              marginRight: "5px",
               width: "100%",
               textTransform: "none",
             }}
@@ -295,8 +400,6 @@ class RemoveButton extends React.Component<IProps, IState> {
             <Button
               style={{
                 width: "50%",
-                marginRight: "2px",
-                marginLeft: "2px",
                 textTransform: "none",
               }}
               variant="contained"
@@ -312,7 +415,6 @@ class RemoveButton extends React.Component<IProps, IState> {
               variant="contained"
               style={{
                 width: "50%",
-                marginRight: "2px",
                 textTransform: "none",
                 marginLeft: "2px",
               }}
@@ -397,11 +499,10 @@ export async function removeFriend(friend: User) {
   }
 }
 
-async function callDB(signedUser: string, setFriends: any) {
+export async function callDB(signedUser: string, setFriends: any) {
   // Query Firestore for information from currently logged in user
-
   // Friends list query from FireStore\
-  const friends = new Array<User>();
+  const newfriends = new Array<User>();
   await getDocs(query(collection(db, "Users"))).then((friendList) => {
     console.log("Pulling users for friends list");
     const users = new Array<User>();
@@ -418,23 +519,26 @@ async function callDB(signedUser: string, setFriends: any) {
       user = tmpUser;
       users.forEach((friend) => {
         if (friend !== undefined && user.friendsList.includes(friend.userid)) {
-          friends.push(friend);
+          newfriends.push(friend);
         }
       });
-      setFriends(friends);
+      setFriends(newfriends);
+      friends = newfriends;
       dbPulled = true;
 
       user.friendsList.forEach((friendId) => {
-        if(!friends.find(friend => friend.userid === friendId)) {
+        if (!newfriends.find((friend) => friend.userid === friendId)) {
           const index = user.friendsList.indexOf(friendId, 0);
           if (index > -1) {
             user.friendsList.splice(index, 1);
-            updateDoc(doc(db, "Users", user.userid),
-            "friendsList",
-            user.friendsList)
+            updateDoc(
+              doc(db, "Users", user.userid),
+              "friendsList",
+              user.friendsList
+            );
           }
         }
-      })
+      });
     }
   });
 }
