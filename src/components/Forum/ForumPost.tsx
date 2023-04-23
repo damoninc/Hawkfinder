@@ -112,7 +112,7 @@ function ForumPost(props: any) {
         if (Object.keys(data.ratings).length > 0) {
           const ratingsMap = new Map(Object.entries(data.ratings));
           for (const [k, v] of ratingsMap) {
-            if (k == props.userID) {
+            if (k == props.loggedUser) {
               if (v == "upvote") {
                 setUpvoted(true);
                 return;
@@ -245,12 +245,14 @@ function ForumPost(props: any) {
 
   return (
     // Data passed in from props
-    // {props.postID}
-    // {props.postDate.toString}
-    // {props.description}
-    // {props.interest}
-    // {props.imageURL}
-    // {props.ratings}
+    // props.postID
+    // props.userID - ID of the user that created the post
+    // props.loggedUser - ID of the logged in user
+    // props.postDate.toString
+    // props.description
+    // props.interest
+    // props.imageURL
+    // props.ratings
     <Paper className="post-container">
       <Box sx={{ p: 2, margin: "auto" }}>
         <Box
@@ -271,11 +273,9 @@ function ForumPost(props: any) {
                 if (props.userID == props.loggedUser) {
                   console.log("your profile");
                   navigate("/components/Profile");
-                  // return (<Navigate to={`/components/Profile`} />)
                 } else {
                   console.log("not your profile");
                   navigate(`/components/Profile#userid=${props.userID}`);
-                  // return (<Navigate to={`/components/Profile#userid=${props.userID}`} />)
                 }
               }}
             />
@@ -317,7 +317,6 @@ function ForumPost(props: any) {
            * on the state of upvoted and downvoted, and eventually, what
            * the user had upvoted/downvoted previously
            */}
-
           <div className="rating-button-container">
             {!upvoted ? (
               <IconButton className="rating-button" onClick={(e) => upvote(e)}>
@@ -352,8 +351,6 @@ function ForumPost(props: any) {
         </Box>
         <Box sx={{ justifyContent: "space-between", display: "flex" }}>
           <span className="post-interest">{props.interest}</span>
-          {/* TODO: Consider changing the format of post date to something else */}
-          {/* <span className="post-date">{props.postDate.toDateString()}</span> */}
           <span className="post-date">
             {timeSince(props.postDate) + " ago"}
           </span>
