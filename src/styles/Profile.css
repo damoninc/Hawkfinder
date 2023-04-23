@@ -1,23 +1,16 @@
-.hawkfinder {
-  top: auto;
-  left: 50%;
-  position: relative;
-  align-self: center;
-  padding-right: 0px;
+@media (min-width: 900px) {
+  .body {
+    margin: 0 100px; /* add horizontal padding */
+  }
 }
-.profile-info {
-  margin-left: 10%;
-  margin-right: 10%;
+
+.first-row {
+  margin: auto;
   max-width: 2000px;
   height: 600px;
   display: flex;
   position: relative;
-  box-shadow: 5px 5px 10px 0px #d4d4d4;
   align-items: center;
-  border-color: var(--dl-color-gray-black);
-  border-width: 1px;
-  background-color: whitesmoke;
-  border-radius: var(--dl-radius-radius-radius4);
   transition: height 0.3s ease; /* add transition property */
   grid-area: overlap;
 }
@@ -30,32 +23,33 @@
   height: 90%;
   width: 100%;
   max-height: 500px;
-  max-width: 1700px;
+  max-width: 2000px;
   object-fit: cover;
   z-index: 1;
 }
+
 .profile-name {
-  left: 317px;
-  bottom: 30px;
+  left: 420px;
+  bottom: 25px;
   position: absolute;
   padding-right: 0px;
   font-weight: bold;
 }
 .friend-count {
-  left: 317px;
-  bottom: 10px;
+  left: 420px;
+  bottom: 5px;
   position: absolute;
   padding-right: 0px;
 }
 .edit-button {
   right: 15%;
   z-index: 1;
-  top: 560px;
+  top: 550px;
 }
 .profile-photo {
-  left: 144px;
-  width: 164px;
-  bottom: 1px;
+  left: 260px;
+  bottom: 5px;
+  width: 157px;
   height: 157px;
   margin: auto;
   z-index: 100;
@@ -63,40 +57,586 @@
   align-self: flex-end;
   object-fit: cover;
   border-radius: 50%;
+  border: 3px solid white;
+}
+.second-row {
+  max-width: 2000px;
+  display: flex;
+  margin: auto;
+  margin-top: 10px;
+  justify-content: center;
+}
+.spotify-info,
+.about-and-info {
+  max-width: 1000px;
+  margin-top: 10px;
+  margin-left: 25px;
+  margin-right: 25px;
+}
+.spotify-box,
+.about-and-info-box {
+  display: flex;
+  justify-content: center;
+}
+.current-song {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.top-songs {
+  margin-right: 10px;
+  margin-left: 10px;
 }
 .about {
-  margin-left: 10%;
-  margin-top: 2%;
-  width: 500px;
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-top: 55px;
+  width: 400px;
   height: 266px;
-  display: flex;
+  display: inline-flex;
   align-items: flex-start;
-  border-color: black;
-  border-width: 2px;
-  border-style: solid;
-  padding-right: 0px;
   flex-direction: column;
 }
+
+.interests {
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-top: 55px;
+  margin-bottom: 55px;
+  width: 400px;
+  height: 266px;
+  display: inline-flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.interests-title,
 .about-title {
   align-self: center;
 }
-.interests {
-  margin-left: 10%;
-  width: 500px;
-  height: 300px;
-  display: flex;
-  align-items: flex-start;
-  border-color: black;
-  border-width: 2px;
-  border-style: solid;
-  flex-direction: column;
-}
-.text4 {
-  align-self: center;
-}
-@media (max-width: 768px) {
-  .profile-info {
-    max-height: 400px; /* change max-height for smaller screens */
+
+@media (max-width: 1940px) {
+  .first-row {
+    margin: auto;
+    max-width: 2000px;
+    height: 600px;
+    display: flex;
+    position: relative;
+    align-items: center;
+    transition: height 0.3s ease; /* add transition property */
+    grid-area: overlap;
+  }
+
+  .cover-photo {
+    position: relative;
+    padding-left: 5%;
+    padding-right: 5%;
+    margin: auto;
+    height: 90%;
+    width: 100%;
+    max-height: 500px;
+    max-width: 1700px;
+    object-fit: cover;
+    z-index: 1;
+  }
+
+  .profile-name {
+    left: 317px;
+    bottom: 25px;
+    position: absolute;
+    padding-right: 0px;
+    font-weight: bold;
+  }
+  .friend-count {
+    left: 317px;
+    bottom: 5px;
+    position: absolute;
+    padding-right: 0px;
+  }
+  .edit-button {
+    right: 15%;
+    z-index: 1;
+    top: 550px;
+  }
+  .profile-photo {
+    left: 144px;
+    bottom: 5px;
+    width: 157px;
+    height: 157px;
+    margin: auto;
+    z-index: 100;
+    position: absolute;
+    align-self: flex-end;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+  .second-row {
+    max-width: 2000px;
+    display: flex;
+    margin: auto;
+    margin-top: 10px;
+    justify-content: center;
+  }
+  .spotify-info,
+  .about-and-info {
+    max-width: 500px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  .spotify-box,
+  .about-and-info-box {
+    display: flex;
+    justify-content: center;
+  }
+  .current-song {
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+
+  .top-songs {
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+  .about {
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 55px;
+    width: 400px;
+    height: 266px;
+    display: inline-flex;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .interests {
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 55px;
+    margin-bottom: 55px;
+    width: 400px;
+    height: 266px;
+    display: inline-flex;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .interests-title,
+  .about-title {
+    align-self: center;
   }
 }
 
+@media (max-width: 1600px) {
+  .first-row {
+    margin: auto;
+    max-width: 2000px;
+    height: 400px;
+    display: flex;
+    position: relative;
+    align-items: center;
+    transition: height 0.3s ease; /* add transition property */
+    grid-area: overlap;
+  }
+
+  .cover-photo {
+    position: relative;
+    padding-left: 5%;
+    padding-right: 5%;
+    margin: auto;
+    height: 90%;
+    width: 100%;
+    max-height: 300px;
+    max-width: 1700px;
+    object-fit: cover;
+    z-index: 1;
+  }
+
+  .profile-name {
+    left: 317px;
+    bottom: 25px;
+    position: absolute;
+    padding-right: 0px;
+    font-weight: bold;
+  }
+  .friend-count {
+    left: 317px;
+    bottom: 5px;
+    position: absolute;
+    padding-right: 0px;
+  }
+  .edit-button {
+    right: 15%;
+    z-index: 1;
+    top: 350px;
+  }
+  .profile-photo {
+    left: 144px;
+    bottom: 5px;
+    width: 157px;
+    height: 157px;
+    margin: auto;
+    z-index: 100;
+    position: absolute;
+    align-self: flex-end;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+  .second-row {
+    max-width: 2000px;
+    display: flex;
+    margin: auto;
+    margin-top: 10px;
+    justify-content: center;
+  }
+  .spotify-info,
+  .about-and-info {
+    max-width: 500px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  .spotify-box,
+  .about-and-info-box {
+    display: flex;
+    justify-content: center;
+  }
+  .current-song {
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+
+  .top-songs {
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+  .about {
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 55px;
+    width: 400px;
+    height: 266px;
+    display: inline-flex;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .interests {
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 55px;
+    margin-bottom: 55px;
+    width: 400px;
+    height: 266px;
+    display: inline-flex;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .interests-title,
+  .about-title {
+    align-self: center;
+  }
+}
+
+@media (max-width: 1200px) {
+  .first-row {
+    margin: auto;
+    max-width: 2000px;
+    height: 400px;
+    display: flex;
+    position: relative;
+    align-items: center;
+    transition: height 0.3s ease; /* add transition property */
+    grid-area: overlap;
+  }
+
+  .cover-photo {
+    position: relative;
+    padding-left: 5%;
+    padding-right: 5%;
+    margin: auto;
+    height: 90%;
+    width: 100%;
+    max-height: 300px;
+    max-width: 1700px;
+    object-fit: cover;
+    z-index: 1;
+  }
+
+  .profile-name {
+    left: 200px;
+    bottom: 25px;
+    position: absolute;
+    padding-right: 0px;
+    font-weight: bold;
+  }
+  .friend-count {
+    left: 200px;
+    bottom: 5px;
+    position: absolute;
+    padding-right: 0px;
+  }
+  .edit-button {
+    right: 7%;
+    z-index: 1;
+    top: 350px;
+  }
+  .profile-photo {
+    left: 50px;
+    bottom: 5px;
+    width: 157px;
+    height: 157px;
+    margin: auto;
+    z-index: 100;
+    position: absolute;
+    align-self: flex-end;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+}
+
+@media (max-width: 1024px) {
+  .first-row {
+    margin: auto;
+    max-width: 2000px;
+    height: 300px;
+    width: 100%;
+    display: flex;
+    position: relative;
+    align-items: center;
+    transition: height 0.3s ease; /* add transition property */
+    grid-area: overlap;
+    margin-bottom: 100px;
+  }
+
+  .cover-photo {
+    position: relative;
+    padding-left: 5%;
+    padding-right: 5%;
+    margin: auto;
+    height: 90%;
+    width: 100%;
+    max-height: 200px;
+    max-width: 1700px;
+    object-fit: cover;
+    z-index: 1;
+  }
+
+  .profile-name {
+    left: 200px;
+    bottom: 25px;
+    position: absolute;
+    padding-right: 0px;
+    font-weight: bold;
+  }
+  .friend-count {
+    left: 200px;
+    bottom: 5px;
+    position: absolute;
+    padding-right: 0px;
+  }
+  .edit-button {
+    margin: auto;
+    z-index: 1;
+    top: 300px;
+  }
+  .profile-photo {
+    left: 35px;
+    bottom: 5px;
+    width: 157px;
+    height: 157px;
+    margin: auto;
+    z-index: 100;
+    position: absolute;
+    align-self: flex-end;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+  .second-row {
+    max-width: 2000px;
+    display: flex;
+    margin: auto;
+    margin-top: 10px;
+    justify-content: center;
+  }
+  .spotify-info,
+  .about-and-info {
+    max-width: 1000px;
+    margin-top: 10px;
+    margin-left: 25px;
+    margin-right: 25px;
+  }
+  .spotify-box,
+  .about-and-info-box {
+    display: flex;
+    justify-content: center;
+  }
+  .current-song {
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+
+  .top-songs {
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+  .about {
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 55px;
+    width: 400px;
+    height: 266px;
+    display: inline-flex;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .interests {
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 55px;
+    margin-bottom: 55px;
+    width: 400px;
+    height: 266px;
+    display: inline-flex;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .interests-title,
+  .about-title {
+    align-self: center;
+  }
+}
+
+@media (max-width: 728px) {
+  .first-row {
+    margin: auto;
+    margin-bottom: 200px;
+    width: 100%;
+    height: 350px;
+    display: flex;
+    position: relative;
+    align-items: center;
+    transition: height 0.3s ease; /* add transition property */
+    grid-area: overlap;
+  }
+
+  .cover-photo {
+    position: relative;
+    padding-left: 5%;
+    padding-right: 5%;
+    margin: auto;
+    height: 70%;
+    width: 100%;
+    max-height: 600px;
+    max-width: 700px;
+    object-fit: cover;
+    z-index: 1;
+  }
+
+  .profile-name {
+    margin: auto;
+    display: flex;
+    left: 5px;
+    bottom: -120px;
+    width: 100%;
+    position: absolute;
+    font-weight: bold;
+    justify-content: center;
+  }
+  .friend-count {
+    margin: auto;
+    display: flex;
+    left: 5px;
+    bottom: -140px;
+    width: 100%;
+    position: absolute;
+    font-weight: bold;
+    justify-content: center;
+  }
+
+  .edit-button {
+    left: 0px;
+    margin: 0 auto;
+    top: 485px;
+    width: 100%;
+    position: absolute;
+    font-weight: bold;
+    justify-content: center;
+  }
+  .profile-photo-container {
+    right: 32px;
+    bottom: -195px;
+    margin: auto;
+    display: flex;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+  }
+  .profile-photo {
+    justify-content: center;
+    display: flex;
+    width: 157px;
+    height: 157px;
+    margin: auto;
+    z-index: 100;
+    position: relative;
+    align-self: flex-end;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+  .second-row {
+    max-width: 2000px;
+    display: flex;
+    margin: auto;
+    margin-top: 10px;
+    justify-content: center;
+  }
+  .spotify-info,
+  .about-and-info {
+    min-width: 300px;
+    max-width: 1000px;
+    margin-top: 10px;
+    margin-left: 25px;
+    margin-right: 25px;
+  }
+  .spotify-box,
+  .about-and-info-box {
+    display: flex;
+    justify-content: center;
+  }
+  .current-song {
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+
+  .top-songs {
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+  .about {
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 55px;
+    width: 400px;
+    height: 266px;
+    display: inline-flex;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .interests {
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 55px;
+    margin-bottom: 55px;
+    width: 400px;
+    height: 266px;
+    display: inline-flex;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .interests-title,
+  .about-title {
+    align-self: center;
+  }
+}
