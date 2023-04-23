@@ -308,7 +308,7 @@ function EditPage(
       return { colCount: 4, rowPixels: 164 };
     } else if (width < breakpoints.xl) {
       return { colCount: 5, rowPixels: 164 };
-    } else if (width > breakpoints.xl) {
+    } else if (width >= breakpoints.xl) {
       return { colCount: 5, rowPixels: 164 };
     }
   };

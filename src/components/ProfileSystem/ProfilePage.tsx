@@ -99,7 +99,9 @@ function ProfilePage(passedUser: any) {
                 className="spotify-box"
                 sx={{ padding: 1, flexWrap: "wrap" }}
               >
-                <Box className="current-song"></Box>
+                <Box className="current-song">
+                  <CurrentSong user={spotifyUser!} small={false} />
+                </Box>
                 <Box className="top-songs">
                   <TopSongs user={spotifyUser!} small={true} />
                 </Box>
