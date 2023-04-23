@@ -289,7 +289,8 @@ function ForumPost(props: any) {
                 bottom: 0,
                 position: "absolute",
                 color: "turquoise",
-                fontVariant: "",
+                fontSize: "h6",
+                fontWeight: "bold",
               }}
             >
               {fullName}
