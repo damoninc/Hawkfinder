@@ -74,6 +74,8 @@ function Forum(props: any) {
       setPosts(tempPosts);
     });
     setLoading(false);
+    // Rerender the page when the 'pageSize' variable is changed
+    // which only happens when the "Load More" button is clicked
   }, [pageSize]);
 
   /**

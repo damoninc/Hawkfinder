@@ -157,7 +157,7 @@ const PostInput = (props: any) => {
         variant="outlined"
         multiline
         rows={4}
-        sx={{ borderColor: "teal" }}
+        sx={{ fieldset: { borderColor: "#00504e", borderWidth: "2px" } }}
         onChange={(e) => {
           if (e.target.value.length < 120) {
             setPostText(e.target.value);
@@ -179,12 +179,17 @@ const PostInput = (props: any) => {
           />
         </div>
       )}
-      <FormControl className="interest-input">
+      <FormControl
+        className="interest-input"
+        sx={{ fieldset: { borderColor: "#00504e", borderWidth: "2px" } }}
+      >
         <Autocomplete
           onChange={(e, value) => {
             if (value) {
               console.log("setting interest: ", value);
               setInterest(value);
+            } else {
+              setInterest("");
             }
           }}
           options={interests}
@@ -229,15 +234,19 @@ const PostInput = (props: any) => {
             className="post-button-disabled"
             type="submit"
             variant="outlined"
-            disabled
+            // disabled
             aria-haspopup="true"
             aria-owns={open ? "mouse-over-popover" : undefined}
-            onMouseEnter={handlePopoverOpen}
+            onClick={handlePopoverOpen}
             onMouseLeave={handlePopoverClose}
           >
             Post
           </Button>
           <Popover
+            id="mouse-over-popover"
+            sx={{
+              pointerEvents: "none",
+            }}
             open={open}
             anchorEl={anchorEl}
             anchorOrigin={{

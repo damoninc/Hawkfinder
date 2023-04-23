@@ -1,21 +1,13 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { db, storage } from "../../firebase/config";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Link,
-  Navigate,
-  useNavigate,
-} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
 import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
 import { Box, IconButton, Paper, Typography } from "@mui/material";
 import "../../styles/forumpost.css";
 import { getDownloadURL, ref } from "firebase/storage";
 import { doc, getDoc, updateDoc, deleteField } from "@firebase/firestore";
-import { BorderStyle } from "@mui/icons-material";
 
 function timeSince(date: Date) {
   const seconds = Math.floor((new Date().valueOf() - date.valueOf()) / 1000);
@@ -75,7 +67,19 @@ function timeSince(date: Date) {
   }
 }
 
-function ForumPost(props: any) {
+interface Post {
+  id: string;
+  userID: string;
+  loggedUser: string;
+  postDate: Date;
+  description: string;
+  interest: string;
+  imageURL: string;
+  ratings: Map<string, string>;
+  rating: number;
+}
+
+function ForumPost(props: Post) {
   // HOOKS ----------------------------------------------------------------
   // Hook for the ratings of each post
   const [ratings, setRatings] = useState(props.rating);
@@ -93,6 +97,7 @@ function ForumPost(props: any) {
   const [documentRef, setDocumentRef] = useState<any>(
     doc(db, "Posts", props.id)
   );
+
   const navigate = useNavigate();
 
   /**
