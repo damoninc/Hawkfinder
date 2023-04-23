@@ -410,7 +410,7 @@ function EditPage(
             <Typography id="modal-modal-title" variant="h6" component="h2">
               Edit your profile
             </Typography>
-            <Box sx={{ overflowY: "scroll", maxHeight: 500 }}>
+            <Box sx={{ overflowY: "auto", maxHeight: 500 }}>
               <Paper sx={{ p: 3 }}>
                 <Box
                   id="picture icons box"

@@ -122,7 +122,7 @@ function ProfilePage(passedUser: any) {
                   <Typography sx={{ fontWeight: "bold" }}> About Me</Typography>
                   <br></br>
                 </Box>
-                <Box sx={{ overflowY: "scroll" }}>
+                <Box sx={{ overflowY: "auto" }}>
                   <Typography sx={{ m: 2 }}>{userPage?.profile.bio}</Typography>
                 </Box>
               </Paper>
@@ -137,7 +137,7 @@ function ProfilePage(passedUser: any) {
                   </Typography>
                   <br></br>
                 </Box>
-                <Box sx={{ overflowY: "scroll", width: "100%" }}>
+                <Box sx={{ overflowY: "auto", width: "100%" }}>
                   <ul className="list">
                     {userPage?.profile.interests.map((interest: any) => (
                       <li key={interest}>{interest}</li>
