@@ -12,6 +12,7 @@ import {
   Chip,
   InputAdornment,
   Paper,
+  Grid,
 } from "@mui/material";
 import PortraitIcon from "@mui/icons-material/Portrait";
 import PanoramaIcon from "@mui/icons-material/Panorama";
@@ -27,7 +28,7 @@ import { db, storage } from "../../firebase/config";
 import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
 import * as filter from "leo-profanity";
 import { MuiChipsInput } from "mui-chips-input";
-import { BorderStyle } from "@mui/icons-material";
+import EditIcon from "@mui/icons-material/Edit";
 const interestRef = doc(db, "Interests", "Interests");
 const interestSnap = await getDoc(interestRef);
 const baseInterests = interestSnap.data();
@@ -307,6 +308,8 @@ function EditPage(
       return { colCount: 4, rowPixels: 164 };
     } else if (width < breakpoints.xl) {
       return { colCount: 5, rowPixels: 164 };
+    } else if (width > breakpoints.xl) {
+      return { colCount: 5, rowPixels: 164 };
     }
   };
 
@@ -379,7 +382,10 @@ function EditPage(
           className="edit-button"
           variant="contained"
         >
-          Edit Profile
+          <EditIcon />{" "}
+          <Typography variant="body2" style={{ textTransform: "capitalize" }}>
+            Edit Profile
+          </Typography>
         </Button>
         <Modal
           open={open}
@@ -481,31 +487,44 @@ function EditPage(
                       }}
                     >
                       <ImageLoader />
-                      <Button color="warning" onClick={handleInnerClose}>
-                        Back
-                      </Button>
-                      <Button
-                        color="primary"
-                        variant="contained"
-                        sx={{ ml: 44, mr: 44 }}
-                        onClick={handleUploadPhoto}
+                      <Grid
+                        container
+                        justifyContent="space-between"
+                        spacing={2}
+                        sx={{}}
                       >
-                        <input
-                          type="file"
-                          ref={fileInputRef}
-                          style={{ display: "none" }}
-                          onChange={handleFileInputChange}
-                          accept="image/jpeg, image/png"
-                        />
-                        Upload Photo
-                      </Button>
-                      <Button
-                        color="primary"
-                        variant="outlined"
-                        onClick={handleInnerClose}
-                      >
-                        Select
-                      </Button>
+                        <Grid item>
+                          <Button color="warning" onClick={handleInnerClose}>
+                            Back
+                          </Button>
+                        </Grid>
+                        <Grid item>
+                          <Button
+                            color="primary"
+                            variant="contained"
+                            sx={{ flexGrow: 1 }}
+                            onClick={handleUploadPhoto}
+                          >
+                            <input
+                              type="file"
+                              ref={fileInputRef}
+                              style={{ display: "none" }}
+                              onChange={handleFileInputChange}
+                              accept="image/jpeg, image/png"
+                            />
+                            Upload Photo
+                          </Button>
+                        </Grid>
+                        <Grid item>
+                          <Button
+                            color="primary"
+                            variant="outlined"
+                            onClick={handleInnerClose}
+                          >
+                            Select
+                          </Button>
+                        </Grid>
+                      </Grid>
                     </Box>
                   </Modal>
                 </Box>

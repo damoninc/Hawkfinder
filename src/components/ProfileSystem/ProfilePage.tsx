@@ -73,7 +73,7 @@ function ProfilePage(passedUser: any) {
 
   return (
     <>
-      <div className="body">
+      <div className="body" style={{ overflowX: "hidden" }}>
         <Paper className="first-row" sx={{ mt: "10px", borderRadius: 10 }}>
           <img src={`${userCoverPic}`} alt="image" className="cover-photo" />
           <Typography className="profile-name" sx={{ fontWeight: "bold" }}>
@@ -82,12 +82,14 @@ function ProfilePage(passedUser: any) {
           <Typography className="friend-count">
             {userPage?.friendsList.length + " Friends"}
           </Typography>
-          <img
-            src={`${userProfPic}`}
-            alt="image"
-            loading="lazy"
-            className="profile-photo"
-          />
+          <Box className="profile-photo-container">
+            <img
+              src={`${userProfPic}`}
+              alt="image"
+              loading="lazy"
+              className="profile-photo"
+            />
+          </Box>
           {EditPage(userPage, docRef, passedUserObj)}
         </Paper>
         <Box className="second-row" sx={{ flexWrap: "wrap" }}>
@@ -97,9 +99,7 @@ function ProfilePage(passedUser: any) {
                 className="spotify-box"
                 sx={{ padding: 1, flexWrap: "wrap" }}
               >
-                <Box className="current-song">
-                  <CurrentSong user={spotifyUser!} small={false} />
-                </Box>
+                <Box className="current-song"></Box>
                 <Box className="top-songs">
                   <TopSongs user={spotifyUser!} small={true} />
                 </Box>
