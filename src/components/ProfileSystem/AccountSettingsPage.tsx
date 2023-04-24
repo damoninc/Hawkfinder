@@ -86,107 +86,6 @@ function AccountSettingsPage(passedUser: any) {
   }
 
   /**
-   * Uses FireBase changeUserPassword function to change the current password.
-   * If the user needs to reauth, will redirect to another page.
-   * @param passwordInput : string - The user inputed password they want to change
-   */
-  //TODO:
-  function changeUserPassword(passwordInput: string) {
-    console.log("You're in the function!");
-    updatePassword(passedUser.uCreds, passwordInput)
-      .then(() => {
-        alert("Password Changed");
-      })
-      .catch((error: FirebaseError) => {
-        alert("Error! " + error);
-        switch (error.code) {
-          case "auth/requires-recent-login":
-            alert("You need to sign in again to do this change!");
-            navigate("/components/Reauth");
-            break;
-          default:
-            setSignupMessage(
-              `Man, I don't even know what happened... ${error.code}`
-            );
-            break;
-        }
-      });
-  }
-
-  function order66() {
-    alert("Account has been deleted!");
-    deleteUser(passedUser.uCreds)
-      .then(() => {
-        deleteDoc(doc(db, "Users", passedUser.uCreds.uid))
-          .then(() => alert("Profile is a gone!"))
-          .catch((error: FirebaseError) => {
-            alert("Error! " + error);
-            switch (error.code) {
-              case "auth/requires-recent-login":
-                alert("You need to sign in again to do this change!");
-                navigate("/components/Reauth");
-                break;
-              default:
-                setSignupMessage(
-                  `Man, I don't even know what happened... ${error.code}`
-                );
-                break;
-            }
-          });
-        alert("Rip bozo!");
-        navigate("/");
-      })
-      .catch((error: FirebaseError) => {
-        alert("Error! " + error);
-        switch (error.code) {
-          case "auth/requires-recent-login":
-            alert("You need to sign in again to do this change!");
-            navigate("/components/Reauth");
-            break;
-          default:
-            setSignupMessage(
-              `Man, I don't even know what happened... ${error.code}`
-            );
-            break;
-        }
-      });
-  }
-
-  /**
-   * Will change what is shown based on useState
-   * @returns A component or null
-   */
-  //TODO: Maybe add reauthentication to this page.
-  function displayItem() {
-    if (selectItem == "2") {
-      return (
-        <div className="centered" style={{ height: "100%" }}>
-          <ChangeEmailComponent />
-        </div>
-      );
-    } else if (selectItem == "3") {
-      return (
-        <div className="centered" style={{ height: "100%" }}>
-          <ChangePasswordComponent />
-        </div>
-      );
-    } else if (selectItem == "4") {
-      return (
-        <div
-          className="centered"
-          style={{ height: "100%", textAlign: "center" }}
-        >
-          <DeleteAccountComponent />
-        </div>
-      );
-    } else if (selectItem == "5") {
-      return <div className="centered" style={{ height: "100%"}}>{SpotifyAuthDeauth(spotifyUser)}</div>;
-    } else {
-      return null;
-    }
-  }
-
-  /**
    * Allows a user to change their email. If their credentials have expired,
    * it will navigate them to another page.
    * @returns The Email Change Component
@@ -280,6 +179,34 @@ function AccountSettingsPage(passedUser: any) {
         </form>
       </Paper>
     );
+  }
+
+  /**
+   * Uses FireBase changeUserPassword function to change the current password.
+   * If the user needs to reauth, will redirect to another page.
+   * @param passwordInput : string - The user inputed password they want to change
+   */
+  //TODO:
+  function changeUserPassword(passwordInput: string) {
+    console.log("You're in the function!");
+    updatePassword(passedUser.uCreds, passwordInput)
+      .then(() => {
+        alert("Password Changed");
+      })
+      .catch((error: FirebaseError) => {
+        alert("Error! " + error);
+        switch (error.code) {
+          case "auth/requires-recent-login":
+            alert("You need to sign in again to do this change!");
+            navigate("/components/Reauth");
+            break;
+          default:
+            setSignupMessage(
+              `Man, I don't even know what happened... ${error.code}`
+            );
+            break;
+        }
+      });
   }
 
   /**
@@ -381,15 +308,55 @@ function AccountSettingsPage(passedUser: any) {
     );
   }
 
+  function order66() {
+    alert("Account has been deleted!");
+    deleteUser(passedUser.uCreds)
+      .then(() => {
+        deleteDoc(doc(db, "Users", passedUser.uCreds.uid))
+          .then(() => alert("Profile is a gone!"))
+          .catch((error: FirebaseError) => {
+            alert("Error! " + error);
+            switch (error.code) {
+              case "auth/requires-recent-login":
+                alert("You need to sign in again to do this change!");
+                navigate("/components/Reauth");
+                break;
+              default:
+                setSignupMessage(
+                  `Man, I don't even know what happened... ${error.code}`
+                );
+                break;
+            }
+          });
+        alert("Rip bozo!");
+        navigate("/");
+      })
+      .catch((error: FirebaseError) => {
+        alert("Error! " + error);
+        switch (error.code) {
+          case "auth/requires-recent-login":
+            alert("You need to sign in again to do this change!");
+            navigate("/components/Reauth");
+            break;
+          default:
+            setSignupMessage(
+              `Man, I don't even know what happened... ${error.code}`
+            );
+            break;
+        }
+      });
+  }
   function DeleteAccountComponent() {
     return <div>{deleteClicked ? <ClickDaButton /> : <NoClickDaButton />}</div>;
   }
-
+  
   function ClickDaButton() {
     return (
       <div>
         <h1>Are you absolutely sure?</h1>
-        <p>I&apos;m not joking, it&apos;s really going to be completely gone.</p>
+        <p>
+          I&apos;m not joking, it&apos;s really going to be completely gone.
+        </p>
         <ButtonGroup>
           <Button variant="contained" onClick={() => order66()}>
             Yes
@@ -413,14 +380,52 @@ function AccountSettingsPage(passedUser: any) {
         <Button
           variant="contained"
           onClick={() => setDeleteClicked(!deleteClicked)}
-        >
+          >
           Delete Account?
         </Button>
         <p>Once you press this button there&apos;s no going back.</p>
       </div>
     );
   }
-
+  
+  
+    /**
+     * Will change what is shown based on useState
+     * @returns A component or null
+     */
+    function displayItem() {
+      if (selectItem == "2") {
+        return (
+          <div className="centered" style={{ height: "100%" }}>
+            <ChangeEmailComponent />
+          </div>
+        );
+      } else if (selectItem == "3") {
+        return (
+          <div className="centered" style={{ height: "100%" }}>
+            <ChangePasswordComponent />
+          </div>
+        );
+      } else if (selectItem == "4") {
+        return (
+          <div
+            className="centered"
+            style={{ height: "100%", textAlign: "center" }}
+          >
+            <DeleteAccountComponent />
+          </div>
+        );
+      } else if (selectItem == "5") {
+        return (
+          <div className="centered" style={{ height: "100%" }}>
+            {SpotifyAuthDeauth(spotifyUser)}
+          </div>
+        );
+      } else {
+        return null;
+      }
+    }
+  
   return (
     <div>
       <div style={{ textAlign: "center", marginBottom: "20px" }}>
