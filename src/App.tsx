@@ -230,7 +230,16 @@ function App() {
               )
             }
           />
-          <Route path="/components/Reauth" element={<ReAuth />} />
+          <Route
+            path="/components/Reauth"
+            element={
+              isUserLoggin(user) ? (
+                <ReAuth />
+              ) : (
+                <Navigate to="/components/Interceptor" />
+              )
+            }
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>

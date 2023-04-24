@@ -20,8 +20,15 @@
     }
 
     .loginSquare {
-        font-size: 8px;
+        font-size: 12px;
         padding: 5px;
+    }
+    .errorMessage{
+        font-size: 10px;
+    }
+
+    .MuiTextField-root {
+        height: 50px;
     }
     
 }

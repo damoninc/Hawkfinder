@@ -9,9 +9,9 @@ import { db } from "../../firebase/config";
 import {
   Button,
   ButtonGroup,
+  CircularProgress,
   Container,
   Grid,
-  Link,
   List,
   ListItem,
   ListItemButton,
@@ -19,10 +19,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import Navbar from "../Navbar/Navbar";
 import { useNavigate } from "react-router-dom";
 import SpotifyAuthDeauth from "../SpotifyIntegration/SpotifyLogin";
-import { user } from "../FriendSystem/FriendPage";
 
 /**
  * Allows a user ot change their important credentials such as their Email and their Password.
@@ -52,16 +50,28 @@ function AccountSettingsPage(passedUser: any) {
       });
   }, []);
 
+  function AccountErrorMessage() {
+    if (signupMessage == "") {
+      return null;
+    } else if (signupMessage == "CLICKED!") {
+      return <CircularProgress />;
+    } else {
+      return <h2 className="errorMessage">{signupMessage}</h2>;
+    }
+  }
+
   /**
    * Uses the firebase updateEmail function to change a user's email for
    * account and firestore. Will redirect if needed to reauth.
    * @param emailInput : string - The select email that will replace their old email
    */
   function changeUserEmail(emailInput: string) {
+    setSignupMessage("CLICKED!");
     updateEmail(passedUser.uCreds, emailInput)
       .then(() => {
         updateDoc(docRef, { email: emailInput });
         alert("Email Successfully changed!");
+        window.location.reload();
       })
       .catch((error: FirebaseError) => {
         alert("Error! " + error);
@@ -74,7 +84,6 @@ function AccountSettingsPage(passedUser: any) {
           case "auth/requires-recent-login":
             alert("You need to sign in again to do this change!");
             navigate("/components/Reauth");
-
             break;
           default:
             setSignupMessage(
@@ -167,6 +176,7 @@ function AccountSettingsPage(passedUser: any) {
                   />
                 </Grid>
               </Container>
+              {AccountErrorMessage()}
               <Container>
                 <Grid item>
                   <Button variant="outlined" type="submit">
@@ -188,10 +198,11 @@ function AccountSettingsPage(passedUser: any) {
    */
   //TODO:
   function changeUserPassword(passwordInput: string) {
-    console.log("You're in the function!");
+    setSignupMessage("CLICKED!");
     updatePassword(passedUser.uCreds, passwordInput)
       .then(() => {
         alert("Password Changed");
+        window.location.reload();
       })
       .catch((error: FirebaseError) => {
         alert("Error! " + error);
@@ -294,6 +305,7 @@ function AccountSettingsPage(passedUser: any) {
                   />
                 </Grid>
               </Container>
+              {AccountErrorMessage()}
               <Container>
                 <Grid item>
                   <Button variant="outlined" type="submit">
@@ -349,7 +361,7 @@ function AccountSettingsPage(passedUser: any) {
   function DeleteAccountComponent() {
     return <div>{deleteClicked ? <ClickDaButton /> : <NoClickDaButton />}</div>;
   }
-  
+
   function ClickDaButton() {
     return (
       <div>
@@ -380,52 +392,51 @@ function AccountSettingsPage(passedUser: any) {
         <Button
           variant="contained"
           onClick={() => setDeleteClicked(!deleteClicked)}
-          >
+        >
           Delete Account?
         </Button>
         <p>Once you press this button there&apos;s no going back.</p>
       </div>
     );
   }
-  
-  
-    /**
-     * Will change what is shown based on useState
-     * @returns A component or null
-     */
-    function displayItem() {
-      if (selectItem == "2") {
-        return (
-          <div className="centered" style={{ height: "100%" }}>
-            <ChangeEmailComponent />
-          </div>
-        );
-      } else if (selectItem == "3") {
-        return (
-          <div className="centered" style={{ height: "100%" }}>
-            <ChangePasswordComponent />
-          </div>
-        );
-      } else if (selectItem == "4") {
-        return (
-          <div
-            className="centered"
-            style={{ height: "100%", textAlign: "center" }}
-          >
-            <DeleteAccountComponent />
-          </div>
-        );
-      } else if (selectItem == "5") {
-        return (
-          <div className="centered" style={{ height: "100%" }}>
-            {SpotifyAuthDeauth(spotifyUser)}
-          </div>
-        );
-      } else {
-        return null;
-      }
+
+  /**
+   * Will change what is shown based on useState
+   * @returns A component or null
+   */
+  function displayItem() {
+    if (selectItem == "2") {
+      return (
+        <div className="centered" style={{ height: "100%" }}>
+          <ChangeEmailComponent />
+        </div>
+      );
+    } else if (selectItem == "3") {
+      return (
+        <div className="centered" style={{ height: "100%" }}>
+          <ChangePasswordComponent />
+        </div>
+      );
+    } else if (selectItem == "4") {
+      return (
+        <div
+          className="centered"
+          style={{ height: "100%", textAlign: "center" }}
+        >
+          <DeleteAccountComponent />
+        </div>
+      );
+    } else if (selectItem == "5") {
+      return (
+        <div className="centered" style={{ height: "100%" }}>
+          {SpotifyAuthDeauth(spotifyUser)}
+        </div>
+      );
+    } else {
+      return null;
     }
-  
+  }
+
   return (
     <div>
       <div style={{ textAlign: "center", marginBottom: "20px" }}>
@@ -443,13 +454,13 @@ function AccountSettingsPage(passedUser: any) {
         <List className="account-box">
           <ListItemButton
             selected={selectItem == "2"}
-            onClick={() => setSelectedItem("2")}
+            onClick={() => {setSelectedItem("2"); setSignupMessage("");}}
           >
             <ListItem>Change Email</ListItem>
           </ListItemButton>
           <ListItemButton
             selected={selectItem == "3"}
-            onClick={() => setSelectedItem("3")}
+            onClick={() => {setSelectedItem("3"); setSignupMessage("")}}
           >
             <ListItem>Change Password</ListItem>
           </ListItemButton>
