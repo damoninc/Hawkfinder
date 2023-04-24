@@ -180,11 +180,7 @@ function AccountSettingsPage(passedUser: any) {
         </div>
       );
     } else if (selectItem == "5") {
-      return (
-        <div className="centered">
-          {SpotifyAuthDeauth(spotifyUser)}
-        </div>
-      );
+      return <div className="centered" style={{ height: "100%"}}>{SpotifyAuthDeauth(spotifyUser)}</div>;
     } else {
       return null;
     }
@@ -393,7 +389,7 @@ function AccountSettingsPage(passedUser: any) {
     return (
       <div>
         <h1>Are you absolutely sure?</h1>
-        <p>I'm not joking, it's really going to be completely gone.</p>
+        <p>I&apos;m not joking, it&apos;s really going to be completely gone.</p>
         <ButtonGroup>
           <Button variant="contained" onClick={() => order66()}>
             Yes
@@ -420,7 +416,7 @@ function AccountSettingsPage(passedUser: any) {
         >
           Delete Account?
         </Button>
-        <p>Once you press this button there's no going back.</p>
+        <p>Once you press this button there&apos;s no going back.</p>
       </div>
     );
   }
@@ -432,9 +428,10 @@ function AccountSettingsPage(passedUser: any) {
           Hi, {userData?.profile.firstName + " " + userData?.profile.lastName}!
         </Typography>
         <Typography>Welcome to Account Settings!</Typography>
-        <Typography>If your session has been active for
-            a while, you may need to reauthenticate!</Typography>
-
+        <Typography>
+          If your session has been active for a while, you may need to
+          reauthenticate!
+        </Typography>
       </div>
       <hr />
       <div className="account-wrapper">
