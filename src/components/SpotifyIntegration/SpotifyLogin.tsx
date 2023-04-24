@@ -14,7 +14,7 @@ const spotifyLogo =
  * @param {User} user - user to link to spotify
  * @return {*}
  */
-export default function SpotifyAuthDeauth(user: User) {
+export default function SpotifyAuthDeauth(user: User | undefined) {
   if (user === undefined) {
     return <div></div>;
   }

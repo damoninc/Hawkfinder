@@ -12,3 +12,23 @@
 .account-setting {
     margin: 0 auto;
 }
+
+@media only screen and (max-width: 728px) {
+    .account-wrapper {
+        grid-template-columns:
+         30% 70%;
+    }
+
+    .loginSquare {
+        font-size: 12px;
+        padding: 5px;
+    }
+    .errorMessage{
+        font-size: 10px;
+    }
+
+    .MuiTextField-root {
+        height: 50px;
+    }
+    
+}
