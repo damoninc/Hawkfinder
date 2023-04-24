@@ -43,9 +43,13 @@ function Forum(props: any) {
    */
   useEffect(() => {
     setLoading(true);
-    getTotalDocs()
+    getTotalDocs();
     if (!props.passedUser) {
-      q = query(collection(db, "Posts"), orderBy("postDate", "desc"), limit(pageSize));
+      q = query(
+        collection(db, "Posts"),
+        orderBy("postDate", "desc"),
+        limit(pageSize)
+      );
     } else if (props.passedUser) {
       q = query(
         collection(db, "Posts"),
@@ -113,6 +117,7 @@ function Forum(props: any) {
                   ratings={post.ratings}
                   rating={post.calculateRating()}
                 />
+                <br />
               </div>
             );
           })}
@@ -120,11 +125,20 @@ function Forum(props: any) {
             <div className="pagination">
               {/* Determines whether the forum can load any more posts */}
               {pageSize <= totalDocs ? (
-                <Button className="load-more" variant="outlined" onClick={handleLoadMore}>
+                <Button
+                  className="load-more"
+                  variant="outlined"
+                  onClick={handleLoadMore}
+                >
                   Load more...
                 </Button>
               ) : (
-                <Button className="load-more" variant="outlined" onClick={handleLoadMore} disabled>
+                <Button
+                  className="load-more"
+                  variant="outlined"
+                  onClick={handleLoadMore}
+                  disabled
+                >
                   Load more...
                 </Button>
               )}

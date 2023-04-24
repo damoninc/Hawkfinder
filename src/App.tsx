@@ -47,7 +47,7 @@ function App() {
     theme.palette.mode == "dark" ? "#454545" : "#F6F6F6";
   boxTheme.borderColor = theme.palette.primary.dark;
 
-  const gridTheme = {marginLeft: "0px"}
+  const gridTheme = { marginLeft: "0px" };
 
   return (
     <div className="app">
@@ -92,7 +92,11 @@ function App() {
         </nav> 
       Comment out temporarily */}
       <Router>
-        {user ? <div style={{height: "60px"}}><Navbar /></div> : null}
+        {user ? (
+          <div style={{ height: "60px" }}>
+            <Navbar />
+          </div>
+        ) : null}
         <Routes>
           <Route
             path="/components/Forum"
@@ -125,16 +129,14 @@ function App() {
             path="/components/Friends/requests"
             element={
               isUserLoggin(user) ? (
-              <Grid
-                container
-              >
+                <Grid container>
                   <Grid item xs={12} md={8} lg={9} xl={10} sx={gridTheme}>
-                  <FriendRequests />
+                    <FriendRequests />
+                  </Grid>
+                  <Grid item xs={0} md={4} lg={3} xl={2}>
+                    <FriendPage uCreds={user!.uid} page="sidebar" />
+                  </Grid>
                 </Grid>
-                <Grid item xs={0} md={4} lg={3} xl={2}>
-                  <FriendPage uCreds={user!.uid} page="sidebar" />
-                </Grid>
-              </Grid>
               ) : (
                 <Navigate to="/components/Interceptor" />
               )
@@ -175,7 +177,7 @@ function App() {
             element={
               isUserLoggin(user) ? (
                 <Grid container>
-                  <Grid item xs={12} md={8} lg={9} xl={10} sx={gridTheme}>
+                  <Grid item xs={12} md={8} lg={10} xl={10.5} sx={gridTheme}>
                     <ProfilePage uCreds={user?.uid} />
                   </Grid>
                   <Grid item xs={0} md={4} lg={3} xl={2}>
