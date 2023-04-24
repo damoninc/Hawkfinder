@@ -2,13 +2,11 @@ import React, { useEffect, useState } from "react";
 import User, { userConverter } from "../../data/User";
 import "../../styles/Profile.css";
 import { getDoc, doc } from "firebase/firestore";
-import { auth, db, storage } from "../../firebase/config";
+import { db, storage } from "../../firebase/config";
 import { ref, getDownloadURL } from "firebase/storage";
-import Navbar from "../Navbar/Navbar";
-import { Box, Typography } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 import EditPage from "./EditPage";
-import CurrentSong from "../SpotifyIntegration/SpotifyComponents";
-import ForumPost from "../Forum/ForumPost";
+import CurrentSong, { TopSongs } from "../SpotifyIntegration/SpotifyComponents";
 import Forum from "../Forum/Forum";
 
 /**
@@ -21,8 +19,8 @@ function ProfilePage(passedUser: any) {
   const urlParams = new URLSearchParams(hashParams);
   let uid = urlParams.get("userid");
 
-  console.log(urlParams);
-  console.log(uid);
+  // console.log(urlParams);
+  // console.log(uid);
   const passedUserObj: string = passedUser.uCreds; //Feel free to change this to the passed in object for testing. Make sure its of type string.
   const [userPage, setUserPage] = useState<any>();
   const [userProfPic, setUserProfPic] = useState("");
@@ -34,6 +32,7 @@ function ProfilePage(passedUser: any) {
   }
   const docRef = doc(db, "Users", uid!);
   useEffect(() => {
+    console.log("passed user: ", passedUserObj);
     getDoc(docRef)
       .then((docSnap) => {
         const userToSpotify: User | undefined =
@@ -68,60 +67,91 @@ function ProfilePage(passedUser: any) {
     return (
       <div hidden>
         {EditPage(userPage, docRef, passedUserObj)}
-        <Forum passedUser={uid} />
+        <Forum passedUser={uid} userID={uid} />
       </div>
     );
   }
 
-  console.log(userPage.profile.firstName);
-  console.log(userProfPic);
   return (
     <>
-      <Navbar />
-      <Box className="profile-info">
-        <img src={`${userCoverPic}`} alt="image" className="cover-photo" />
-        <span className="profile-name">
-          <span>
+      <div className="body" style={{ overflowX: "hidden" }}>
+        <Paper className="first-row" sx={{ mt: "10px", borderRadius: 10 }}>
+          <img src={`${userCoverPic}`} alt="image" className="cover-photo" />
+          <Typography className="profile-name" sx={{ fontWeight: "bold" }}>
             {userPage?.profile.firstName + " " + userPage?.profile.lastName}
-          </span>
-          <br></br>
-        </span>
-        <span className="friend-count">
-          <span>{userPage?.friendsList.length + " Friends"}</span>
-          <br />
-        </span>
-        <img
-          src={`${userProfPic}`}
-          alt="image"
-          loading="lazy"
-          className="profile-photo"
-        />
-        {EditPage(userPage, docRef, passedUserObj)}
-      </Box>
-      <Box className="about">
-        <Box className="about-title">
-          <Typography sx={{ fontWeight: "bold" }}> About Me</Typography>
-          <br></br>
+          </Typography>
+          <Typography className="friend-count">
+            {userPage?.friendsList.length + " Friends"}
+          </Typography>
+          <Box className="profile-photo-container">
+            <img
+              src={`${userProfPic}`}
+              alt="image"
+              loading="lazy"
+              className="profile-photo"
+            />
+          </Box>
+          {EditPage(userPage, docRef, passedUserObj)}
+        </Paper>
+        <Box className="second-row" sx={{ flexWrap: "wrap" }}>
+          {spotifyUser?.spotify.accessToken != "null" ? (
+            <Paper className="spotify-info" sx={{ borderRadius: 10 }}>
+              <Box
+                className="spotify-box"
+                sx={{ m: "3", padding: 2, flexWrap: "wrap" }}
+              >
+                <Box className="current-song">
+                  <CurrentSong user={spotifyUser!} small={false} />
+                </Box>
+                <Box className="top-songs">
+                  <TopSongs user={spotifyUser!} small={true} />
+                </Box>
+              </Box>
+            </Paper>
+          ) : null}
+          <Paper className="about-and-info" sx={{ borderRadius: 10 }}>
+            <Box
+              className="about-and-info-box"
+              sx={{ m: "3", padding: 2, flexWrap: "wrap" }}
+            >
+              <Paper
+                className="about"
+                elevation={10}
+                sx={{ borderRadius: "12px" }}
+              >
+                <Box className="about-title">
+                  <Typography sx={{ fontWeight: "bold" }}> About Me</Typography>
+                  <br></br>
+                </Box>
+                <Box sx={{ overflowY: "auto" }}>
+                  <Typography sx={{ m: 2 }}>{userPage?.profile.bio}</Typography>
+                </Box>
+              </Paper>
+              <Paper
+                className="interests"
+                elevation={10}
+                sx={{ borderRadius: "12px" }}
+              >
+                <Box className="interests-title">
+                  <Typography sx={{ fontWeight: "bold" }}>
+                    My Interests
+                  </Typography>
+                  <br></br>
+                </Box>
+                <Box sx={{ overflowY: "auto", width: "100%" }}>
+                  <ul className="list">
+                    {userPage?.profile.interests.map((interest: any) => (
+                      <li key={interest}>{interest}</li>
+                    ))}
+                  </ul>
+                </Box>
+              </Paper>
+            </Box>
+          </Paper>
         </Box>
-        <Typography sx={{ m: 2 }}>{userPage?.profile.bio}</Typography>
-      </Box>
-      <Box className="interests">
-        <Box className="text4">
-          <Typography sx={{ fontWeight: "bold" }}>My Interests</Typography>
-          <br></br>
-        </Box>
-        <ul className="list">
-          {userPage?.profile.interests.map((interest: any) => (
-            <li key={interest}>{interest}</li>
-          ))}
-        </ul>
-      </Box>
-      {spotifyUser !== undefined ? (
-        <CurrentSong user={spotifyUser} small={false} />
-      ) : (
-        <div></div>
-      )}
-      <Forum passedUser={uid} />
+        <br />
+      </div>
+      <Forum passedUser={uid} userID={passedUserObj} />
     </>
   );
 }

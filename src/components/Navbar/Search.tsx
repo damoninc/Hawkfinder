@@ -2,10 +2,10 @@ import React from "react";
 import User, { userConverter } from "../../data/User";
 import "../../styles/friendpage.css";
 import { db } from "../../firebase/config";
-import { collection, query, getDocs, doc, getDoc } from "firebase/firestore";
+import { collection, query, getDocs } from "firebase/firestore";
 import { Box, CircularProgress } from "@mui/material";
 import UserBox from "../FriendSystem/UserBox";
-import Navbar from "./Navbar";
+import { boxTheme } from "../../App";
 
 /**
  * Generates a HTML block that displays a list of Users based
@@ -25,6 +25,13 @@ interface IState {
   loggedUser: User | null;
 }
 
+/**
+ * returns a display that shows the results of a given search
+ *
+ * @export
+ * @class SearchPage
+ * @extends {React.Component<IProps, IState>}
+ */
 export default class SearchPage extends React.Component<IProps, IState> {
   rerender = false;
   intervalID: any;
@@ -57,18 +64,20 @@ export default class SearchPage extends React.Component<IProps, IState> {
     }
     return (
       <div>
-        <Navbar />
         <Box
           className="search"
           sx={{
-            border: "4px solid teal",
+            border: boxTheme.border,
+            borderColor: boxTheme.borderColor,
             borderRadius: "25px",
+            background: boxTheme.backgroundSecondary,
             overflow: "hidden",
             gridTemplateRows: "75px 100%",
             justifyItems: "center",
+            marginTop: "10px",
           }}
         >
-          <h1>User Search</h1>
+          <h1 style={{ borderBottom: "3px solid gray" }}>User Search</h1>
           {this.checkNullList()}
         </Box>
       </div>
@@ -76,18 +85,10 @@ export default class SearchPage extends React.Component<IProps, IState> {
   }
 
   async callDB() {
-    const querySnapshot = await getDoc(
-      doc(db, "Users", this.props.uCreds!).withConverter(userConverter)
-    );
-    const dbUser = querySnapshot.data();
-    if (dbUser !== undefined) {
-      this.setState({ loggedUser: dbUser });
-    }
-
     let msg = this.state.search;
     const users: User[] = [];
 
-    if (msg == null || msg.length == 0) {
+    if (!msg || msg.length == 0) {
       this.setState({ dbCall: null });
       return;
     }
@@ -98,13 +99,16 @@ export default class SearchPage extends React.Component<IProps, IState> {
     await getDocs(query(collection(db, "Users"))).then(async (usersData) => {
       usersData.forEach((user) => {
         const data: User | undefined = userConverter.fromFirestore(user);
-        if (data !== undefined) {
+        if (data !== undefined && msg) {
+          if (data.userid == this.props.uCreds) {
+            this.setState({ loggedUser: data });
+          }
           if (
-            data.profile.userName.toLocaleLowerCase().includes(msg!) ||
-            data.profile.firstName.toLocaleLowerCase().includes(msg!) ||
-            data.profile.lastName.toLocaleLowerCase().includes(msg!) ||
+            data.profile.userName.toLocaleLowerCase().includes(msg) ||
+            data.profile.firstName.toLocaleLowerCase().includes(msg) ||
+            data.profile.lastName.toLocaleLowerCase().includes(msg) ||
             `${data.profile.firstName.toLocaleLowerCase()}${data.profile.lastName.toLocaleLowerCase()}`.includes(
-              msg!
+              msg
             )
           ) {
             users.push(data);
@@ -112,7 +116,7 @@ export default class SearchPage extends React.Component<IProps, IState> {
         }
       });
       this.setState({ dbCall: users });
-      console.log("db call");
+      console.log("db call: grabbing all users");
     });
   }
 
@@ -127,7 +131,7 @@ export default class SearchPage extends React.Component<IProps, IState> {
     if (this.state.dbCall.length == 0) {
       return (
         <div>
-          <h2>This user does not exist :(</h2>
+          <h2>No users match this search :(</h2>
         </div>
       );
     } else {

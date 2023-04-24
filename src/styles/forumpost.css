@@ -1,13 +1,13 @@
 .post-container {
-  display: flex;
+  display: block;
   position: relative;
-  height: 150px;
-  width: 100%;
-  gap: 2%;
-  align-items: center;
-  border: 2px solid teal;
-  border-radius: 5px;
-  padding: 1% 2%;
+  margin: auto;
+  height: auto;
+  max-width: 500px;
+  /* align-items: center; */
+  /* border: 2px solid teal; */
+  /* border-radius: 15px; */
+  /* padding: 1% 1%; */
 }
 
 .pic-crop {
@@ -21,9 +21,9 @@
 
 .profile-pic {
   display: inline;
-  margin: 0 auto;
   width: 100%;
   cursor: pointer;
+  top: 1%;
 }
 
 .pic-crop:hover {
@@ -32,15 +32,15 @@
 }
 
 .post-img-container {
-  display: flex;
-  margin: 0;
+  display: block;
   justify-content: center;
+  margin-bottom: 30px;
 }
 
 .post-img {
-  height: 140px;
-  max-width: 250px;
-  border-radius: 5px;
+  width: 100%;
+  object-fit: contain;
+  border-radius: 20px;
 }
 
 .post-description {
@@ -50,10 +50,11 @@
 
 .ratings {
   display: flex;
-  flex-direction: column;
   align-items: center;
   width: 80px;
-  margin-left: auto;
+  /* margin-right: auto; */
+  position: relative;
+  margin-bottom: 15px;
 }
 
 .ratings > button {
@@ -63,10 +64,9 @@
 }
 
 .post-interest {
-  position: absolute;
+  display: inline-block;
+  position: relative;
   font-weight: bold;
-  top: 1%;
-  right: 1%;
 }
 
 .rating-button {
@@ -88,9 +88,8 @@
 }
 
 .post-date {
-  position: absolute;
+  display: inline-block;
+  position: relative;
   font-size: 0.85em;
   font-weight: bold;
-  bottom: 1%;
-  right: 1%;
 }

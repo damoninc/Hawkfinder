@@ -2,46 +2,118 @@ import React from "react";
 import User from "../../data/User";
 import axios from "axios";
 import "../../styles/spotify.css";
-import { LinearProgress, Stack } from "@mui/material";
+import { Box, LinearProgress, Stack, Typography } from "@mui/material";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/config";
+import Marquee from "react-fast-marquee";
+import { boxTheme } from "../../App";
 
 const api_uri = "https://api.spotify.com/v1";
 const spotifyLogo =
   "https://firebasestorage.googleapis.com/v0/b/csc-450-project.appspot.com/o/HAWKFINDER%2Ffile-spotify-logo-png-4.png?alt=media&token=4ffa3420-edf1-4f8e-8ee4-8b1b7fc19093";
 
-function DisplaySong(song: Song, times?: number[]) {
+function DisplaySong(
+  song: Song,
+  times?: number[],
+  sx: {
+    width?: string;
+    maxWidth?: string;
+    minWidth?: string;
+    textWidth?: string;
+    fontSize?: string;
+    fontStyle?: string;
+    imgSize?: string;
+    imgBorder?: string;
+    scrollLimit?: {
+      xs?: number;
+      sm?: number;
+      md?: number;
+      lg?: number;
+      xl?: number;
+    };
+  } = { width: "100%", imgSize: "100px" }
+) {
+  if (!sx.scrollLimit) {
+    sx.scrollLimit = { xs: 7 };
+  }
+  let scrollLimit = 20;
+  if (screen.width < 600) {
+    scrollLimit = sx.scrollLimit.xs ? sx.scrollLimit.xs : 7;
+  } else if (screen.width < 900) {
+    scrollLimit = sx.scrollLimit.sm
+      ? sx.scrollLimit.sm
+      : sx.scrollLimit.xs
+      ? sx.scrollLimit.xs
+      : 10;
+  } else {
+    scrollLimit = sx.scrollLimit.md
+      ? sx.scrollLimit.md
+      : sx.scrollLimit.sm
+      ? sx.scrollLimit.sm
+      : sx.scrollLimit.xs
+      ? sx.scrollLimit.xs
+      : 15;
+  }
   return (
     <div
       style={{
         display: "block",
-        border: "1px solid black",
-        maxWidth: "400px",
-        minWidth: "250px",
+        border: boxTheme.border,
+        borderColor: boxTheme.borderColor,
+        background: boxTheme.backgroundPrimary,
+        width: sx.width ? sx.width : "100%",
+        maxWidth: sx.maxWidth ? sx.maxWidth : `${Number(screen.width * 0.9)}px`,
+        minWidth: sx.minWidth ? sx.minWidth : "0px",
         padding: "10px",
         borderRadius: "25px",
       }}
     >
-      <div className="songBox">
-        <div style={{}}>
+      <div
+        className="songBox"
+        style={{ justifyItems: "center", alignContent: "center" }}
+      >
+        <Box alignItems="center" justifyContent="center">
           <img
             src={
               song.album.images[1].url == null ? "" : song.album.images[1].url
             }
-            style={{ width: "100px", height: "100px", borderRadius: 25 }}
+            style={{
+              width: sx.imgSize ? sx.imgSize : "100px",
+              height: sx.imgSize ? sx.imgSize : "100px",
+              borderRadius: sx.imgBorder ? sx.imgBorder : "25px",
+            }}
           />
-        </div>
+        </Box>
         <div className="songText">
-          <p style={{ marginTop: "0px", lineHeight: "0px", fontSize: "20px" }}>
-            <b>{song.name}</b>
-          </p>
+          <Marquee
+            play={song.name ? song.name.length > scrollLimit : false}
+            speed={20}
+            gradient={false}
+            style={{
+              width:
+                screen.width < 600
+                  ? "100%"
+                  : sx.textWidth
+                  ? sx.textWidth
+                  : "120px",
+            }}
+          >
+            <Typography variant="h6" sx={{ marginRight: "25px" }}>
+              <b>{song.name}</b>
+            </Typography>
+          </Marquee>
           <p
-            style={{ paddingLeft: "15px", lineHeight: "0px", fontSize: "16px" }}
+            style={{
+              paddingLeft: "10px",
+              lineHeight: "0px",
+              fontSize: "16px",
+              fontStyle: sx?.fontStyle,
+            }}
           >
             by{" "}
             {song.artists.length == 1
               ? song.artists[0].name
-              : song.artists[0].name + " and others"}
+              : song.artists[0].name + " et al."}
           </p>
           <p
             style={{ paddingLeft: "15px", lineHeight: "0px", fontSize: "16px" }}
@@ -53,11 +125,9 @@ function DisplaySong(song: Song, times?: number[]) {
           href={song.external_urls.spotify}
           target="_blank"
           rel="noopener noreferrer"
+          style={{ marginLeft: "10px" }}
         >
-          <img
-            src={spotifyLogo}
-            style={{ height: "30px", width: "30px", margin: "20px" }}
-          />
+          <img src={spotifyLogo} style={{ height: "30px", width: "30px" }} />
         </a>
       </div>
 
@@ -94,12 +164,19 @@ function DisplaySong(song: Song, times?: number[]) {
 function DisplaySongSmall(song: Song, scrolling: boolean) {
   if (scrolling) {
     return (
-      <marquee style={{ color: "black", fontSize: "1em" }}>
-        Listening to: <b>{song.name}</b> by{" "}
-        {song.artists.length == 1
-          ? song.artists[0].name
-          : song.artists[0].name + " and others"}
-      </marquee>
+      <Marquee
+        play={scrolling}
+        speed={20}
+        gradient={false}
+        style={{ width: screen.width < 600 ? "100%" : "150px" }}
+      >
+        <Typography variant="body2" sx={{ marginRight: "15px" }}>
+          Listening to: <b>{song.name}</b> by{" "}
+          {song.artists.length == 1
+            ? song.artists[0].name
+            : song.artists[0].name + " et al."}
+        </Typography>
+      </Marquee>
     );
   } else {
     return (
@@ -109,7 +186,7 @@ function DisplaySongSmall(song: Song, scrolling: boolean) {
           overflow: "hidden",
           whiteSpace: "nowrap",
           textOverflow: "ellipsis",
-          marginRight: "15%",
+          marginRight: "15px",
         }}
       >
         <p>
@@ -119,7 +196,7 @@ function DisplaySongSmall(song: Song, scrolling: boolean) {
           by{" "}
           {song.artists.length == 1
             ? song.artists[0].name
-            : song.artists[0].name + " and others"}
+            : song.artists[0].name + " et al."}
         </p>
       </div>
     );
@@ -143,6 +220,23 @@ interface IProps {
   user: User;
   small: boolean;
   limit?: number;
+  sx?: {
+    width?: string;
+    maxWidth?: string;
+    minWidth?: string;
+    textWidth?: string;
+    fontSize?: string;
+    fontStyle?: string;
+    imgSize?: string;
+    imgBorder?: string;
+    scrollLimit?: {
+      xs?: number;
+      sm?: number;
+      md?: number;
+      lg?: number;
+      xl?: number;
+    };
+  };
 }
 
 interface IState {
@@ -194,7 +288,6 @@ class spotifyComponent extends React.Component<IProps, IState> {
     }
   }
   async refreshToken() {
-    console.log("bad access token, refreshing");
     await axios
       .get("/api/spotify/refresh_token", {
         method: "GET",
@@ -256,7 +349,6 @@ export default class CurrentSong extends spotifyComponent {
   render() {
     if (!this.pulled && this.props.user !== undefined) {
       this.pulled = true;
-      console.log("pulling data for " + this.props.user.profile.userName);
       this.makeRequest(this.props.user, "/me/player/currently-playing");
     }
     if (this.state.result == null) {
@@ -270,11 +362,11 @@ export default class CurrentSong extends spotifyComponent {
         this.state.result.item.duration_ms,
       ];
       return (
-        <div style={{ padding: "10px" }}>
+        <div style={{ padding: this.props.small ? "0px" : "10px" }}>
           {!this.props.small ? (
             <div>
               <h3 style={{ fontSize: "12px" }}>Listening to on Spotify</h3>
-              {DisplaySong(this.state.result.item, times)}
+              {DisplaySong(this.state.result.item, times, this.props.sx)}
             </div>
           ) : (
             DisplaySongSmall(this.state.result.item, true)
@@ -328,11 +420,13 @@ export class TopSongs extends spotifyComponent {
       return (
         <div>
           <h3>Top Songs</h3>
-          <ul style={{ paddingLeft: "5%" }}>
+          <ul style={{ paddingLeft: "5%", flexWrap: "wrap" }}>
             {this.state.result.items
               .slice(this.props.limit === undefined ? 15 : -this.props.limit)
               .map((song: any) => (
-                <li key={song.id}>{DisplaySongSmall(song, false)}</li>
+                <li style={{ flexWrap: "wrap" }} key={song.id}>
+                  {DisplaySongSmall(song, false)}
+                </li>
               ))}
           </ul>
         </div>
@@ -394,7 +488,6 @@ export class RecentSongs extends spotifyComponent {
       if (this.props.small) {
         return (
           <div>
-            <h3>Recent Songs</h3>
             <ul style={{ paddingLeft: "5%" }}>
               {this.state.result.items
                 .slice(this.props.limit === undefined ? 15 : -this.props.limit)
@@ -414,16 +507,12 @@ export class RecentSongs extends spotifyComponent {
       } else {
         return (
           <div>
-            <h3>Recent Songs</h3>
-            <Stack
-              spacing={2}
-              sx={{ borderTop: "3px solid gray", paddingTop: "10px" }}
-            >
+            <Stack spacing={2}>
               {this.state.result.items
                 .slice(this.props.limit === undefined ? 15 : -this.props.limit)
                 .map((song: any) => (
                   <div
-                    style={{ maxWidth: "350px" }}
+                    style={{ maxWidth: this.props.sx?.maxWidth }}
                     key={
                       song.track.id +
                       Math.floor(Math.random() * 3000).toString()

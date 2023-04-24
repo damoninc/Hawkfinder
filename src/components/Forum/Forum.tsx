@@ -43,9 +43,13 @@ function Forum(props: any) {
    */
   useEffect(() => {
     setLoading(true);
-    getTotalDocs()
+    getTotalDocs();
     if (!props.passedUser) {
-      q = query(collection(db, "Posts"), orderBy("postDate", "desc"), limit(pageSize));
+      q = query(
+        collection(db, "Posts"),
+        orderBy("postDate", "desc"),
+        limit(pageSize)
+      );
     } else if (props.passedUser) {
       q = query(
         collection(db, "Posts"),
@@ -70,6 +74,8 @@ function Forum(props: any) {
       setPosts(tempPosts);
     });
     setLoading(false);
+    // Rerender the page when the 'pageSize' variable is changed
+    // which only happens when the "Load More" button is clicked
   }, [pageSize]);
 
   /**
@@ -91,7 +97,6 @@ function Forum(props: any) {
 
   return (
     <div className="forum-container">
-      {/* <PostInput reloadPosts={reloadPosts} /> */}
       {!props.passedUser ? (
         <PostInput reloadForum={reloadForum} userID={props.userID} />
       ) : (
@@ -113,6 +118,7 @@ function Forum(props: any) {
                   ratings={post.ratings}
                   rating={post.calculateRating()}
                 />
+                <br />
               </div>
             );
           })}
@@ -120,11 +126,20 @@ function Forum(props: any) {
             <div className="pagination">
               {/* Determines whether the forum can load any more posts */}
               {pageSize <= totalDocs ? (
-                <Button className="load-more" variant="outlined" onClick={handleLoadMore}>
+                <Button
+                  className="load-more"
+                  variant="outlined"
+                  onClick={handleLoadMore}
+                >
                   Load more...
                 </Button>
               ) : (
-                <Button className="load-more" variant="outlined" onClick={handleLoadMore} disabled>
+                <Button
+                  className="load-more"
+                  variant="outlined"
+                  onClick={handleLoadMore}
+                  disabled
+                >
                   Load more...
                 </Button>
               )}
