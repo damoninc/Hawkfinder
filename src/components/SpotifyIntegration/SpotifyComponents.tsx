@@ -349,7 +349,6 @@ export default class CurrentSong extends spotifyComponent {
   render() {
     if (!this.pulled && this.props.user !== undefined) {
       this.pulled = true;
-      console.log("pulling data for " + this.props.user.profile.userName);
       this.makeRequest(this.props.user, "/me/player/currently-playing");
     }
     if (this.state.result == null) {
@@ -421,11 +420,13 @@ export class TopSongs extends spotifyComponent {
       return (
         <div>
           <h3>Top Songs</h3>
-          <ul style={{ paddingLeft: "5%" }}>
+          <ul style={{ paddingLeft: "5%", flexWrap: "wrap" }}>
             {this.state.result.items
               .slice(this.props.limit === undefined ? 15 : -this.props.limit)
               .map((song: any) => (
-                <li key={song.id}>{DisplaySongSmall(song, false)}</li>
+                <li style={{ flexWrap: "wrap" }} key={song.id}>
+                  {DisplaySongSmall(song, false)}
+                </li>
               ))}
           </ul>
         </div>
