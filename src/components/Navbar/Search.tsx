@@ -67,9 +67,10 @@ export default class SearchPage extends React.Component<IProps, IState> {
             overflow: "hidden",
             gridTemplateRows: "75px 100%",
             justifyItems: "center",
+            marginTop: "10px",
           }}
         >
-          <h1>User Search</h1>
+          <h1 style={{ borderBottom: "3px solid gray" }}>User Search</h1>
           {this.checkNullList()}
         </Box>
       </div>
@@ -80,7 +81,7 @@ export default class SearchPage extends React.Component<IProps, IState> {
     let msg = this.state.search;
     const users: User[] = [];
 
-    if (msg == null || msg.length == 0) {
+    if (!msg || msg.length == 0) {
       this.setState({ dbCall: null });
       return;
     }
@@ -91,16 +92,16 @@ export default class SearchPage extends React.Component<IProps, IState> {
     await getDocs(query(collection(db, "Users"))).then(async (usersData) => {
       usersData.forEach((user) => {
         const data: User | undefined = userConverter.fromFirestore(user);
-        if (data !== undefined) {
+        if (data !== undefined && msg) {
           if (data.userid == this.props.uCreds) {
             this.setState({ loggedUser: data });
           }
           if (
-            data.profile.userName.toLocaleLowerCase().includes(msg!) ||
-            data.profile.firstName.toLocaleLowerCase().includes(msg!) ||
-            data.profile.lastName.toLocaleLowerCase().includes(msg!) ||
+            data.profile.userName.toLocaleLowerCase().includes(msg) ||
+            data.profile.firstName.toLocaleLowerCase().includes(msg) ||
+            data.profile.lastName.toLocaleLowerCase().includes(msg) ||
             `${data.profile.firstName.toLocaleLowerCase()}${data.profile.lastName.toLocaleLowerCase()}`.includes(
-              msg!
+              msg
             )
           ) {
             users.push(data);

@@ -32,13 +32,6 @@ const inButtonStyle = {
   textTransform: "none",
 };
 
-export enum ButtonType {
-  Friends = 1,
-  NotFriends,
-  Incoming,
-  Outgoing,
-}
-
 interface IProps {
   user: User;
   currentUser: User | null;
@@ -289,7 +282,9 @@ export default class UserBox extends React.Component<IProps, IState> {
               <SmallUserBox user={this.props.user} pfp={this.state.pfpUrl} />
             </Grid>
             <Grid item sx={{ padding: "10px" }}>
-              <Typography>{this.props.user.profile.bio}</Typography>
+              <Box sx={{ maxHeight: "20vh", overflowY: "auto" }}>
+                <Typography>{this.props.user.profile.bio}</Typography>
+              </Box>
             </Grid>
             <Grid
               item
@@ -307,18 +302,45 @@ export default class UserBox extends React.Component<IProps, IState> {
 }
 
 export function SmallUserBox(props: { user: User; pfp: string }) {
+  const imgSize = screen.width < 600 ? "65px" : "80px";
   return (
-    <Grid container spacing={2} sx={{ paddingLeft: "10px" }}>
-      <Grid item xs={4}>
-        <Avatar src={props.pfp} sx={{ width: 96, height: 96 }} />
+    <Grid container spacing={0.5}>
+      <Grid item xs={3}>
+        <Avatar src={props.pfp} sx={{ width: imgSize, height: imgSize }} />
       </Grid>
       <Stack justifyContent="center" alignItems="center">
-        <Typography variant="h4">
+        <Typography
+          variant={"h4"}
+          fontSize={
+            `${props.user.profile.firstName} ${props.user.profile.lastName}`
+              .length >= 15
+              ? screen.width < 600
+                ? "20pt"
+                : "24pt"
+              : screen.width < 600
+              ? "24pt"
+              : "28pt"
+          }
+        >
           <b>
             {props.user.profile.firstName} {props.user.profile.lastName}
           </b>
         </Typography>
       </Stack>
+      <a style={{ width: "100%" }}>
+        <Button
+          variant="contained"
+          sx={{ width: "100%", marginTop: "10px" }}
+          onClick={() => {
+            window.location.replace(
+              `/components/Profile#userid=${props.user.userid}`
+            );
+            window.location.reload();
+          }}
+        >
+          Profile
+        </Button>
+      </a>
     </Grid>
   );
 }

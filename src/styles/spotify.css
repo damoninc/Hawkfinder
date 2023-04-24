@@ -10,7 +10,6 @@ h3 {
     box-sizing: border-box;
     display: flex;
     width: auto;
-    margin: auto;
     height: 100px;
     max-height: 100px;
     min-width: 200px;

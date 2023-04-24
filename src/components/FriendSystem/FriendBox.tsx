@@ -23,6 +23,7 @@ interface IState {
  *      Currently displays the name and interests as well as having buttons to go to
  *      their profile, messages, and removing them.
  * @param {User} friend - The user to display
+ * @parma {Boolean} smol - determines whether to display a small FriendBox
  * @return {*} - FriendBox HTML
  */
 export default class FriendBox extends React.Component<IProps, IState> {
@@ -120,7 +121,11 @@ export default class FriendBox extends React.Component<IProps, IState> {
                 />
               </Grid>
               <Grid item sx={{ padding: "10px" }}>
-                <Typography>{this.props.friend.profile.bio}</Typography>
+                <Box sx={{ maxHeight: "20vh", overflowY: "auto" }}>
+                  <Typography sx={{ m: 2 }}>
+                    {this.props.friend.profile.bio}
+                  </Typography>
+                </Box>
               </Grid>
               <Grid
                 item
@@ -131,7 +136,7 @@ export default class FriendBox extends React.Component<IProps, IState> {
                 <CurrentSong
                   user={this.props.friend}
                   small={false}
-                  sx={{ scrollLimit: { xs: 20 } }}
+                  sx={{ scrollLimit: { xs: 20 }, textWidth: "100%" }}
                 />
               </Grid>
             </Grid>

@@ -2,13 +2,7 @@ import React from "react";
 import User from "../../data/User";
 import axios from "axios";
 import "../../styles/spotify.css";
-import {
-  Box,
-  LinearProgress,
-  Stack,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Box, LinearProgress, Stack, Typography } from "@mui/material";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/config";
 import Marquee from "react-fast-marquee";
@@ -25,6 +19,7 @@ function DisplaySong(
     width?: string;
     maxWidth?: string;
     minWidth?: string;
+    textWidth?: string;
     fontSize?: string;
     fontStyle?: string;
     imgSize?: string;
@@ -96,7 +91,11 @@ function DisplaySong(
             gradient={false}
             style={{
               width:
-                screen.width < 600 ? "100%" : Number(parseInt(sx.width) / 3),
+                screen.width < 600
+                  ? "100%"
+                  : sx.textWidth
+                  ? sx.textWidth
+                  : "120px",
             }}
           >
             <Typography variant="h6" sx={{ marginRight: "25px" }}>
@@ -126,11 +125,9 @@ function DisplaySong(
           href={song.external_urls.spotify}
           target="_blank"
           rel="noopener noreferrer"
+          style={{ marginLeft: "10px" }}
         >
-          <img
-            src={spotifyLogo}
-            style={{ height: "30px", width: "30px", marginLeft: "10px" }}
-          />
+          <img src={spotifyLogo} style={{ height: "30px", width: "30px" }} />
         </a>
       </div>
 
@@ -227,6 +224,7 @@ interface IProps {
     width?: string;
     maxWidth?: string;
     minWidth?: string;
+    textWidth?: string;
     fontSize?: string;
     fontStyle?: string;
     imgSize?: string;

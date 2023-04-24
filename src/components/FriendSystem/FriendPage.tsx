@@ -41,7 +41,8 @@ window.addEventListener("resize", function () {
  * Generates a HTML block that displays a user's friend list by creating
  *    a FriendBox for each friend in their friend list.
  * Shows all friends or a "no friends" message is applicable.
- * @param signedUser : string
+ * @param {string} uCreds - the userid of the logged in user
+ * @param {string} page - the page to display ("list" for main friendpage, "sidebar" for friend sidebar)
  * @return {*} - FriendPage HTML
  */
 export default function FriendPage(props: { uCreds: string; page: string }) {
@@ -438,7 +439,13 @@ class RemoveButton extends React.Component<IProps, IState> {
   }
 }
 
-// TODO Document this
+/**
+ * When called, sends a friend request to the given friend parameter from the given user parameter.
+ *
+ * @export
+ * @param {User} currUser - the currently logged in user
+ * @param {User} friend - the user to send a request to.
+ */
 export async function addFriend(currUser: User, friend: User) {
   if (friend && currUser) {
     if (!currUser.friendsList.includes(friend.userid)) {
@@ -506,7 +513,7 @@ export async function removeFriend(friend: User) {
   }
 }
 
-export async function callDB(signedUser: string, setFriends: any) {
+async function callDB(signedUser: string, setFriends: any) {
   // Query Firestore for information from currently logged in user
   // Friends list query from FireStore\
   const newfriends = new Array<User>();
