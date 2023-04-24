@@ -2,10 +2,11 @@ import React from "react";
 import "../../styles/userbox.css";
 import User from "../../data/User";
 import CurrentSong from "../SpotifyIntegration/SpotifyComponents";
-import { Stack, Box, Typography} from "@mui/material";
+import { Stack, Box, Typography, Grid, Modal, Button } from "@mui/material";
 import { storage } from "../../firebase/config";
 import { getDownloadURL, ref } from "firebase/storage";
 import { boxTheme } from "../../App";
+import { SmallUserBox } from "./UserBox";
 
 interface IProps {
   friend: User;
@@ -14,6 +15,7 @@ interface IProps {
 
 interface IState {
   pfpUrl: string;
+  modalClick: boolean;
 }
 
 /**
@@ -26,7 +28,7 @@ interface IState {
 export default class FriendBox extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
-    this.state = { pfpUrl: "" };
+    this.state = { pfpUrl: "", modalClick: false };
   }
 
   componentDidMount() {
@@ -45,39 +47,96 @@ export default class FriendBox extends React.Component<IProps, IState> {
     }
     if (this.props.smol) {
       return (
-        <div
-          style={{
-            display: "flex",
-            border: boxTheme.border,
-            borderColor: boxTheme.borderColor,
-            background: boxTheme.backgroundPrimary,
-            width: "250px",
-            maxWidth: `${Number(screen.width * 0.9)}px`,
-            height: "60px",
-            borderRadius: "50px",
-            alignItems: "center",
-            overflow: "hidden",
-          }}
-        >
-          <div>
-            <img
-              src={this.state.pfpUrl}
+        <>
+          <Button
+            onClick={() => {
+              this.setState({ modalClick: true });
+            }}
+            sx={{ textTransform: "none" }}
+          >
+            <div
               style={{
-                marginTop: "8px",
-                marginRight: "10px",
-                width: "52px",
-                height: "52px",
+                display: "flex",
+                border: boxTheme.border,
+                borderColor: boxTheme.borderColor,
+                background: boxTheme.backgroundPrimary,
+                width: "250px",
+                maxWidth: `${Number(screen.width * 0.9)}px`,
+                height: "60px",
                 borderRadius: "50px",
+                alignItems: "center",
+                overflow: "hidden",
               }}
-            />
-          </div>
-          <Stack>
-            <Typography variant="body1" sx={{ textAlign: "left" }}>
-              <b>{`${this.props.friend.profile.firstName} ${this.props.friend.profile.lastName}`}</b>
-            </Typography>
-              <CurrentSong user={this.props.friend} small={true} />
-          </Stack>
-        </div>
+            >
+              <div>
+                <img
+                  src={this.state.pfpUrl}
+                  style={{
+                    marginTop: "8px",
+                    marginRight: "10px",
+                    width: "52px",
+                    height: "52px",
+                    borderRadius: "50px",
+                  }}
+                />
+              </div>
+              <Stack>
+                <Typography variant="body1" sx={{ textAlign: "left" }}>
+                  <b>{`${this.props.friend.profile.firstName} ${this.props.friend.profile.lastName}`}</b>
+                </Typography>
+                <CurrentSong user={this.props.friend} small={true} />
+              </Stack>
+            </div>
+          </Button>
+          <Modal
+            open={this.state.modalClick}
+            onClose={() => {
+              this.setState({ modalClick: false });
+            }}
+          >
+            <Grid
+              container
+              alignItems="center"
+              justifyItems="center"
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                minWidth: "300px",
+                maxWidth: "400px",
+                border: "6px solid",
+                borderColor: boxTheme.borderColor,
+                borderRadius: "25px",
+                overflow: "hidden",
+                gridTemplateRows: "80% 20%",
+                backgroundColor: boxTheme.backgroundSecondary,
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              <Grid item sx={{ width: "100%", padding: "10px" }}>
+                <SmallUserBox
+                  user={this.props.friend}
+                  pfp={this.state.pfpUrl}
+                />
+              </Grid>
+              <Grid item sx={{ padding: "10px" }}>
+                <Typography>{this.props.friend.profile.bio}</Typography>
+              </Grid>
+              <Grid
+                item
+                sx={{ width: "100%" }}
+                justifyItems="center"
+                alignItems="center"
+              >
+                <CurrentSong
+                  user={this.props.friend}
+                  small={false}
+                  sx={{ scrollLimit: { xs: 20 } }}
+                />
+              </Grid>
+            </Grid>
+          </Modal>
+        </>
       );
     } else {
       return (
@@ -87,14 +146,14 @@ export default class FriendBox extends React.Component<IProps, IState> {
             width: 150,
             height: 200,
             border: "4px solid",
-            overflow:"hidden",
+            overflow: "hidden",
             borderColor: boxTheme.borderColor,
             borderRadius: "25px",
             gridTemplateRows: "80% 20%",
             background: boxTheme.backgroundPrimary,
-            justifyContent:"center",
+            justifyContent: "center",
             justifyItems: "center",
-            alignItems:"center"
+            alignItems: "center",
           }}
         >
           <Stack justifyContent="center" alignItems="center" spacing={0.5}>

@@ -21,6 +21,7 @@ h3 {
 }
 
 .songText {
+    width: auto;
     margin-right: auto;
     padding:10px;
     text-overflow: ellipsis;

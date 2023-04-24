@@ -29,13 +29,13 @@ let dbPulled = false;
 
 export let openFriendBar: React.Dispatch<React.SetStateAction<boolean>>;
 export let open: boolean;
-export let friends: User[] | null = null; 
+export let friends: User[] | null = null;
 
 window.addEventListener("resize", function () {
   if (screen.width > 900 && open) {
-    openFriendBar(false)
+    openFriendBar(false);
   }
-})
+});
 
 /**
  * Generates a HTML block that displays a user's friend list by creating
@@ -49,50 +49,52 @@ export default function FriendPage(props: { uCreds: string; page: string }) {
   const [sidebarOpen, setSidebar] = useState(false);
   const navigate = useNavigate();
   const theme = useTheme();
-  const md = useMediaQuery(theme.breakpoints.up("md"))
+  const md = useMediaQuery(theme.breakpoints.up("md"));
 
-  open = sidebarOpen
+  open = sidebarOpen;
   openFriendBar = setSidebar;
 
   if (!dbPulled || !dbCall) {
     callDB(props.uCreds, setFriends);
   }
-  const friendList = props.page == "list" ? (
-    <Grid
-      sx={{
-        border: "4px solid teal",
-        borderRadius: "25px",
-        overflow: "hidden",
-        gridTemplateRows: "75px 100%",
-        justifyItems: "center",
-        background: boxTheme.backgroundSecondary,
-      }}
-    >
-      <Typography variant="h4" align="center" padding={"10px"}>
-        <b>Friends List</b>
-      </Typography>
-      <Box
+  const friendList =
+    props.page == "list" ? (
+      <Grid
         sx={{
-          display: "flex",
-          width: "100%",
-          height: "100%",
+          border: "4px solid teal",
+          borderRadius: "25px",
           overflow: "hidden",
-          justifyContent: "center",
-          borderTop: "4px solid gray",
-          paddingTop: "1%",
+          gridTemplateRows: "75px 100%",
+          justifyItems: "center",
+          background: boxTheme.backgroundSecondary,
         }}
       >
-        {checkNullList(dbCall)}
-      </Box>
-    </Grid>
-  ) : <div></div>;
+        <Typography variant="h4" align="center" padding={"10px"}>
+          <b>Friends List</b>
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            width: "100%",
+            height: "100%",
+            overflow: "hidden",
+            justifyContent: "center",
+            borderTop: "4px solid gray",
+            paddingTop: "1%",
+          }}
+        >
+          {checkNullList(dbCall)}
+        </Box>
+      </Grid>
+    ) : (
+      <div></div>
+    );
 
   if (props.page == "sidebar") {
     let drawer = <div></div>;
     if (!friends) {
-      drawer = (LoadingPage("Loading Friends"))
-    }
-    else if (friends.length < 1) {
+      drawer = LoadingPage("Loading Friends");
+    } else if (friends.length < 1) {
       drawer = (
         <Typography variant="h6" sx={{ textAlign: "center" }}>
           No Friends :(
@@ -103,23 +105,20 @@ export default function FriendPage(props: { uCreds: string; page: string }) {
         <Box>
           {friends.map((friend) => {
             return (
-              <Box key={friend.userid}>
-                <Button
-                  onClick={() => {
-                    navigate(`/components/Profile#userid=${friend.userid}`);
-                    window.location.reload();
-                  }}
-                  sx={{ textTransform: "none", borderRadius: "50px" }}
-                >
-                  <FriendBox friend={friend} smol={true} />
-                </Button>
+              <Box
+                key={friend.userid}
+                justifyContent={"center"}
+                justifyItems={"center"}
+                alignItems={"center"}
+              >
+                <FriendBox friend={friend} smol={true} />
               </Box>
             );
           })}
         </Box>
       );
     }
-    const drawerDisplay = md ? "persistent" : "temporary" 
+    const drawerDisplay = md ? "persistent" : "temporary";
     return (
       <Drawer
         variant={drawerDisplay}
@@ -141,7 +140,7 @@ export default function FriendPage(props: { uCreds: string; page: string }) {
             paddingTop: "75px",
             background: boxTheme.backgroundSecondary,
             borderLeft: boxTheme.border,
-            borderColor: boxTheme.borderColor
+            borderColor: boxTheme.borderColor,
           },
         }}
       >
@@ -187,11 +186,7 @@ export default function FriendPage(props: { uCreds: string; page: string }) {
             </Badge>
           </Grid>
         </div>
-        {props.page == "list" ? (
-          friendList
-        ) : 
-          <div></div>
-        }
+        {props.page == "list" ? friendList : <div></div>}
       </div>
     );
   }
@@ -210,7 +205,7 @@ function checkNullList(friends: User[] | null) {
 
   // Returns a list of FriendBox if the user's friends list is not empty
   if (friends == null) {
-    return (LoadingPage("Loading Friends"));
+    return LoadingPage("Loading Friends");
   }
   if (friends.length == 0) {
     return (
@@ -291,7 +286,10 @@ function checkNullList(friends: User[] | null) {
                     <CurrentSong
                       user={friend}
                       small={false}
-                      sx={{ maxWidth: "350px", scrollLimit: {xs: 10, sm: 12, md: 12} }}
+                      sx={{
+                        maxWidth: "350px",
+                        scrollLimit: { xs: 10, sm: 12, md: 12 },
+                      }}
                     />
                     <Box
                       width="100%"
@@ -322,7 +320,15 @@ function checkNullList(friends: User[] | null) {
                         Recent Songs
                       </Typography>
                     </Box>
-                    <RecentSongs user={friend} small={false} limit={10} sx={{ maxWidth: "350px", scrollLimit: {xs: 10, sm: 12, md: 12} }}/>
+                    <RecentSongs
+                      user={friend}
+                      small={false}
+                      limit={10}
+                      sx={{
+                        maxWidth: "350px",
+                        scrollLimit: { xs: 10, sm: 12, md: 12 },
+                      }}
+                    />
                   </Stack>
                 </Stack>
               </Drawer>

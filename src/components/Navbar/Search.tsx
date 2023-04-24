@@ -2,7 +2,7 @@ import React from "react";
 import User, { userConverter } from "../../data/User";
 import "../../styles/friendpage.css";
 import { db } from "../../firebase/config";
-import { collection, query, getDocs, } from "firebase/firestore";
+import { collection, query, getDocs } from "firebase/firestore";
 import { Box, CircularProgress } from "@mui/material";
 import UserBox from "../FriendSystem/UserBox";
 import { boxTheme } from "../../App";
@@ -27,7 +27,7 @@ interface IState {
 
 export default class SearchPage extends React.Component<IProps, IState> {
   rerender = false;
-  intervalID: NodeJS.Timer;
+  intervalID: any;
   constructor(props: IProps) {
     super(props);
     this.state = { dbCall: null, search: "", loggedUser: null };
@@ -108,7 +108,7 @@ export default class SearchPage extends React.Component<IProps, IState> {
         }
       });
       this.setState({ dbCall: users });
-      console.log("db call: grabbing all users")
+      console.log("db call: grabbing all users");
     });
   }
 

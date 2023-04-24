@@ -2,7 +2,13 @@ import React from "react";
 import User from "../../data/User";
 import axios from "axios";
 import "../../styles/spotify.css";
-import { Box, LinearProgress, Stack, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  LinearProgress,
+  Stack,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/config";
 import Marquee from "react-fast-marquee";
@@ -23,19 +29,35 @@ function DisplaySong(
     fontStyle?: string;
     imgSize?: string;
     imgBorder?: string;
-    scrollLimit?: {xs?: number, sm?: number, md?: number, lg?: number, xl?: number};
+    scrollLimit?: {
+      xs?: number;
+      sm?: number;
+      md?: number;
+      lg?: number;
+      xl?: number;
+    };
   } = { width: "100%", imgSize: "100px" }
 ) {
   if (!sx.scrollLimit) {
-    sx.scrollLimit = {xs: 7}
+    sx.scrollLimit = { xs: 7 };
   }
   let scrollLimit = 20;
   if (screen.width < 600) {
-    scrollLimit = sx.scrollLimit.xs ? sx.scrollLimit.xs : 7
+    scrollLimit = sx.scrollLimit.xs ? sx.scrollLimit.xs : 7;
   } else if (screen.width < 900) {
-    scrollLimit = sx.scrollLimit.sm ? sx.scrollLimit.sm : (sx.scrollLimit.xs ? sx.scrollLimit.xs : 10)
+    scrollLimit = sx.scrollLimit.sm
+      ? sx.scrollLimit.sm
+      : sx.scrollLimit.xs
+      ? sx.scrollLimit.xs
+      : 10;
   } else {
-    scrollLimit = sx.scrollLimit.md ? sx.scrollLimit.md : (sx.scrollLimit.sm ? sx.scrollLimit.sm : (sx.scrollLimit.xs ? sx.scrollLimit.xs : 15))
+    scrollLimit = sx.scrollLimit.md
+      ? sx.scrollLimit.md
+      : sx.scrollLimit.sm
+      ? sx.scrollLimit.sm
+      : sx.scrollLimit.xs
+      ? sx.scrollLimit.xs
+      : 15;
   }
   return (
     <div
@@ -51,30 +73,31 @@ function DisplaySong(
         borderRadius: "25px",
       }}
     >
-      <div className="songBox" style={{justifyItems: "center", alignContent: "center"}}>
-
-          <Box alignItems="center" justifyContent="center"> 
-            <img
-              src={
-                song.album.images[1].url == null ? "" : song.album.images[1].url
-              }
-              style={{
-                width: sx.imgSize ? sx.imgSize : "100px",
-                height: sx.imgSize ? sx.imgSize : "100px",
-                borderRadius: sx.imgBorder ? sx.imgBorder : "25px",
-              }}
-            />
-          </Box>
+      <div
+        className="songBox"
+        style={{ justifyItems: "center", alignContent: "center" }}
+      >
+        <Box alignItems="center" justifyContent="center">
+          <img
+            src={
+              song.album.images[1].url == null ? "" : song.album.images[1].url
+            }
+            style={{
+              width: sx.imgSize ? sx.imgSize : "100px",
+              height: sx.imgSize ? sx.imgSize : "100px",
+              borderRadius: sx.imgBorder ? sx.imgBorder : "25px",
+            }}
+          />
+        </Box>
         <div className="songText">
           <Marquee
-            play={
-              song.name
-                ? song.name.length > scrollLimit
-                : false
-            }
+            play={song.name ? song.name.length > scrollLimit : false}
             speed={20}
             gradient={false}
-            style={{ width: screen.width < 600 ? "100%" : "120px" }}
+            style={{
+              width:
+                screen.width < 600 ? "100%" : Number(parseInt(sx.width) / 3),
+            }}
           >
             <Typography variant="h6" sx={{ marginRight: "25px" }}>
               <b>{song.name}</b>
@@ -91,7 +114,7 @@ function DisplaySong(
             by{" "}
             {song.artists.length == 1
               ? song.artists[0].name
-              : song.artists[0].name + " and others"}
+              : song.artists[0].name + " et al."}
           </p>
           <p
             style={{ paddingLeft: "15px", lineHeight: "0px", fontSize: "16px" }}
@@ -145,20 +168,18 @@ function DisplaySongSmall(song: Song, scrolling: boolean) {
   if (scrolling) {
     return (
       <Marquee
-      play={
-        scrolling
-      }
-      speed={20}
-      gradient={false}
-      style={{ width: screen.width < 600 ? "100%" : "150px" }}
-    >
-      <Typography variant="body2" sx={{ marginRight: "15px" }}>
-      Listening to: <b>{song.name}</b> by{" "}
+        play={scrolling}
+        speed={20}
+        gradient={false}
+        style={{ width: screen.width < 600 ? "100%" : "150px" }}
+      >
+        <Typography variant="body2" sx={{ marginRight: "15px" }}>
+          Listening to: <b>{song.name}</b> by{" "}
           {song.artists.length == 1
             ? song.artists[0].name
-            : song.artists[0].name + " and others"}
-      </Typography>
-    </Marquee>
+            : song.artists[0].name + " et al."}
+        </Typography>
+      </Marquee>
     );
   } else {
     return (
@@ -178,7 +199,7 @@ function DisplaySongSmall(song: Song, scrolling: boolean) {
           by{" "}
           {song.artists.length == 1
             ? song.artists[0].name
-            : song.artists[0].name + " and others"}
+            : song.artists[0].name + " et al."}
         </p>
       </div>
     );
@@ -210,7 +231,13 @@ interface IProps {
     fontStyle?: string;
     imgSize?: string;
     imgBorder?: string;
-    scrollLimit?: {xs?: number, sm?: number, md?: number, lg?: number, xl?: number}
+    scrollLimit?: {
+      xs?: number;
+      sm?: number;
+      md?: number;
+      lg?: number;
+      xl?: number;
+    };
   };
 }
 

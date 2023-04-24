@@ -220,48 +220,46 @@ export default class UserBox extends React.Component<IProps, IState> {
     };
 
     return (
-      <div>
-        <Box
-          sx={{
-            display: "grid",
-            width: 150,
-            height: 200,
-            border: "4px solid",
-            borderColor: boxTheme.borderColor,
-            borderRadius: "25px",
-            overflow: "hidden",
-            backgroundColor: boxTheme.backgroundPrimary,
-            gridTemplateRows: "80% 20%",
+      <Box
+        sx={{
+          display: "grid",
+          width: 150,
+          height: 200,
+          border: "4px solid",
+          borderColor: boxTheme.borderColor,
+          borderRadius: "25px",
+          overflow: "hidden",
+          backgroundColor: boxTheme.backgroundPrimary,
+          gridTemplateRows: "80% 20%",
+        }}
+      >
+        <Button
+          onClick={() => {
+            this.setState({ mainClicked: true });
           }}
         >
-          <Button
-            onClick={() => {
-              this.setState({ mainClicked: true });
-            }}
+          <Stack
+            justifyContent="center"
+            alignItems="center"
+            spacing={0.5}
+            sx={{ height: "100%" }}
           >
-            <Stack
-              justifyContent="center"
-              alignItems="center"
-              spacing={0.5}
-              sx={{ height: "100%" }}
-            >
-              <img
-                src={`${this.state.pfpUrl}`}
-                style={{
-                  height: "100px",
-                  width: "100px",
-                  borderRadius: "50px",
-                  marginTop: "10px",
-                }}
-              />
-              <h3 style={{ lineHeight: "16px" }}>
-                {this.props.user.profile.firstName}{" "}
-                {this.props.user.profile.lastName}
-              </h3>
-            </Stack>
-          </Button>
-          {buttons()}
-        </Box>
+            <img
+              src={`${this.state.pfpUrl}`}
+              style={{
+                height: "100px",
+                width: "100px",
+                borderRadius: "50px",
+                marginTop: "10px",
+              }}
+            />
+            <h3 style={{ lineHeight: "16px" }}>
+              {this.props.user.profile.firstName}{" "}
+              {this.props.user.profile.lastName}
+            </h3>
+          </Stack>
+        </Button>
+        {buttons()}
         <Modal
           open={this.state.modalClick}
           onClose={() => {
@@ -303,12 +301,12 @@ export default class UserBox extends React.Component<IProps, IState> {
             </Grid>
           </Grid>
         </Modal>
-      </div>
+      </Box>
     );
   }
 }
 
-function SmallUserBox(props: { user: User; pfp: string }) {
+export function SmallUserBox(props: { user: User; pfp: string }) {
   return (
     <Grid container spacing={2} sx={{ paddingLeft: "10px" }}>
       <Grid item xs={4}>
