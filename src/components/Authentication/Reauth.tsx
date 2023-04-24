@@ -99,7 +99,10 @@ function ReAuth() {
             setAccountMessage("User not found!");
             break;
           case "auth/wrong-password":
-            setAccountMessage("User not found");
+            setAccountMessage("That's the wrong password!");
+            break;
+          case "auth/user-mismatch":
+            setAccountMessage("Those credentials don't match to that account!");
             break;
           default:
             setAccountMessage(`UH OH! Unknown error: ${error.code}.`);
