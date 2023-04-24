@@ -1,6 +1,13 @@
 import React from "react";
 import { CircularProgress, Stack, Typography } from "@mui/material";
 
+/**
+ * Returns a page that can be used to show indefinite loading.
+ *
+ * @export
+ * @param {string} text - The text to display above the loading icon
+ * @return {*}
+ */
 export default function LoadingPage(text: string) {
   return (
     <Stack

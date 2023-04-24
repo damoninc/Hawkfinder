@@ -19,8 +19,8 @@ function ProfilePage(passedUser: any) {
   const urlParams = new URLSearchParams(hashParams);
   let uid = urlParams.get("userid");
 
-  console.log(urlParams);
-  console.log(uid);
+  // console.log(urlParams);
+  // console.log(uid);
   const passedUserObj: string = passedUser.uCreds; //Feel free to change this to the passed in object for testing. Make sure its of type string.
   const [userPage, setUserPage] = useState<any>();
   const [userProfPic, setUserProfPic] = useState("");
@@ -32,6 +32,7 @@ function ProfilePage(passedUser: any) {
   }
   const docRef = doc(db, "Users", uid!);
   useEffect(() => {
+    console.log("passed user: ", passedUserObj);
     getDoc(docRef)
       .then((docSnap) => {
         const userToSpotify: User | undefined =
@@ -66,7 +67,7 @@ function ProfilePage(passedUser: any) {
     return (
       <div hidden>
         {EditPage(userPage, docRef, passedUserObj)}
-        <Forum passedUser={uid} />
+        <Forum passedUser={uid} userID={uid} />
       </div>
     );
   }
@@ -97,7 +98,7 @@ function ProfilePage(passedUser: any) {
             <Paper className="spotify-info" sx={{ borderRadius: 10 }}>
               <Box
                 className="spotify-box"
-                sx={{ padding: 1, flexWrap: "wrap" }}
+                sx={{ m: "3", padding: 2, flexWrap: "wrap" }}
               >
                 <Box className="current-song">
                   <CurrentSong user={spotifyUser!} small={false} />
@@ -111,7 +112,7 @@ function ProfilePage(passedUser: any) {
           <Paper className="about-and-info" sx={{ borderRadius: 10 }}>
             <Box
               className="about-and-info-box"
-              sx={{ padding: 1, flexWrap: "wrap" }}
+              sx={{ m: "3", padding: 2, flexWrap: "wrap" }}
             >
               <Paper
                 className="about"
@@ -150,7 +151,7 @@ function ProfilePage(passedUser: any) {
         </Box>
         <br />
       </div>
-      <Forum passedUser={uid} />
+      <Forum passedUser={uid} userID={passedUserObj} />
     </>
   );
 }

@@ -2,7 +2,7 @@ import React from "react";
 import User, { userConverter } from "../../data/User";
 import "../../styles/friendpage.css";
 import { db } from "../../firebase/config";
-import { collection, query, getDocs, } from "firebase/firestore";
+import { collection, query, getDocs } from "firebase/firestore";
 import { Box, CircularProgress } from "@mui/material";
 import UserBox from "../FriendSystem/UserBox";
 import { boxTheme } from "../../App";
@@ -25,9 +25,16 @@ interface IState {
   loggedUser: User | null;
 }
 
+/**
+ * returns a display that shows the results of a given search
+ *
+ * @export
+ * @class SearchPage
+ * @extends {React.Component<IProps, IState>}
+ */
 export default class SearchPage extends React.Component<IProps, IState> {
   rerender = false;
-  intervalID: NodeJS.Timer;
+  intervalID: any;
   constructor(props: IProps) {
     super(props);
     this.state = { dbCall: null, search: "", loggedUser: null };
@@ -67,9 +74,10 @@ export default class SearchPage extends React.Component<IProps, IState> {
             overflow: "hidden",
             gridTemplateRows: "75px 100%",
             justifyItems: "center",
+            marginTop: "10px",
           }}
         >
-          <h1>User Search</h1>
+          <h1 style={{ borderBottom: "3px solid gray" }}>User Search</h1>
           {this.checkNullList()}
         </Box>
       </div>
@@ -80,7 +88,7 @@ export default class SearchPage extends React.Component<IProps, IState> {
     let msg = this.state.search;
     const users: User[] = [];
 
-    if (msg == null || msg.length == 0) {
+    if (!msg || msg.length == 0) {
       this.setState({ dbCall: null });
       return;
     }
@@ -91,16 +99,16 @@ export default class SearchPage extends React.Component<IProps, IState> {
     await getDocs(query(collection(db, "Users"))).then(async (usersData) => {
       usersData.forEach((user) => {
         const data: User | undefined = userConverter.fromFirestore(user);
-        if (data !== undefined) {
+        if (data !== undefined && msg) {
           if (data.userid == this.props.uCreds) {
             this.setState({ loggedUser: data });
           }
           if (
-            data.profile.userName.toLocaleLowerCase().includes(msg!) ||
-            data.profile.firstName.toLocaleLowerCase().includes(msg!) ||
-            data.profile.lastName.toLocaleLowerCase().includes(msg!) ||
+            data.profile.userName.toLocaleLowerCase().includes(msg) ||
+            data.profile.firstName.toLocaleLowerCase().includes(msg) ||
+            data.profile.lastName.toLocaleLowerCase().includes(msg) ||
             `${data.profile.firstName.toLocaleLowerCase()}${data.profile.lastName.toLocaleLowerCase()}`.includes(
-              msg!
+              msg
             )
           ) {
             users.push(data);
@@ -108,7 +116,7 @@ export default class SearchPage extends React.Component<IProps, IState> {
         }
       });
       this.setState({ dbCall: users });
-      console.log("db call: grabbing all users")
+      console.log("db call: grabbing all users");
     });
   }
 
