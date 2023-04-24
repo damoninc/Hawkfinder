@@ -44,6 +44,13 @@ interface IState {
   modalClick: boolean;
 }
 
+/**
+ * Generates a box that displays the information of the passed user.
+ *
+ * @export
+ * @class UserBox
+ * @extends {React.Component<IProps, IState>}
+ */
 export default class UserBox extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
@@ -301,6 +308,13 @@ export default class UserBox extends React.Component<IProps, IState> {
   }
 }
 
+/**
+ * Generates a box that displays a small version of the user's information. Useful in user modals
+ *
+ * @export
+ * @param {{ user: User; pfp: string }} props
+ * @return {*}
+ */
 export function SmallUserBox(props: { user: User; pfp: string }) {
   const imgSize = screen.width < 600 ? "65px" : "80px";
   return (
