@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
-import User from "../../data/User";
+import User, { userConverter } from "../../data/User";
 import { deleteUser, updateEmail, updatePassword } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
@@ -21,6 +21,8 @@ import {
 } from "@mui/material";
 import Navbar from "../Navbar/Navbar";
 import { useNavigate } from "react-router-dom";
+import SpotifyAuthDeauth from "../SpotifyIntegration/SpotifyLogin";
+import { user } from "../FriendSystem/FriendPage";
 
 /**
  * Allows a user ot change their important credentials such as their Email and their Password.
@@ -33,6 +35,7 @@ function AccountSettingsPage(passedUser: any) {
   const [userData, setUserData] = useState<any>();
   const [selectItem, setSelectedItem] = useState("");
   const [deleteClicked, setDeleteClicked] = useState(false);
+  const [spotifyUser, setSpotifyUser] = useState<User | undefined>(undefined);
 
   const docRef = doc(db, "Users", passedUser.uCreds.uid);
   useEffect(() => {
@@ -40,6 +43,9 @@ function AccountSettingsPage(passedUser: any) {
       .then((docSnap) => {
         const userData = docSnap.data();
         setUserData(userData);
+        const userToSpotify: User | undefined =
+          userConverter.fromFirestore(docSnap);
+        setSpotifyUser(userToSpotify);
       })
       .catch((error) => {
         console.log(error);
@@ -152,16 +158,7 @@ function AccountSettingsPage(passedUser: any) {
    */
   //TODO: Maybe add reauthentication to this page.
   function displayItem() {
-    if (selectItem == "1") {
-      return (
-        <div>
-          <h1 style={{ textAlign: "center" }}>
-            Welcome to the account settings! If your session has been active for
-            a while, you may need to reauthenticate!
-          </h1>
-        </div>
-      );
-    } else if (selectItem == "2") {
+    if (selectItem == "2") {
       return (
         <div className="centered" style={{ height: "100%" }}>
           <ChangeEmailComponent />
@@ -180,6 +177,12 @@ function AccountSettingsPage(passedUser: any) {
           style={{ height: "100%", textAlign: "center" }}
         >
           <DeleteAccountComponent />
+        </div>
+      );
+    } else if (selectItem == "5") {
+      return (
+        <div className="centered">
+          {SpotifyAuthDeauth(spotifyUser)}
         </div>
       );
     } else {
@@ -429,16 +432,13 @@ function AccountSettingsPage(passedUser: any) {
           Hi, {userData?.profile.firstName + " " + userData?.profile.lastName}!
         </Typography>
         <Typography>Welcome to Account Settings!</Typography>
+        <Typography>If your session has been active for
+            a while, you may need to reauthenticate!</Typography>
+
       </div>
       <hr />
       <div className="account-wrapper">
         <List className="account-box">
-          <ListItemButton
-            selected={selectItem == "1"}
-            onClick={() => setSelectedItem("1")}
-          >
-            <ListItem>Info</ListItem>
-          </ListItemButton>
           <ListItemButton
             selected={selectItem == "2"}
             onClick={() => setSelectedItem("2")}
@@ -459,6 +459,15 @@ function AccountSettingsPage(passedUser: any) {
             }}
           >
             <ListItem>Delete Account</ListItem>
+          </ListItemButton>
+          <ListItemButton
+            selected={selectItem == "5"}
+            onClick={() => {
+              setSelectedItem("5");
+              setDeleteClicked(false);
+            }}
+          >
+            <ListItem>Spotify</ListItem>
           </ListItemButton>
         </List>
         <Container className="account-settings">{displayItem()}</Container>
