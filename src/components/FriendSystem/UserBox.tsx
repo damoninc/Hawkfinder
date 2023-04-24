@@ -315,7 +315,11 @@ export default class UserBox extends React.Component<IProps, IState> {
  * @param {{ user: User; pfp: string }} props
  * @return {*}
  */
-export function SmallUserBox(props: { user: User; pfp: string }) {
+export function SmallUserBox(props: {
+  user: User;
+  pfp: string;
+  navigate?: any;
+}) {
   const imgSize = screen.width < 600 ? "65px" : "80px";
   return (
     <Grid container spacing={0.5}>
@@ -346,10 +350,10 @@ export function SmallUserBox(props: { user: User; pfp: string }) {
           variant="contained"
           sx={{ width: "100%", marginTop: "10px" }}
           onClick={() => {
-            window.location.replace(
-              `/components/Profile#userid=${props.user.userid}`
-            );
-            window.location.reload();
+            if (props.navigate) {
+              props.navigate(`/components/Profile#userid=${props.user.userid}`);
+              window.location.reload();
+            }
           }}
         >
           Profile

@@ -31,7 +31,6 @@ import { MuiChipsInput } from "mui-chips-input";
 import EditIcon from "@mui/icons-material/Edit";
 const interestRef = doc(db, "Interests", "Interests");
 const interestSnap = await getDoc(interestRef);
-console.log("Interest pull");
 const baseInterests = interestSnap.data();
 
 /**
@@ -52,7 +51,6 @@ function EditPage(
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  console.log("editing page");
   // PHOTO MODAL HOOKS
   const [profilePhotoModal, setProfilePhotoModal] = useState(false);
   const [coverPhotoModal, setCoverPhotoModal] = useState(false);

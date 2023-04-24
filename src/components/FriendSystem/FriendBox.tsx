@@ -11,6 +11,7 @@ import { SmallUserBox } from "./UserBox";
 interface IProps {
   friend: User;
   smol?: boolean;
+  navigate?: any;
 }
 
 interface IState {
@@ -118,6 +119,7 @@ export default class FriendBox extends React.Component<IProps, IState> {
                 <SmallUserBox
                   user={this.props.friend}
                   pfp={this.state.pfpUrl}
+                  navigate={this.props.navigate}
                 />
               </Grid>
               <Grid item sx={{ padding: "10px" }}>
