@@ -1,5 +1,5 @@
 import { doc, updateDoc } from "firebase/firestore";
-import React from "react";
+import React, { useState } from "react";
 import User from "../../data/User";
 import { db } from "../../firebase/config";
 import { Button } from "@mui/material";
@@ -25,7 +25,7 @@ export default function SpotifyAuthDeauth(user: User) {
   }
 }
 
-function SpotifyLogin(user: User) {
+function SpotifyLogin(user: User | undefined) {
   if (user === undefined) {
     return <div></div>;
   }
@@ -73,17 +73,18 @@ function SpotifyLogin(user: User) {
 }
 
 function SpotifyLogout(user: User) {
+  const [refresh, setRefresh] = useState("");
   if (user === undefined) {
     return <div></div>;
   }
 
-  if (user.spotify.refreshToken != " ") {
+  if (user.spotify.refreshToken != "null") {
     return (
       <div>
         <Button
           variant="contained"
           color="primary"
-          onClick={() => logOut(user)}
+          onClick={() => logOut(user, setRefresh)}
         >
           <img
             src={spotifyLogo}
@@ -98,7 +99,7 @@ function SpotifyLogout(user: User) {
   }
 }
 
-function logOut(user: User) {
+function logOut(user: User, setRefresh: any) {
   if (user.spotify.accessToken != "null") {
     console.log("db access update");
     user.spotify.accessToken = "null";
@@ -106,7 +107,9 @@ function logOut(user: User) {
       doc(db, "Users", user.userid),
       "spotifyTokens.accessToken",
       user.spotify.accessToken
-    );
+    ).then(() => {
+      setRefresh("access");
+    });
   }
   if (user.spotify.refreshToken != "null") {
     console.log("db refresh update");
@@ -115,6 +118,8 @@ function logOut(user: User) {
       doc(db, "Users", user.userid),
       "spotifyTokens.refreshToken",
       user.spotify.refreshToken
-    );
+    ).then(() => {
+      setRefresh("refresh");
+    });
   }
 }

@@ -112,7 +112,7 @@ export default function FriendPage(props: { uCreds: string; page: string }) {
                 justifyItems={"center"}
                 alignItems={"center"}
               >
-                <FriendBox friend={friend} smol={true} />
+                <FriendBox friend={friend} smol={true} navigate={navigate} />
               </Box>
             );
           })}

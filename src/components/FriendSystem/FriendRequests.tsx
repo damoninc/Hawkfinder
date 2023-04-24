@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import User, { userConverter } from "../../data/User";
 import "../../styles/friendrequest.css";
-import { Box, CircularProgress, Grid, Stack, Typography, Button, Badge } from "@mui/material";
-import { db } from "../../firebase/config";
 import {
-  doc,
-  collection,
-  query,
-  getDocs,
-  updateDoc,
-} from "firebase/firestore";
+  Box,
+  CircularProgress,
+  Grid,
+  Stack,
+  Typography,
+  Button,
+  Badge,
+} from "@mui/material";
+import { db } from "../../firebase/config";
+import { doc, collection, query, getDocs, updateDoc } from "firebase/firestore";
 import UserBox from "./UserBox";
 import { boxTheme } from "../../App";
 import { user } from "./FriendPage";
@@ -30,20 +32,20 @@ export default function FriendRequests() {
   const [incoming, setIncoming] = useState(null);
   const [outgoing, setOutgoing] = useState(null);
   const [refresh, setRefresh] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   if (user) {
-    currUser = user
+    currUser = user;
   } else {
-    setTimeout(function() {
-      setRefresh(!refresh)
-    }, 1000)
+    setTimeout(function () {
+      setRefresh(!refresh);
+    }, 1000);
   }
   if (currUser && (!dbPulled || (!incoming && !outgoing))) {
-    dbPulled = true
+    dbPulled = true;
     callDB(currUser, setIncoming, setOutgoing);
   }
 
-  const requests = (    
+  const requests = (
     <Grid
       sx={{
         border: "4px solid teal",
@@ -93,7 +95,7 @@ export default function FriendRequests() {
         {OutgoingRequests(currUser, outgoing)}
       </Box>
     </Grid>
-  ) 
+  );
 
   return (
     <div>
@@ -130,19 +132,22 @@ export default function FriendRequests() {
           </Badge>
         </Grid>
       </div>
-      {dbPulled ? requests :       
-      <Box
-        sx={{
-          border: boxTheme.border,
-          borderColor: boxTheme.borderColor,
-          background: boxTheme.backgroundSecondary,
-          borderRadius: "25px",
-          
-        }}
-      >
-        {LoadingPage("Loading Requests")}
-      </Box>}
-    </div>)
+      {dbPulled ? (
+        requests
+      ) : (
+        <Box
+          sx={{
+            border: boxTheme.border,
+            borderColor: boxTheme.borderColor,
+            background: boxTheme.backgroundSecondary,
+            borderRadius: "25px",
+          }}
+        >
+          {LoadingPage("Loading Requests")}
+        </Box>
+      )}
+    </div>
+  );
 }
 
 // Returns HTML of UserBoxes for incoming requests
@@ -155,7 +160,7 @@ function IncomingRequests(currUser: User, incoming: Array<User> | null) {
         alignItems="center"
         spacing={3}
         width="100%"
-      >       
+      >
         <Typography variant="h6" textAlign="center">
           Loading
         </Typography>
@@ -208,7 +213,7 @@ function OutgoingRequests(currUser: User, outgoing: Array<User> | null) {
         alignItems="center"
         spacing={3}
         width="100%"
-      >       
+      >
         <Typography variant="h6" textAlign="center">
           Loading
         </Typography>
@@ -247,6 +252,7 @@ function OutgoingRequests(currUser: User, outgoing: Array<User> | null) {
 /**
  * Declines a friend request when the decline button is pressed
  *
+ * @param {User} currUser - the currently logged in user
  * @param {User} request - User linked to declined friend request
  */
 export async function decline(currUser: User, request: User) {
@@ -288,6 +294,7 @@ export async function decline(currUser: User, request: User) {
 /**
  * Accepts the friend reqeust when the accept button is pressed
  *
+ * @param {User} currUser - the currently logged in user
  * @param {User} request - User linked to request
  */
 export async function accept(currUser: User, request: User) {
@@ -335,6 +342,7 @@ export async function accept(currUser: User, request: User) {
 /**
  * Cancels a friend request when the cancel button on a request is pressed
  *
+ * @param {User} currUser - the currently logged in user
  * @param {User} request - the user associated with the cancelled request
  */
 export async function cancel(currUser: User, request: User) {
