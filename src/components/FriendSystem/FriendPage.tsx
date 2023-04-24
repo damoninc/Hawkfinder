@@ -41,7 +41,8 @@ window.addEventListener("resize", function () {
  * Generates a HTML block that displays a user's friend list by creating
  *    a FriendBox for each friend in their friend list.
  * Shows all friends or a "no friends" message is applicable.
- * @param signedUser : string
+ * @param {string} uCreds - the userid of the logged in user
+ * @param {string} page - the page to display ("list" for main friendpage, "sidebar" for friend sidebar)
  * @return {*} - FriendPage HTML
  */
 export default function FriendPage(props: { uCreds: string; page: string }) {
@@ -105,16 +106,13 @@ export default function FriendPage(props: { uCreds: string; page: string }) {
         <Box>
           {friends.map((friend) => {
             return (
-              <Box key={friend.userid}>
-                <Button
-                  onClick={() => {
-                    navigate(`/components/Profile#userid=${friend.userid}`);
-                    window.location.reload();
-                  }}
-                  sx={{ textTransform: "none", borderRadius: "50px" }}
-                >
-                  <FriendBox friend={friend} smol={true} />
-                </Button>
+              <Box
+                key={friend.userid}
+                justifyContent={"center"}
+                justifyItems={"center"}
+                alignItems={"center"}
+              >
+                <FriendBox friend={friend} smol={true} />
               </Box>
             );
           })}
@@ -262,12 +260,13 @@ function checkNullList(friends: User[] | null) {
                 >
                   <ArrowBackIcon />
                 </Button>
-                <Stack justifyContent="flex-start" alignItems="flex-start">
+                <Stack justifyContent="center" alignItems="center" width="100%">
                   <Stack
                     justifyContent="center"
                     alignItems="center"
                     spacing={2}
                     paddingTop="10px"
+                    width="100%"
                   >
                     <Typography variant="h4" sx={{ textAlign: "center" }}>
                       {friend.profile.firstName} {friend.profile.lastName}
@@ -288,7 +287,10 @@ function checkNullList(friends: User[] | null) {
                     <CurrentSong
                       user={friend}
                       small={false}
-                      sx={{ width: "350px" }}
+                      sx={{
+                        maxWidth: "350px",
+                        scrollLimit: { xs: 10, sm: 12, md: 12 },
+                      }}
                     />
                     <Box
                       width="100%"
@@ -319,7 +321,15 @@ function checkNullList(friends: User[] | null) {
                         Recent Songs
                       </Typography>
                     </Box>
-                    <RecentSongs user={friend} small={false} limit={10} />
+                    <RecentSongs
+                      user={friend}
+                      small={false}
+                      limit={10}
+                      sx={{
+                        maxWidth: "350px",
+                        scrollLimit: { xs: 10, sm: 12, md: 12 },
+                      }}
+                    />
                   </Stack>
                 </Stack>
               </Drawer>
@@ -429,7 +439,13 @@ class RemoveButton extends React.Component<IProps, IState> {
   }
 }
 
-// TODO Document this
+/**
+ * When called, sends a friend request to the given friend parameter from the given user parameter.
+ *
+ * @export
+ * @param {User} currUser - the currently logged in user
+ * @param {User} friend - the user to send a request to.
+ */
 export async function addFriend(currUser: User, friend: User) {
   if (friend && currUser) {
     if (!currUser.friendsList.includes(friend.userid)) {
@@ -497,7 +513,7 @@ export async function removeFriend(friend: User) {
   }
 }
 
-export async function callDB(signedUser: string, setFriends: any) {
+async function callDB(signedUser: string, setFriends: any) {
   // Query Firestore for information from currently logged in user
   // Friends list query from FireStore\
   const newfriends = new Array<User>();

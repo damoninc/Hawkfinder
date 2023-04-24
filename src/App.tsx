@@ -102,14 +102,10 @@ function App() {
             path="/components/Forum"
             element={
               isUserLoggin(user) ? (
-                <Grid container>
-                  <Grid item xs={12} md={8} lg={9} xl={10} sx={gridTheme}>
-                    <Forum passedUser={""} userID={user?.uid} />
-                  </Grid>
-                  <Grid item xs={0} md={4} lg={3} xl={2}>
-                    <FriendPage uCreds={user!.uid} page="sidebar" />
-                  </Grid>
-                </Grid>
+                <div style={{display:"grid", gridTemplateColumns:"1fr 300px"}}>
+                  <Forum passedUser={""} userID={user?.uid} />
+                  <FriendPage uCreds={user!.uid} page="sidebar" />
+                </div>
               ) : (
                 <Navigate to="/components/Interceptor" />
               )

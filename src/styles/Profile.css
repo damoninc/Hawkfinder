@@ -640,3 +640,9 @@
     align-self: center;
   }
 }
+
+@media (max-width: 480px){
+  .spotify-box{
+    scale:.8;
+  }
+}
