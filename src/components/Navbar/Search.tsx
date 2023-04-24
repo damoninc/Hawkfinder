@@ -25,6 +25,13 @@ interface IState {
   loggedUser: User | null;
 }
 
+/**
+ * returns a display that shows the results of a given search
+ *
+ * @export
+ * @class SearchPage
+ * @extends {React.Component<IProps, IState>}
+ */
 export default class SearchPage extends React.Component<IProps, IState> {
   rerender = false;
   intervalID: any;
