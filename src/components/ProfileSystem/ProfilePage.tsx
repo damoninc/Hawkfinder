@@ -63,7 +63,7 @@ function ProfilePage(passedUser: any) {
   }, []);
 
   // Required to keep the DOM happy.
-  if (!userPage || !userProfPic || !userCoverPic) {
+  if (!userPage) {
     return (
       <div hidden>
         {EditPage(userPage, docRef, passedUserObj)}
