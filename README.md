@@ -44,20 +44,25 @@ On Windows, this is done by:
 	- You may want to consider switching your execution policy back to "Restricted" after you have finished running your scripts.
 -------------------------------------------------------------------------------------------------------------------------
 ## Developer Guide
-Preferred IDE
-- VSCode
-Code Standards
-- Follow the official TS guide created by Google: https://google.github.io/styleguide/tsguide.html
-Linters
-- ESLint
-	- "npm install -g eslint" to install eslint globally on your machine
-	- The linter is already a dependency in our project, so it will find any lint errors automatically
-Pretty Formatting
-- Install the Prettier extension
-	- https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
-- To format your code, right-click your workspace, click "Format Document With...", and choose "Prettier - Code Formatter"
-- A better option would be to go into your VSCode settings and enable "Editor: Format On Save"
-	- This will auto-format your code every time the file is saved
+- Preferred IDE
+	- VSCode
+- Code Standards
+	- Follow the official TS guide created by Google: https://google.github.io/styleguide/tsguide.html
+- Linters
+	- ESLint
+		- "npm install -g eslint" to install eslint globally on your machine
+		- The linter is already a dependency in our project, so it will find any lint errors automatically
+- Pretty Formatting
+	- Install the Prettier extension
+		- https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
+	- To format your code, right-click your workspace, click "Format Document With...", and choose "Prettier - Code Formatter"
+	- A better option would be to go into your VSCode settings and enable "Editor: Format On Save"
+		- This will auto-format your code every time the file is saved
+
+-------------------------------------------------------------------------------------------------------------------------
+## Running Tests
+Make sure you have the testing dependencies installed with a "npm i". To run your test, simply run the following command in your terminal "node src/tests/" + the relative path of your test ex. "node src/tests/Forum/Forum.test.js"
+
 -------------------------------------------------------------------------------------------------------------------------
 ## About
 Hawk Finder is a UNCW social media web app where users can share their interests with others. The app targets UNCW students looking to socialize and meet with other students based on their common interests.
