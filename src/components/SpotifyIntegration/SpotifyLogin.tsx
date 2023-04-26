@@ -111,7 +111,7 @@ async function logOut(user: User) {
       user.spotify
     ).then(() => {
       alert("Deauthorized Spotify");
-      window.location.reload();
+      window.location.assign("/components/AccountSettings/");
     });
   }
 }
