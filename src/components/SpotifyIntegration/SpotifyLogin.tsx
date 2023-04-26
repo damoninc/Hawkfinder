@@ -73,7 +73,6 @@ function SpotifyLogin(user: User | undefined) {
 }
 
 function SpotifyLogout(user: User) {
-  const [refresh, setRefresh] = useState("");
   if (user === undefined) {
     return <div></div>;
   }
@@ -84,7 +83,7 @@ function SpotifyLogout(user: User) {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => logOut(user, setRefresh)}
+          onClick={() => logOut(user)}
         >
           <img
             src={spotifyLogo}
@@ -99,27 +98,20 @@ function SpotifyLogout(user: User) {
   }
 }
 
-function logOut(user: User, setRefresh: any) {
-  if (user.spotify.accessToken != "null") {
-    console.log("db access update");
-    user.spotify.accessToken = "null";
-    updateDoc(
+async function logOut(user: User) {
+  if (
+    user.spotify.accessToken != "null" ||
+    user.spotify.refreshToken != "null"
+  ) {
+    user.spotify = { accessToken: "null", refreshToken: "null" };
+    console.log("removing spotify tokens");
+    await updateDoc(
       doc(db, "Users", user.userid),
-      "spotifyTokens.accessToken",
-      user.spotify.accessToken
+      "spotifyTokens",
+      user.spotify
     ).then(() => {
-      setRefresh("access");
-    });
-  }
-  if (user.spotify.refreshToken != "null") {
-    console.log("db refresh update");
-    user.spotify.refreshToken = "null";
-    updateDoc(
-      doc(db, "Users", user.userid),
-      "spotifyTokens.refreshToken",
-      user.spotify.refreshToken
-    ).then(() => {
-      setRefresh("refresh");
+      alert("Deauthorized Spotify");
+      window.location.reload();
     });
   }
 }
