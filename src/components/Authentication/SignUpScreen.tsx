@@ -65,11 +65,11 @@ function SignUpScreen() {
         errors.confirmPassword = "Password fields do not match!";
       }
 
-      if (values.firstname == "") {
+      if (values.firstname.trim() == "") {
         errors.firstname = "Must fill out firstname field.";
       }
 
-      if (values.lastname == "") {
+      if (values.lastname.trim() == "") {
         errors.lastname = "Must fill out lastname field.";
       }
 
