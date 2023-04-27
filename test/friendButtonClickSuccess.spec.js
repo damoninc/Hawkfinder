@@ -24,6 +24,7 @@ describe('Friend_Button_Click_Success', function() {
     await driver.findElement(By.css(".MuiButtonBase-root")).click()
     await driver.sleep(2000)
     {
+      assert(await driver.switchTo().alert().getText() == "Signed in as Test User")
       const element = await driver.findElement(By.css(".MuiButtonBase-root:nth-child(2) > .MuiBadge-root > .MuiSvgIcon-root"))
       await driver.actions({ bridge: true }).moveToElement(element).perform()
     }

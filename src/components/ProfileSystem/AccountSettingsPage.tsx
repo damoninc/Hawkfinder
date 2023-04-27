@@ -405,6 +405,10 @@ function AccountSettingsPage(passedUser: any) {
    * @returns A component or null
    */
   function displayItem() {
+    const urlParams = new URLSearchParams(
+      window.location.hash.replace("#", "?")
+    );
+
     if (selectItem == "2") {
       return (
         <div className="centered" style={{ height: "100%" }}>
@@ -426,7 +430,7 @@ function AccountSettingsPage(passedUser: any) {
           <DeleteAccountComponent />
         </div>
       );
-    } else if (selectItem == "5") {
+    } else if (selectItem == "5" || urlParams.get("access_token") != null) {
       return (
         <div className="centered" style={{ height: "100%" }}>
           {SpotifyAuthDeauth(spotifyUser)}
@@ -454,13 +458,19 @@ function AccountSettingsPage(passedUser: any) {
         <List className="account-box">
           <ListItemButton
             selected={selectItem == "2"}
-            onClick={() => {setSelectedItem("2"); setSignupMessage("");}}
+            onClick={() => {
+              setSelectedItem("2");
+              setSignupMessage("");
+            }}
           >
             <ListItem>Change Email</ListItem>
           </ListItemButton>
           <ListItemButton
             selected={selectItem == "3"}
-            onClick={() => {setSelectedItem("3"); setSignupMessage("")}}
+            onClick={() => {
+              setSelectedItem("3");
+              setSignupMessage("");
+            }}
           >
             <ListItem>Change Password</ListItem>
           </ListItemButton>
