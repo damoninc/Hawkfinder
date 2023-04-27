@@ -180,7 +180,7 @@ function SignUpScreen() {
                   <TextField
                     label="Password"
                     id="password"
-                    type="text"
+                    type="password"
                     onChange={formik.handleChange}
                     value={formik.values.password}
                     error={
@@ -197,7 +197,7 @@ function SignUpScreen() {
                   <TextField
                     label="Confirm Password"
                     id="confirmPassword"
-                    type="text"
+                    type="password"
                     onChange={formik.handleChange}
                     value={formik.values.confirmPassword}
                     error={
