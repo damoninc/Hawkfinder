@@ -4,9 +4,10 @@ import axios from "axios";
 import "../../styles/spotify.css";
 import { Box, LinearProgress, Stack, Typography } from "@mui/material";
 import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../../firebase/config";
+import { db, functions } from "../../firebase/config";
 import Marquee from "react-fast-marquee";
 import { boxTheme } from "../../App";
+import { httpsCallable } from "@firebase/functions";
 
 const api_uri = "https://api.spotify.com/v1";
 const spotifyLogo =
@@ -288,6 +289,8 @@ class spotifyComponent extends React.Component<IProps, IState> {
     }
   }
   async refreshToken() {
+    const callableReturnMessage = httpsCallable(functions, "spotifyAuth");
+
     await axios
       .get("/api/spotify/refresh_token", {
         method: "GET",

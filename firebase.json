@@ -8,6 +8,10 @@
     ],
     "rewrites": [
       {
+        "source": "/spotify/**",
+        "function": "spotifyAuth"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }

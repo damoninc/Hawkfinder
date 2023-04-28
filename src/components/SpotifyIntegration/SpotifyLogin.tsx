@@ -3,6 +3,9 @@ import React, { useState } from "react";
 import User from "../../data/User";
 import { db } from "../../firebase/config";
 import { Button } from "@mui/material";
+import { functions } from "../../firebase/config";
+import { httpsCallable } from "@firebase/functions";
+import axios from "axios";
 
 const spotifyLogo =
   "https://firebasestorage.googleapis.com/v0/b/csc-450-project.appspot.com/o/HAWKFINDER%2Fspotify-logo-7839B39C1B-seeklogo.com.png?alt=media&token=d84fdd6d-08da-4dcd-a9f5-99beba187849";
@@ -99,19 +102,28 @@ function SpotifyLogout(user: User) {
 }
 
 async function logOut(user: User) {
-  if (
-    user.spotify.accessToken != "null" ||
-    user.spotify.refreshToken != "null"
-  ) {
-    user.spotify = { accessToken: "null", refreshToken: "null" };
-    console.log("removing spotify tokens");
-    await updateDoc(
-      doc(db, "Users", user.userid),
-      "spotifyTokens",
-      user.spotify
-    ).then(() => {
-      alert("Deauthorized Spotify");
-      window.location.assign("/components/AccountSettings/");
+  const callableReturnMessage = httpsCallable(functions, "spotifyAuth");
+  callableReturnMessage()
+    .then((result) => {
+      console.log(result.data.output);
+    })
+    .catch((error) => {
+      console.log(`error: ${JSON.stringify(error)}`);
     });
-  }
+
+  // if (
+  //   user.spotify.accessToken != "null" ||
+  //   user.spotify.refreshToken != "null"
+  // ) {
+  //   user.spotify = { accessToken: "null", refreshToken: "null" };
+  //   console.log("removing spotify tokens");
+  //   await updateDoc(
+  //     doc(db, "Users", user.userid),
+  //     "spotifyTokens",
+  //     user.spotify
+  //   ).then(() => {
+  //     alert("Deauthorized Spotify");
+  //     window.location.assign("/components/AccountSettings/");
+  //   });
+  // }
 }
