@@ -183,7 +183,7 @@ function ForumPost(props: Post) {
      * stopPropgation prevents events from bubbling and only runs
      * this function (instead of this function AND showing the modal)
      */
-    const uid = props.userID;
+    const uid = props.loggedUser;
     const field = `ratings.${uid}`;
     e.stopPropagation();
     if (!upvoted && !downvoted) {
@@ -219,7 +219,7 @@ function ForumPost(props: Post) {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.stopPropagation();
-    const uid = props.userID;
+    const uid = props.loggedUser;
     const field = `ratings.${uid}`;
     if (!downvoted && !upvoted) {
       // Case where downvote and upvote are not set
