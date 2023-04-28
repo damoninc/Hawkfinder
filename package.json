@@ -13,6 +13,7 @@
     "extra_scripts": "npm install mui-chips-input && npm install leo-profanity --save-dev --no-optional && npm i --save-dev @types/leo-profanity && npm i"
   },
   "dependencies": {
+    "@babel/plugin-syntax-top-level-await": "^7.14.5",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
     "@mui/icons-material": "^5.11.11",

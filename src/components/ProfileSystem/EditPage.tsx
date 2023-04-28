@@ -29,8 +29,11 @@ import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
 import * as filter from "leo-profanity";
 import { MuiChipsInput } from "mui-chips-input";
 import EditIcon from "@mui/icons-material/Edit";
-
-
+const interestRef = doc(db, "Interests", "Interests");
+const interestSnap = await getDoc(interestRef);
+const baseInterests = interestSnap.data();
+console.log("Changed!!!!!!!!!!!")
+console.log("HEY!")
 /**
  * This is the edit page button. It is only visible if the logged in user matches the user's profile.
  * A user can only see this on their own page.
@@ -44,21 +47,9 @@ function EditPage(
   docRef: DocumentReference,
   passedUserObj: string
 ) {
-  useEffect(() =>{
-    const interestRef = doc(db, "Interests", "Interests");
-    setInterestRef(interestRef);
-    getDoc(interestRef).then((snap) =>{
-      const baseInterests = snap.data();
-      setBaseInterests(baseInterests);
-    }
-
-    );
-  });
   const owner = user?.userid === passedUserObj;
   // MAIN EDIT PAGE MODAL HANDLERS
   const [open, setOpen] = React.useState(false);
-  const [interestRef, setInterestRef] = useState<DocumentReference<DocumentData>>();
-  const [baseInterests, setBaseInterests] = useState<DocumentData | undefined>();
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   // PHOTO MODAL HOOKS
@@ -258,7 +249,7 @@ function EditPage(
       baseInterestDataToUpdate["Interests"] = newBaseInterests;
     }
     updateDoc(docRef, dataToUpdate);
-    updateDoc(interestRef!, baseInterestDataToUpdate);
+    updateDoc(interestRef, baseInterestDataToUpdate);
     handleClose();
   };
 
