@@ -272,7 +272,7 @@ function AccountSettingsPage(passedUser: any) {
                   <TextField
                     label="Password"
                     id="password"
-                    type="text"
+                    type="password"
                     onChange={formikPassword.handleChange}
                     value={formikPassword.values.password}
                     error={
@@ -291,7 +291,7 @@ function AccountSettingsPage(passedUser: any) {
                   <TextField
                     label="Confirm Password"
                     id="confirmPassword"
-                    type="text"
+                    type="password"
                     onChange={formikPassword.handleChange}
                     value={formikPassword.values.confirmPassword}
                     error={
