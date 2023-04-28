@@ -32,7 +32,8 @@ import EditIcon from "@mui/icons-material/Edit";
 const interestRef = doc(db, "Interests", "Interests");
 const interestSnap = await getDoc(interestRef);
 const baseInterests = interestSnap.data();
-
+console.log("Changed!!!!!!!!!!!")
+console.log("HEY!")
 /**
  * This is the edit page button. It is only visible if the logged in user matches the user's profile.
  * A user can only see this on their own page.
