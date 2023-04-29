@@ -9,7 +9,6 @@ import axios from "axios";
 
 const spotifyLogo =
   "https://firebasestorage.googleapis.com/v0/b/csc-450-project.appspot.com/o/HAWKFINDER%2Fspotify-logo-7839B39C1B-seeklogo.com.png?alt=media&token=d84fdd6d-08da-4dcd-a9f5-99beba187849";
-const cloudFuncLoc = "http://127.0.0.1:5001/csc-450-project/us-central1/"
 /**
  * Returns a component that allows a user to authorize or de-authorize Hawkfinder's access to their spotify profile.
  *
