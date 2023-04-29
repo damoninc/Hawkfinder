@@ -7,6 +7,8 @@ const dotenv = require('dotenv');
 const process = require('process');
 // eslint-disable-next-line no-undef
 const request = require("request");
+// eslint-disable-next-line no-undef
+const functions = require("firebase-functions");
 
 const port = 5000
 
@@ -114,3 +116,4 @@ app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}`)
 })
 
+exports.spotifyAuth = functions.https.onRequest(app);
