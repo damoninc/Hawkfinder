@@ -1,16 +1,12 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-// eslint-disable-next-line no-undef
 const express = require('express');
-// eslint-disable-next-line no-undef
 const dotenv = require('dotenv');
-// eslint-disable-next-line no-undef
 const process = require('process');
-// eslint-disable-next-line no-undef
 const request = require("request");
-// eslint-disable-next-line no-undef
 const functions = require("firebase-functions");
+const needle = require("needle");
 
-const port = 5001
+
 
 dotenv.config()
 
@@ -18,7 +14,6 @@ var spotify_client_id = process.env.SPOTIFY_CLIENT_ID
 var spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET
 var redirect_uri_front = process.env.SPOTIFY_REDIRECT_URI_FRONT_END
 var redirect_uri_back = process.env.SPOTIFY_REDIRECT_URI_BACK_END
-var app = express();
 
 var generateRandomString = function (length) {
   var text = '';
@@ -30,10 +25,11 @@ var generateRandomString = function (length) {
   return text;
 };
 
-app.get('/api/spotify', (req, res) => {
+// eslint-disable-next-line no-undef
+exports.spotifyAuth = functions.https.onCall( (req, res) => {
+
   var scope = "streaming user-read-currently-playing user-top-read user-follow-read user-read-recently-played"
   var state = generateRandomString(16);
-
   var auth_query_parameters = new URLSearchParams({
     response_type: "code",
     client_id: spotify_client_id,
@@ -41,15 +37,16 @@ app.get('/api/spotify', (req, res) => {
     redirect_uri: redirect_uri_back,
     state: state,
     headers: {
-      'Access-Control-Allow-Origin': '*',
+      "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "OPTIONS",
-      "Access-Control-Allow-Headers": "Origin, Content-Type, Authorization"
+      "Access-Control-Allow-Headers": "Origin, Content-Type, Authorization",
     }
   })
-  res.redirect('https://accounts.spotify.com/authorize/?' + auth_query_parameters.toString());
+  return ({url: 'https://accounts.spotify.com/authorize/?' + auth_query_parameters.toString()});
 })
 
-app.get('/api/spotify/callback', (req, res) => {
+// eslint-disable-next-line no-undef
+exports.spotifyCallback = functions.https.onRequest((req, res) => {
   var code = req.query.code;
   var authOptions = {
     url: 'https://accounts.spotify.com/api/token',
@@ -76,9 +73,10 @@ app.get('/api/spotify/callback', (req, res) => {
   });
 });
 
-export const spotifyRefresh = functions.https.onRequest(function (req, res) {
 
-  var refresh_token = req.query.refresh_token;
+// eslint-disable-next-line no-undef
+exports.spotifyRefresh = functions.https.onCall( (req, res) => {
+  var refresh_token = req.refresh_token;
   var authOptions = {
     url: 'https://accounts.spotify.com/api/token',
     // eslint-disable-next-line no-undef
@@ -90,20 +88,8 @@ export const spotifyRefresh = functions.https.onRequest(function (req, res) {
     json: true
   };
 
-  request.post(authOptions, function (error, response, body) {
-    if (!error && response.statusCode === 200) {
-      var access_token = body.access_token;
-      res.send({
-        'access_token': access_token
-      });
-    }
-    else if (response.statusCode === 400) {
-      res.send({
-        'access_token': "null"
-      })
-    }
-  });
+  return needle("post", authOptions.url, authOptions.form, {headers: authOptions.headers}).then((resp) => {
+    console.log(resp.body.access_token)
+    return ({access_token: resp.body.access_token})
+  })
 });
-
-// eslint-disable-next-line no-undef
-exports.spotifyAuth = functions.https.onRequest(app);

@@ -7,10 +7,6 @@ export default defineConfig({
     chunkSizeWarningLimit: 1600,
     target: 'esnext' //browsers can handle the latest ES features
   },
-  server: {
-    proxy: {
-      "/api/spotify": "http://localhost:5000"
-    }
-  },
+
   plugins: [react()],
 })

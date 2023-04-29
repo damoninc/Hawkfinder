@@ -8,8 +8,16 @@
     ],
     "rewrites": [
       {
-        "source": "/spotify/**",
+        "source": "/api/spotify/callback",
+        "function": "spotifyCallback"
+      },
+      {
+        "source": "/api/spotify/",
         "function": "spotifyAuth"
+      },      
+      {
+        "source": "/api/spotify/Refresh",
+        "function": "spotifyRefresh"
       },
       {
         "source": "**",

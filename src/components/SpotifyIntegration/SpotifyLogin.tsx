@@ -9,7 +9,7 @@ import axios from "axios";
 
 const spotifyLogo =
   "https://firebasestorage.googleapis.com/v0/b/csc-450-project.appspot.com/o/HAWKFINDER%2Fspotify-logo-7839B39C1B-seeklogo.com.png?alt=media&token=d84fdd6d-08da-4dcd-a9f5-99beba187849";
-
+const cloudFuncLoc = "http://127.0.0.1:5001/csc-450-project/us-central1/"
 /**
  * Returns a component that allows a user to authorize or de-authorize Hawkfinder's access to their spotify profile.
  *
@@ -59,21 +59,25 @@ function SpotifyLogin(user: User | undefined) {
 
   return (
     <div>
-      <a
-        href="/api/spotify"
-        style={{ display: "flex", justifyContent: "space-evenly" }}
-      >
-        <Button variant="contained" color="primary">
+        <Button variant="contained" color="primary" onClick={() => {login()}}>
           <img
             src={spotifyLogo}
             style={{ height: "60px", width: "60px", paddingRight: "10px" }}
           ></img>
           <h3>Authorize</h3>
         </Button>
-      </a>
     </div>
   );
 }
+
+async function login() {
+  const spotAuth = httpsCallable(functions, 'spotifyAuth');
+  spotAuth()
+    .then((result : any) => {
+      if (result.data) {
+        window.location = result.data.url
+      }
+    });}
 
 function SpotifyLogout(user: User) {
   if (user === undefined) {
@@ -102,28 +106,19 @@ function SpotifyLogout(user: User) {
 }
 
 async function logOut(user: User) {
-  const callableReturnMessage = httpsCallable(functions, "spotifyAuth");
-  callableReturnMessage()
-    .then((result) => {
-      console.log(result.data.output);
-    })
-    .catch((error) => {
-      console.log(`error: ${JSON.stringify(error)}`);
+  if (
+    user.spotify.accessToken != "null" ||
+    user.spotify.refreshToken != "null"
+  ) {
+    user.spotify = { accessToken: "null", refreshToken: "null" };
+    console.log("removing spotify tokens");
+    await updateDoc(
+      doc(db, "Users", user.userid),
+      "spotifyTokens",
+      user.spotify
+    ).then(() => {
+      alert("Deauthorized Spotify");
+      window.location.assign("/components/AccountSettings/");
     });
-
-  // if (
-  //   user.spotify.accessToken != "null" ||
-  //   user.spotify.refreshToken != "null"
-  // ) {
-  //   user.spotify = { accessToken: "null", refreshToken: "null" };
-  //   console.log("removing spotify tokens");
-  //   await updateDoc(
-  //     doc(db, "Users", user.userid),
-  //     "spotifyTokens",
-  //     user.spotify
-  //   ).then(() => {
-  //     alert("Deauthorized Spotify");
-  //     window.location.assign("/components/AccountSettings/");
-  //   });
-  // }
+  }
 }
