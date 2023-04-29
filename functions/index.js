@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const express = require('express');
 const dotenv = require('dotenv');
 const process = require('process');
 const request = require("request");
