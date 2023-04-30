@@ -9,7 +9,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "node mocha",
+    "test": "mocha",
     "extra_scripts": "npm install mui-chips-input && npm install leo-profanity --save-dev --no-optional && npm i --save-dev @types/leo-profanity && npm i"
   },
   "dependencies": {

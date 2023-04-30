@@ -82,7 +82,11 @@ function ProfilePage(passedUser: any) {
             className="cover-photo"
             loading="lazy"
           />
-          <Typography className="profile-name" sx={{ fontWeight: "bold" }}>
+          <Typography
+            id="testing profile name"
+            className="profile-name"
+            sx={{ fontWeight: "bold" }}
+          >
             {userPage?.profile.firstName + " " + userPage?.profile.lastName}
           </Typography>
           <Typography className="friend-count">
