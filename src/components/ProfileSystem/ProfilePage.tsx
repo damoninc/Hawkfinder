@@ -63,7 +63,7 @@ function ProfilePage(passedUser: any) {
   }, []);
 
   // Required to keep the DOM happy.
-  if (!userPage) {
+  if (!userPage || !userProfPic || !userCoverPic) {
     return (
       <div hidden>
         {EditPage(userPage, docRef, passedUserObj)}
@@ -76,7 +76,12 @@ function ProfilePage(passedUser: any) {
     <>
       <div className="body" style={{ overflowX: "hidden" }}>
         <Paper className="first-row" sx={{ mt: "10px", borderRadius: 10 }}>
-          <img src={`${userCoverPic}`} alt="image" className="cover-photo" />
+          <img
+            src={`${userCoverPic}`}
+            alt="image"
+            className="cover-photo"
+            loading="lazy"
+          />
           <Typography className="profile-name" sx={{ fontWeight: "bold" }}>
             {userPage?.profile.firstName + " " + userPage?.profile.lastName}
           </Typography>
