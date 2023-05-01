@@ -12,7 +12,7 @@ async function signIn() {
   await driver.findElement(By.id("email")).sendKeys("profiletest@uncw.edu");
   await driver.findElement(By.id("password")).click();
   await driver.findElement(By.id("password")).sendKeys("test1234" + Key.RETURN);
-  await driver.sleep(3000);
+  await driver.sleep(2000);
   await driver.switchTo().alert().accept();
 }
 
@@ -29,7 +29,7 @@ describe("Edit Profile", function () {
   it("Edit Firstname to new name", async function () {
     await signIn();
     await driver.get("http://localhost:5173/components/Profile");
-    await driver.sleep(5000);
+    await driver.sleep(2000);
     assert(
       (await driver.findElement(By.id("testing profile name")).getText()) ==
         "Leon Kennedy"
@@ -61,7 +61,7 @@ describe("Edit Profile", function () {
   it("Edit Firstname to no name", async function () {
     await signIn();
     await driver.get("http://localhost:5173/components/Profile");
-    await driver.sleep(5000);
+    await driver.sleep(2000);
     assert(
       (await driver.findElement(By.id("testing profile name")).getText()) ==
         "Leon Kennedy"
