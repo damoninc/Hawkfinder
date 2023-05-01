@@ -61,7 +61,7 @@ On Windows, this is done by:
 
 -------------------------------------------------------------------------------------------------------------------------
 ## Running Tests
-Make sure you have the testing dependencies installed with a "npm i". To run your test, simply run the following command in your terminal "node src/tests/" + the relative path of your test ex. "node src/tests/Forum/Forum.test.js"
+Make sure you have the testing dependencies installed with a "npm i". To run a single test, simply run the following command in your terminal `npx mocha <relative path of spec.js file>`. To run all tests simply run `npm run test`.
 
 -------------------------------------------------------------------------------------------------------------------------
 ## About
