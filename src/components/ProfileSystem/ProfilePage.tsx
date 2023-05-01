@@ -76,12 +76,7 @@ function ProfilePage(passedUser: any) {
     <>
       <div className="body" style={{ overflowX: "hidden" }}>
         <Paper className="first-row" sx={{ mt: "10px", borderRadius: 10 }}>
-          <img
-            src={`${userCoverPic}`}
-            alt="image"
-            className="cover-photo"
-            loading="lazy"
-          />
+          <img src={`${userCoverPic}`} className="cover-photo" loading="lazy" />
           <Typography
             id="testing profile name"
             className="profile-name"
@@ -95,7 +90,6 @@ function ProfilePage(passedUser: any) {
           <Box className="profile-photo-container">
             <img
               src={`${userProfPic}`}
-              alt="image"
               loading="lazy"
               className="profile-photo"
             />
