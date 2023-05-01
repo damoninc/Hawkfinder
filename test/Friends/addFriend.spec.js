@@ -127,4 +127,43 @@ describe('Add Friend', function() {
     await driver.sleep(500);
     assert(await driver.findElement(By.css("h2")).getText() == "No Friends Found :(")
   })
+  it('AddFriendAcceptAndRemove', async function() {
+    await signIn("profiletest@uncw.edu", "test1234");
+    await driver.get("http://localhost:5173/components/Friends")
+    await driver.sleep(2000);
+    await driver.findElement(By.id("search")).click()
+    await driver.findElement(By.id("search")).sendKeys("testuser")
+    await driver.findElement(By.id("search")).sendKeys(Key.ENTER)
+    await driver.sleep(1000);
+    await driver.findElement(By.css(".MuiButton-root > .MuiSvgIcon-root")).click()
+    await driver.sleep(500);
+    await driver.findElement(By.css(".MuiButton-containedSuccess")).click()
+    await driver.sleep(1000);
+    assert(await driver.switchTo().alert().getText() == "Added testuser", "Failed to add profileuser")
+    await driver.sleep(1000);
+    await driver.switchTo().alert().accept();
+    await driver.sleep(500);
+    await driver.findElement(By.css(".MuiIconButton-edgeEnd > .MuiSvgIcon-root")).click()
+    await driver.findElement(By.css(".MuiButtonBase-root > .MuiButton-root")).click()
+    await driver.sleep(1000);
+    await driver.findElement(By.linkText("Go to login")).click()
+    await driver.sleep(1000);
+    await signIn("testuser@uncw.edu", "test1234");
+    await driver.sleep(2000);
+    await driver.get("http://localhost:5173/components/Friends/requests")
+    await driver.sleep(2000);
+    await driver.findElement(By.css(".MuiBadge-root > .MuiButtonBase-root")).click()
+    await driver.sleep(500);
+    await driver.findElement(By.css(".MuiButton-root:nth-child(2) > .MuiSvgIcon-root")).click()
+    await driver.sleep(1000);
+    assert(await driver.switchTo().alert().getText() == "Are you sure you want to decline profiletest's request ?", "bad alert")
+    await driver.sleep(1000);
+    await driver.switchTo().alert().accept();
+    await driver.sleep(1000);
+    assert(await driver.switchTo().alert().getText() == "Removed profiletest", "bad alert")
+    await driver.sleep(1000);
+    await driver.switchTo().alert().accept();
+    await driver.sleep(2000);
+    assert(await driver.findElement(By.css("div:nth-child(1) > .css-1kgxqm0-MuiTypography-root:nth-child(1)")).getText() == "No Incoming Requests")
+  })
 })
