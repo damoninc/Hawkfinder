@@ -115,6 +115,14 @@ describe("RatingPosts", function () {
         )
       )
       .click();
+    await driver.sleep(300);
+    await driver
+      .findElement(
+        By.css(
+          "div:nth-child(2) > .MuiPaper-root .rating-button-container:nth-child(1) .MuiSvgIcon-root"
+        )
+      )
+      .click();
     await driver.sleep(1000);
     // Check if the ratings are the same as before
     assert((await driver.findElement(By.css(".rating")).getText()) == ratings);
