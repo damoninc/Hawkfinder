@@ -61,7 +61,7 @@ On Windows, this is done by:
 
 -------------------------------------------------------------------------------------------------------------------------
 ## Running Tests
-Make sure you have the testing dependencies installed with a "npm i". To run a single test, simply run the following command in your terminal `npx mocha <relative path of spec.js file>`. To run all tests simply run `npm run test`.
+Make sure you have the testing dependencies installed with an "npm i" and make sure you are using Google Chrome with version 112 or higher. To run a single test, simply run the following command in your terminal `npx mocha <relative path of spec.js file>`. To run all tests simply run `npm run test`.
 
 -------------------------------------------------------------------------------------------------------------------------
 ## About
