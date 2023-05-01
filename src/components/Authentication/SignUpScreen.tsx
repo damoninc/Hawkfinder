@@ -47,8 +47,8 @@ function SignUpScreen() {
       const errors: signupFields = {};
       if (values.email == "") {
         errors.email = "Must fill out email field.";
-      } else if (!values.email.includes("@uncw.edu")) {
-        errors.email = "Email must be from @uncw.edu";
+      } else if (!values.email.includes("@")) {
+        errors.email = "Must be a valid email containing '@'";
       }
 
       if (values.password == "") {
