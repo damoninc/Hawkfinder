@@ -556,7 +556,7 @@
   .edit-button {
     left: 0px;
     margin: 0 auto;
-    top: 485px;
+    top: 505px;
     width: 100%;
     position: absolute;
     font-weight: bold;
@@ -641,8 +641,8 @@
   }
 }
 
-@media (max-width: 480px){
-  .spotify-box{
-    scale:.8;
+@media (max-width: 480px) {
+  .spotify-box {
+    scale: 0.8;
   }
 }

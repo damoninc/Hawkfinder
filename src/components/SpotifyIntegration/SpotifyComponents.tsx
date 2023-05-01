@@ -4,9 +4,10 @@ import axios from "axios";
 import "../../styles/spotify.css";
 import { Box, LinearProgress, Stack, Typography } from "@mui/material";
 import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../../firebase/config";
+import { db, functions } from "../../firebase/config";
 import Marquee from "react-fast-marquee";
 import { boxTheme } from "../../App";
+import { httpsCallable } from "@firebase/functions";
 
 const api_uri = "https://api.spotify.com/v1";
 const spotifyLogo =
@@ -252,7 +253,7 @@ class spotifyComponent extends React.Component<IProps, IState> {
   }
 
   async makeRequest(user: User, request_uri: string) {
-    if (user.spotify.accessToken != "null") {
+    if (user.spotify.refreshToken != "null") {
       await axios
         .get(api_uri + request_uri, {
           method: "GET",
@@ -287,36 +288,37 @@ class spotifyComponent extends React.Component<IProps, IState> {
         });
     }
   }
-  async refreshToken() {
-    await axios
-      .get("/api/spotify/refresh_token", {
-        method: "GET",
-        params: {
-          refresh_token: this.props.user.spotify.refreshToken,
-        },
-      })
-      .then((response) => {
-        console.log("db access update");
-        this.props.user.spotify.accessToken = response.data.access_token;
-        updateDoc(
-          doc(db, "Users", this.props.user.userid),
-          "spotifyTokens.accessToken",
-          this.props.user.spotify.accessToken
-        );
-        if (this.props.user.spotify.accessToken == "null") {
-          console.log("bad refresh, reauthenticate");
-          this.props.user.spotify.refreshToken = "null";
+  refreshToken() {
+    const spotRefresh = httpsCallable(functions, 'spotifyRefresh');
+    spotRefresh({refresh_token: this.props.user.spotify.refreshToken})
+    .then((result : any) => {
+      console.log(result)
+      if (result.data) {
+        console.log(result.data)
+        if (result.data.access_token){
+          console.log("db access update");
+          this.props.user.spotify.accessToken = result.data.access_token;
           updateDoc(
             doc(db, "Users", this.props.user.userid),
-            "spotifyTokens.refreshToken",
-            this.props.user.spotify.refreshToken
-          );
-        }
-        console.log("db refresh update");
-        this.setState({ result: null });
-        this.pulled = false;
-        window.location.reload;
-      });
+            "spotifyTokens.accessToken",
+            this.props.user.spotify.accessToken
+          ); 
+
+          if (this.props.user.spotify.accessToken == "null") {
+            console.log("bad refresh, reauthenticate");
+            this.props.user.spotify.refreshToken = "null";
+            updateDoc(
+              doc(db, "Users", this.props.user.userid),
+              "spotifyTokens.refreshToken",
+              this.props.user.spotify.refreshToken
+            );
+          }
+          console.log("db refresh update");
+          this.setState({ result: null });
+          this.pulled = false;
+          window.location.reload;
+        }}
+    });
   }
 }
 

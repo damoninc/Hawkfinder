@@ -1,0 +1,191 @@
+{
+  "id": "4e9d5c45-98d3-471b-8f04-475d064c48fd",
+  "version": "2.0",
+  "name": "Hawkfinder - Profile",
+  "url": "http://localhost:5173/components/Profile",
+  "tests": [{
+    "id": "a90e3c49-815b-44bc-b79e-bf9519b04e50",
+    "name": "Edit Firstname to new name",
+    "commands": [{
+      "id": "4ede3f48-f82e-4a40-bfa6-dee5212dc942",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5173/components/Profile",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "93e092f9-2850-4ed7-acc6-72f91ab8a8b1",
+      "comment": "First Name before edit",
+      "command": "assertText",
+      "target": "id=testing profile name",
+      "targets": [],
+      "value": "Damon Incorvaia"
+    }, {
+      "id": "fabf8c1d-9f53-4fcb-bd85-6f086e8713c6",
+      "comment": "Click edit button",
+      "command": "click",
+      "target": "css=.edit-button",
+      "targets": [
+        ["css=.edit-button", "css:finder"],
+        ["xpath=(//button[@type='button'])[4]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div/div[2]/div/div/div/div[2]/button", "xpath:idRelative"],
+        ["xpath=//div[2]/button", "xpath:position"],
+        ["xpath=//button[contains(.,'Edit Profile')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "fd0ad19c-b0fe-47f8-b82d-16fd10ad8a5b",
+      "comment": "Click First Name field",
+      "command": "click",
+      "target": "id=:r3:",
+      "targets": [
+        ["id=:r3:", "id"],
+        ["css=#\\3Ar3\\3A", "css:finder"],
+        ["xpath=//input[@id=':r3:']", "xpath:attributes"],
+        ["xpath=//div/div[2]/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "d3a32529-e612-4686-a07c-a2953195f6b7",
+      "comment": "Type new name",
+      "command": "type",
+      "target": "id=:r3:",
+      "targets": [
+        ["id=:rr:", "id"],
+        ["css=#\\3Arr\\3A", "css:finder"],
+        ["xpath=//input[@id=':rr:']", "xpath:attributes"],
+        ["xpath=//div/div[2]/div/input", "xpath:position"]
+      ],
+      "value": "Michael"
+    }, {
+      "id": "06087228-fdfe-47f7-b83b-61f4e66198e7",
+      "comment": "Click Save",
+      "command": "click",
+      "target": "css=.css-uln3b4-MuiButtonBase-root-MuiButton-root",
+      "targets": [
+        ["css=.css-uln3b4-MuiButtonBase-root-MuiButton-root", "css:finder"],
+        ["xpath=(//button[@type='button'])[59]", "xpath:attributes"],
+        ["xpath=//div[3]/button[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "0fdab7cb-f2ac-4de2-8d81-6ac03dcf88df",
+      "comment": "Waiting for update to database",
+      "command": "pause",
+      "target": "2000",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "b5985e7e-8705-4f7e-9fd8-09e9d878fb02",
+      "comment": "Refreshing Page",
+      "command": "open",
+      "target": "http://localhost:5173/components/Profile",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "ee02bb49-3c41-4bcc-8d1c-5c1c58f557fa",
+      "comment": "First Name after edit",
+      "command": "assertText",
+      "target": "css=.profile-name",
+      "targets": [],
+      "value": "Michael Incorvaia"
+    }]
+  }, {
+    "id": "6c306e19-a8ed-4e5c-848f-448c724d7921",
+    "name": "Edit Firstname to no name",
+    "commands": [{
+      "id": "16fd88fa-3cd3-4206-82ef-4f2cb7c0e5fb",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5173/components/Profile",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "820f20d9-6bf3-4075-8fbf-828c5f6a39f2",
+      "comment": "First Name before edit",
+      "command": "assertText",
+      "target": "id=testing profile name",
+      "targets": [],
+      "value": "Michael Incorvaia"
+    }, {
+      "id": "66c2516b-5da8-4a4e-87a4-12f61a44ce51",
+      "comment": "Click edit button",
+      "command": "click",
+      "target": "css=.edit-button",
+      "targets": [
+        ["css=.edit-button", "css:finder"],
+        ["xpath=(//button[@type='button'])[4]", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div/div[2]/div/div/div/div[2]/button", "xpath:idRelative"],
+        ["xpath=//div[2]/button", "xpath:position"],
+        ["xpath=//button[contains(.,'Edit Profile')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "1a652c43-9533-4914-b562-eddb52c4b26d",
+      "comment": "Click First Name field",
+      "command": "click",
+      "target": "id=:r3:",
+      "targets": [
+        ["id=:r3:", "id"],
+        ["css=#\\3Ar3\\3A", "css:finder"],
+        ["xpath=//input[@id=':r3:']", "xpath:attributes"],
+        ["xpath=//div/div[2]/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "e1f0f6f0-7128-40f9-acea-e8d5e60b6004",
+      "comment": "Type new name",
+      "command": "type",
+      "target": "id=:r3:",
+      "targets": [
+        ["id=:rr:", "id"],
+        ["css=#\\3Arr\\3A", "css:finder"],
+        ["xpath=//input[@id=':rr:']", "xpath:attributes"],
+        ["xpath=//div/div[2]/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "32200ed6-9842-451e-928f-f610630ef967",
+      "comment": "Click Save",
+      "command": "click",
+      "target": "css=.css-uln3b4-MuiButtonBase-root-MuiButton-root",
+      "targets": [
+        ["css=.css-uln3b4-MuiButtonBase-root-MuiButton-root", "css:finder"],
+        ["xpath=(//button[@type='button'])[59]", "xpath:attributes"],
+        ["xpath=//div[3]/button[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "84cbd1b5-ae24-461e-837a-229a8d3f151e",
+      "comment": "Waiting for update to database",
+      "command": "pause",
+      "target": "2000",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "183db9e2-8e53-4bd1-a3e6-bab31cddbe38",
+      "comment": "Refreshing Page",
+      "command": "open",
+      "target": "http://localhost:5173/components/Profile",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "ab557968-235f-4f89-b003-9008a02efe10",
+      "comment": "First Name after edit",
+      "command": "assertText",
+      "target": "css=.profile-name",
+      "targets": [],
+      "value": "Michael Incorvaia"
+    }]
+  }],
+  "suites": [{
+    "id": "b512c605-fd0e-49f9-a091-57177d174ae8",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["a90e3c49-815b-44bc-b79e-bf9519b04e50"]
+  }],
+  "urls": ["http://localhost:5173/components/Profile"],
+  "plugins": []
+}
