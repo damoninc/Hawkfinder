@@ -7,7 +7,7 @@ describe("RatingPosts", function () {
   let driver;
   let vars;
   beforeEach(async function () {
-    driver = await new Builder().forBrowser("firefox").build();
+    driver = await new Builder().forBrowser("chrome").build();
     vars = {};
   });
   afterEach(async function () {
@@ -43,6 +43,7 @@ describe("RatingPosts", function () {
         )
         .click();
     }
+    await driver.sleep(300);
     await driver
       .findElement(
         By.css(
@@ -50,6 +51,7 @@ describe("RatingPosts", function () {
         )
       )
       .click();
+    await driver.sleep(300);
     await driver
       .findElement(
         By.css(
@@ -57,6 +59,7 @@ describe("RatingPosts", function () {
         )
       )
       .click();
+    await driver.sleep(300);
     await driver
       .findElement(
         By.css(
@@ -64,6 +67,7 @@ describe("RatingPosts", function () {
         )
       )
       .click();
+    await driver.sleep(300);
     await driver
       .findElement(
         By.css(
@@ -71,6 +75,7 @@ describe("RatingPosts", function () {
         )
       )
       .click();
+    await driver.sleep(300);
     await driver
       .findElement(
         By.css(
@@ -78,6 +83,7 @@ describe("RatingPosts", function () {
         )
       )
       .click();
+    await driver.sleep(300);
     await driver
       .findElement(
         By.css(
@@ -85,6 +91,7 @@ describe("RatingPosts", function () {
         )
       )
       .click();
+    await driver.sleep(300);
     await driver
       .findElement(
         By.css(
@@ -92,6 +99,7 @@ describe("RatingPosts", function () {
         )
       )
       .click();
+    await driver.sleep(300);
     await driver
       .findElement(
         By.css(
@@ -99,6 +107,7 @@ describe("RatingPosts", function () {
         )
       )
       .click();
+    await driver.sleep(300);
     await driver
       .findElement(
         By.css(
@@ -106,7 +115,7 @@ describe("RatingPosts", function () {
         )
       )
       .click();
-    await driver.sleep(500);
+    await driver.sleep(1000);
     // Check if the ratings are the same as before
     assert((await driver.findElement(By.css(".rating")).getText()) == ratings);
   });
