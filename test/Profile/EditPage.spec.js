@@ -9,13 +9,9 @@ async function signIn() {
   await driver.get("http://localhost:5173");
   await driver.sleep(5000);
   await driver.findElement(By.id("email")).click();
-  await driver
-    .findElement(By.id("email"))
-    .sendKeys("profiletest@uncw.edu");
+  await driver.findElement(By.id("email")).sendKeys("profiletest@uncw.edu");
   await driver.findElement(By.id("password")).click();
-  await driver
-    .findElement(By.id("password"))
-    .sendKeys("test1234" + Key.RETURN);
+  await driver.findElement(By.id("password")).sendKeys("test1234" + Key.RETURN);
   await driver.sleep(3000);
   await driver.switchTo().alert().accept();
 }
@@ -59,7 +55,7 @@ describe("Edit Profile", function () {
     await driver
       .findElement(By.css(".css-uln3b4-MuiButtonBase-root-MuiButton-root"))
       .click();
-      await driver.sleep(2000);
+    await driver.sleep(2000);
   });
 
   it("Edit Firstname to no name", async function () {
