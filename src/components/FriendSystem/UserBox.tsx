@@ -345,17 +345,11 @@ export function SmallUserBox(props: {
           </b>
         </Typography>
       </Stack>
-      <a style={{ width: "100%" }}>
-        <Button
-          variant="contained"
-          sx={{ width: "100%", marginTop: "10px" }}
-          onClick={() => {
-            if (props.navigate) {
-              props.navigate(`/components/Profile#userid=${props.user.userid}`);
-              window.location.reload();
-            }
-          }}
-        >
+      <a
+        href={`/components/Profile#userid=${props.user.userid}`}
+        style={{ width: "100%" }}
+      >
+        <Button variant="contained" sx={{ width: "100%", marginTop: "10px" }}>
           Profile
         </Button>
       </a>
