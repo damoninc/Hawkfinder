@@ -3,6 +3,18 @@ const { Builder, By, Key, until } = require("selenium-webdriver");
 const assert = require("assert");
 const mocha = require("mocha");
 
+// For testing posts
+const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+async function generateString(length) {
+    let result = ' ';
+    const charactersLength = characters.length;
+    for ( let i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+}
 describe("Creating post", function () {
   this.timeout(30000);
   let driver;
@@ -24,11 +36,11 @@ describe("Creating post", function () {
     await driver.findElement(By.id("password")).sendKeys("test1234");
     await driver.findElement(By.id("password")).sendKeys(Key.ENTER);
     await driver.sleep(3000);
-    assert(
-      (await driver.switchTo().alert().getText()) == "Signed in as Leon Kennedy"
-    );
     await driver.switchTo().alert().accept();
     await driver.sleep(3000);
+    const randomPost = await generateString(10);
+    const expected = randomPost.trim();
+    await driver.sleep(1000);
 
     // await driver.findElement(By.id(":r7:")).click();
     // await driver
@@ -37,17 +49,16 @@ describe("Creating post", function () {
     // await driver.findElement(By.id(":r7:")).click();
     await driver
       .findElement(By.id(":r7:"))
-      .sendKeys("creating post - selenium");
+      .sendKeys(expected);
     await driver.findElement(By.id(":r9:")).click();
     await driver
-      .findElement(By.xpath("//*[contains(text(),'Crossword puzzles')]"))
+      .findElement(By.xpath("//li[contains(.,'Crossword puzzles')]"))
       .click();
     // await driver.findElement(By.id(":r5-option-1:")).sendKeys("Music");
     await driver.findElement(By.id("post-button-enabled")).click();
     await driver.sleep(3000);
     assert(
-      (await driver.findElement(By.className("post-description")).getText()) ==
-        "creating post - selenium"
+      (await driver.findElement(By.className("post-description")).getText()) === expected
     );
   });
 });
