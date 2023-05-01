@@ -3,10 +3,12 @@ import React, { useState } from "react";
 import User from "../../data/User";
 import { db } from "../../firebase/config";
 import { Button } from "@mui/material";
+import { functions } from "../../firebase/config";
+import { httpsCallable } from "@firebase/functions";
+import axios from "axios";
 
 const spotifyLogo =
   "https://firebasestorage.googleapis.com/v0/b/csc-450-project.appspot.com/o/HAWKFINDER%2Fspotify-logo-7839B39C1B-seeklogo.com.png?alt=media&token=d84fdd6d-08da-4dcd-a9f5-99beba187849";
-
 /**
  * Returns a component that allows a user to authorize or de-authorize Hawkfinder's access to their spotify profile.
  *
@@ -56,21 +58,25 @@ function SpotifyLogin(user: User | undefined) {
 
   return (
     <div>
-      <a
-        href="/api/spotify"
-        style={{ display: "flex", justifyContent: "space-evenly" }}
-      >
-        <Button variant="contained" color="primary">
+        <Button variant="contained" color="primary" onClick={() => {login()}}>
           <img
             src={spotifyLogo}
             style={{ height: "60px", width: "60px", paddingRight: "10px" }}
           ></img>
           <h3>Authorize</h3>
         </Button>
-      </a>
     </div>
   );
 }
+
+async function login() {
+  const spotAuth = httpsCallable(functions, 'spotifyAuth');
+  spotAuth()
+    .then((result : any) => {
+      if (result.data) {
+        window.location = result.data.url
+      }
+    });}
 
 function SpotifyLogout(user: User) {
   if (user === undefined) {

@@ -32,7 +32,6 @@ import EditIcon from "@mui/icons-material/Edit";
 const interestRef = doc(db, "Interests", "Interests");
 const interestSnap = await getDoc(interestRef);
 const baseInterests = interestSnap.data();
-
 /**
  * This is the edit page button. It is only visible if the logged in user matches the user's profile.
  * A user can only see this on their own page.
@@ -249,6 +248,7 @@ function EditPage(
     }
     updateDoc(docRef, dataToUpdate);
     updateDoc(interestRef, baseInterestDataToUpdate);
+    setCustomInterests([]);
     handleClose();
   };
 
@@ -298,9 +298,9 @@ function EditPage(
 
   const getColumns = (width: any) => {
     if (width < breakpoints.xs) {
-      return { colCount: 3, rowPixels: 82 };
+      return { colCount: 3, rowPixels: 40 };
     } else if (width < breakpoints.sm) {
-      return { colCount: 3, rowPixels: 120 };
+      return { colCount: 3, rowPixels: 90 };
     } else if (width < breakpoints.md) {
       return { colCount: 3, rowPixels: 164 };
     } else if (width < breakpoints.lg) {
@@ -401,13 +401,12 @@ function EditPage(
               width: 400,
               maxHeight: 700,
               bgcolor: "background.paper",
-              border: "2px solid #000",
               boxShadow: 24,
               p: 4,
             }}
           >
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              Edit your profile
+              Edit Your Profile
             </Typography>
             <Box sx={{ overflowY: "auto", maxHeight: 500 }}>
               <Paper sx={{ p: 3 }}>
@@ -480,7 +479,6 @@ function EditPage(
                         transform: "translate(-50%, -50%)",
                         maxWidth: "1000px",
                         bgcolor: "background.paper",
-                        border: "2px solid #000",
                         boxShadow: 24,
                         p: 6,
                       }}
