@@ -349,8 +349,10 @@ export function SmallUserBox(props: {
         href={`/components/Profile#userid=${props.user.userid}`}
         style={{ width: "100%" }}
       >
-        <Button variant="contained" sx={{ width: "100%", marginTop: "10px" }}>
-          Profile
+        <Button variant="contained" sx={{ width: "100%", marginTop: "10px" }} onClick={() => {
+          setTimeout(() => { document.location.reload(); }, 250)
+        }}>         
+        Profile
         </Button>
       </a>
     </Grid>
